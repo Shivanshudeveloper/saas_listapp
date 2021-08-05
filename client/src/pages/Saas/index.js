@@ -92,49 +92,8 @@ class Index extends Component {
 
     return (
       <React.Fragment>
-        {/* section */}
-        <Section />
-
-        {/* Partner */}
-        <section className="section bg-light mt-0 mt-md-5">
-          <Container>
-            {/* section title */}
-            <SectionTitle
-              title="Our Trusted Clients"
-              desc="that can provide everything you need to generate awareness, drive traffic, connect."
-            />
-
-            {/* partners */}
-            <Row className="justify-content-center">
-              {this.state.partners.map((partner, key) => (
-                <Col
-                  lg={2}
-                  md={2}
-                  xs={6}
-                  key={key}
-                  className="text-center mt-4 pt-2"
-                >
-                  <img
-                    src={partner.image}
-                    className="avatar avatar-ex-sm"
-                    alt="Landrick"
-                  />
-                </Col>
-              ))}
-            </Row>
-          </Container>
-        </section>
-
-        {/* Feature */}
         <section className="section">
-          <Container>
-            <Feature featureArray={featureArray} isCenter={false} />
-          </Container>
-
-          {/* Start */}
           <Start />
-
-          {/* Client */}
           <Client />
         </section>
 

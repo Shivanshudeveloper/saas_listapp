@@ -25,6 +25,9 @@ import SectionTitle from "../../components/Shared/SectionTitle";
 import Pricing from "../../components/Shared/PricingBox";
 import ReviewsSlider from "../../components/Shared/ReviewsSlider";
 
+import Topbar from "../Home/Topbar";
+import Footer from "../../components/Layout/Footer";
+
 //Import Images
 import img1 from "../../assets/images/client/01.jpg";
 import img2 from "../../assets/images/client/02.jpg";
@@ -203,8 +206,7 @@ class PagePricing extends Component {
           img: img1,
           name: "Thomas Israel",
           post: "C.E.O",
-          desc:
-            "It seems that only fragments of the original text remain in the Lorem Ipsum texts used today.",
+          desc: "It seems that only fragments of the original text remain in the Lorem Ipsum texts used today.",
           rating: 5,
         },
         {
@@ -212,8 +214,7 @@ class PagePricing extends Component {
           img: img2,
           name: "Barbara McIntosh",
           post: "M.D",
-          desc:
-            "One disadvantage of Lorum Ipsum is that in Latin certain letters appear more frequently than others.",
+          desc: "One disadvantage of Lorum Ipsum is that in Latin certain letters appear more frequently than others.",
           rating: 4,
         },
         {
@@ -221,8 +222,7 @@ class PagePricing extends Component {
           img: img3,
           name: "Carl Oliver",
           post: "P.A",
-          desc:
-            "The most well-known dummy text is the 'Lorem Ipsum', which is said to have originated in the 16th century.",
+          desc: "The most well-known dummy text is the 'Lorem Ipsum', which is said to have originated in the 16th century.",
           rating: 3,
         },
         {
@@ -230,8 +230,7 @@ class PagePricing extends Component {
           img: img4,
           name: "Christa Smith",
           post: "Manager",
-          desc:
-            "According to most sources, Lorum Ipsum can be traced back to a text composed by Cicero.",
+          desc: "According to most sources, Lorum Ipsum can be traced back to a text composed by Cicero.",
           rating: 5,
         },
         {
@@ -239,8 +238,7 @@ class PagePricing extends Component {
           img: img5,
           name: "Dean Tolle",
           post: "Developer",
-          desc:
-            "There is now an abundance of readable dummy texts. These are usually used when a text is required.",
+          desc: "There is now an abundance of readable dummy texts. These are usually used when a text is required.",
           rating: 5,
         },
         {
@@ -248,8 +246,7 @@ class PagePricing extends Component {
           img: img6,
           name: "ill Webb",
           post: "Designer",
-          desc:
-            "Thus, Lorem Ipsum has only limited suitability as a visual filler for German texts.",
+          desc: "Thus, Lorem Ipsum has only limited suitability as a visual filler for German texts.",
           rating: 4,
         },
       ],
@@ -288,6 +285,7 @@ class PagePricing extends Component {
     return (
       <React.Fragment>
         {/* breadcrumb */}
+        <Topbar />
         <PageBreadcrumb title="Pricing" pathItems={this.state.pathItems} />
         <div className="position-relative">
           <div className="shape overflow-hidden text-white">
@@ -364,204 +362,8 @@ class PagePricing extends Component {
               ))}
             </Row>
           </Container>
-
-          <Container className="mt-100 mt-60">
-            {/* Render Section Title */}
-            <SectionTitle
-              title="Pricing #2"
-              desc="that can provide everything you need to generate awareness, drive traffic, connect."
-            />
-
-            <Row className="align-items-center">
-              <Col xs="12" className="mt-4 pt-2">
-                <div className="text-center">
-                  <Nav
-                    pills
-                    className="rounded-pill justify-content-center d-inline-block border py-1 px-2"
-                  >
-                    <NavItem className="d-inline-block">
-                      <NavLink
-                        className={classnames(
-                          { active: this.state.activeTab === "1" },
-                          "px-3",
-                          "rounded-pill",
-                          "monthly"
-                        )}
-                        onClick={() => {
-                          this.toggleTab("1");
-                        }}
-                      >
-                        Monthly
-                      </NavLink>
-                    </NavItem>{" "}
-                    <NavItem className="d-inline-block">
-                      <NavLink
-                        className={classnames(
-                          { active: this.state.activeTab === "2" },
-                          "px-3",
-                          "rounded-pill",
-                          "yearly"
-                        )}
-                        onClick={() => {
-                          this.toggleTab("2");
-                        }}
-                      >
-                        Yearly{" "}
-                        <Badge className="rounded-pill bg-success">
-                          15% Off{" "}
-                        </Badge>
-                      </NavLink>
-                    </NavItem>
-                  </Nav>
-                </div>
-
-                <TabContent activeTab={this.state.activeTab}>
-                  <TabPane tabId="1">
-                    <Row>
-                      {/* pricing */}
-                      <Pricing pricings={this.state.pricings1} />
-                    </Row>
-                  </TabPane>
-
-                  <TabPane tabId="2">
-                    <Row>
-                      {/* pricing */}
-                      <Pricing pricings={this.state.pricings2} />
-                    </Row>
-                  </TabPane>
-                </TabContent>
-              </Col>
-            </Row>
-          </Container>
-
-          <Container className="mt-100 mt-60">
-            {/* Render Section Title */}
-            <SectionTitle
-              title="Client Reviews"
-              desc="that can provide everything you need to generate awareness, drive traffic, connect."
-            />
-
-            {/* clients slider */}
-            <ReviewsSlider reviews={this.state.reviews} colclassName="mt-4" />
-          </Container>
         </section>
-
-        <section className="section bg-light">
-          <Container>
-            <Row>
-              <Col md={6} xs="12">
-                <div className="d-flex">
-                  <i>
-                    <FeatherIcon
-                      icon="help-circle"
-                      className="fea icon-ex-md text-primary me-2 mt-1"
-                    />
-                  </i>
-
-                  <div className="flex-1">
-                    <h5 className="mt-0">
-                      How our <span className="text-primary">Landrick</span>{" "}
-                      work ?
-                    </h5>
-                    <p className="answer text-muted mb-0">
-                      Due to its widespread use as filler text for layouts,
-                      non-readability is of great importance: human perception
-                      is tuned to recognize certain patterns and repetitions in
-                      texts.
-                    </p>
-                  </div>
-                </div>
-              </Col>
-
-              <Col md={6} xs="12" className="mt-4 mt-sm-0 pt-2 pt-sm-0">
-                <div className="d-flex">
-                  <i>
-                    <FeatherIcon
-                      icon="help-circle"
-                      className="fea icon-ex-md text-primary me-2 mt-1"
-                    />
-                  </i>
-
-                  <div className="flex-1">
-                    <h5 className="mt-0">
-                      What is the main process open account ?
-                    </h5>
-                    <p className="answer text-muted mb-0">
-                      If the distribution of letters and 'words' is random, the
-                      reader will not be distracted from making a neutral
-                      judgement on the visual impact
-                    </p>
-                  </div>
-                </div>
-              </Col>
-
-              <Col md={6} xs="12" className="mt-4 pt-2">
-                <div className="d-flex">
-                  <i>
-                    <FeatherIcon
-                      icon="help-circle"
-                      className="fea icon-ex-md text-primary me-2 mt-1"
-                    />
-                  </i>
-
-                  <div className="flex-1">
-                    <h5 className="mt-0">How to make unlimited data entry ?</h5>
-                    <p className="answer text-muted mb-0">
-                      Furthermore, it is advantageous when the dummy text is relatively
-                      realistic so that the layout impression of the final publication
-                      is not compromised.
-                    </p>
-                  </div>
-                </div>
-              </Col>
-
-              <Col md={6} xs="12" className="mt-4 pt-2">
-                <div className="d-flex">
-                  <i>
-                    <FeatherIcon
-                      icon="help-circle"
-                      className="fea icon-ex-md text-primary me-2 mt-1"
-                    />
-                  </i>
-
-                  <div className="flex-1">
-                    <h5 className="mt-0">
-                      Is <span className="text-primary">Landrick</span> safer to
-                      use with my account ?
-                    </h5>
-                    <p className="answer text-muted mb-0">
-                      The most well-known dummy text is the 'Lorem Ipsum', which
-                      is said to have originated in the 16th century. Lorem
-                      Ipsum is composed in a pseudo-Latin language which more or
-                      less corresponds to 'proper' Latin.
-                    </p>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-
-            <Row className="mt-md-5 pt-md-3 mt-4 pt-2 mt-sm-0 pt-sm-0 justify-content-center">
-              <div xs="12" className="text-center">
-                <div className="section-title">
-                  <h4 className="title mb-4">Have Question ? Get in touch!</h4>
-                  <p className="text-muted para-desc mx-auto">
-                    Start working with{" "}
-                    <span className="text-primary fw-bold">
-                      Landrick
-                    </span>{" "}
-                    that can provide everything you need to generate awareness,
-                    drive traffic, connect.
-                  </p>
-                  <div className="mt-4 pt-2">
-                    <Link to="page-contact-two" className="btn btn-primary">
-                      Contact us <i className="mdi mdi-arrow-right"></i>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </Row>
-          </Container>
-        </section>
+        <Footer />
       </React.Fragment>
     );
   }

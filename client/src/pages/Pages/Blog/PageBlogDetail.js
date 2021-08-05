@@ -36,6 +36,8 @@ import client2 from "../../../assets/images/client/02.jpg";
 import client3 from "../../../assets/images/client/03.jpg";
 import client4 from "../../../assets/images/client/04.jpg";
 
+import Topbar from "../../Home/Topbar";
+
 class PageBlogDetail extends Component {
   constructor(props) {
     super(props);
@@ -54,8 +56,7 @@ class PageBlogDetail extends Component {
           name: "Lorenzo Peterson",
           date: "15th August, 2019",
           time: "01:25 pm",
-          desc:
-            "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
+          desc: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
         },
         {
           id: 2,
@@ -63,8 +64,7 @@ class PageBlogDetail extends Component {
           name: "Tammy Camacho",
           date: "16th August, 2019",
           time: "02:05 pm",
-          desc:
-            "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
+          desc: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
         },
         {
           id: 3,
@@ -72,8 +72,7 @@ class PageBlogDetail extends Component {
           name: "Tammy Camacho",
           date: "17th August, 2019",
           time: "04:03 pm",
-          desc:
-            "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
+          desc: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
           replies: [
             {
               id: 1,
@@ -81,8 +80,7 @@ class PageBlogDetail extends Component {
               name: "Calvin Camacho",
               date: "18th August, 2019",
               time: "05:55 pm",
-              desc:
-                "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
+              desc: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour",
             },
           ],
         },
@@ -140,6 +138,7 @@ class PageBlogDetail extends Component {
     return (
       <React.Fragment>
         {/* breadcrumb */}
+        <Topbar />
         <PageBreadcrumb pathItems={this.state.pathItems}>
           <h2> Design your apps in your own way </h2>
           <ul className="list-unstyled mt-4">
@@ -392,8 +391,7 @@ class PageBlogDetail extends Component {
                     </Row>
                   </CardBody>
                 </Card>
-
-                 </Col>
+              </Col>
 
               {/* sidebar */}
               <Col lg={4} xs={12} md={6} className="mt-4 mt-sm-0 pt-2 pt-sm-0">

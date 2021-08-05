@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 
 //Import components
 import PageBreadcrumb from "../../../components/Shared/PageBreadcrumb";
+import Topbar from "../../Home/Topbar";
 
 // import images
 import blog13 from "../../../assets/images/work/13.jpg";
@@ -39,8 +40,7 @@ class PageBlogList extends Component {
           id: 1,
           image: blog14,
           title: "Design your apps in your own way",
-          desc:
-            "Due to its widespread use as filler text for layouts, non-readability",
+          desc: "Due to its widespread use as filler text for layouts, non-readability",
           like: "33",
           comment: "08",
           autor: "Calvin Carlo",
@@ -50,8 +50,7 @@ class PageBlogList extends Component {
           id: 2,
           image: blog15,
           title: "Design your apps in your own way",
-          desc:
-            "Due to its widespread use as filler text for layouts, non-readability",
+          desc: "Due to its widespread use as filler text for layouts, non-readability",
           like: "33",
           comment: "08",
           autor: "Calvin Carlo",
@@ -61,8 +60,7 @@ class PageBlogList extends Component {
           id: 3,
           image: blog16,
           title: "Design your apps in your own way",
-          desc:
-            "Due to its widespread use as filler text for layouts, non-readability",
+          desc: "Due to its widespread use as filler text for layouts, non-readability",
           like: "33",
           comment: "08",
           autor: "Calvin Carlo",
@@ -72,8 +70,7 @@ class PageBlogList extends Component {
           id: 4,
           image: blog17,
           title: "Design your apps in your own way",
-          desc:
-            "Due to its widespread use as filler text for layouts, non-readability",
+          desc: "Due to its widespread use as filler text for layouts, non-readability",
           like: "33",
           comment: "08",
           autor: "Calvin Carlo",
@@ -83,8 +80,7 @@ class PageBlogList extends Component {
           id: 5,
           image: blog18,
           title: "Design your apps in your own way",
-          desc:
-            "Due to its widespread use as filler text for layouts, non-readability",
+          desc: "Due to its widespread use as filler text for layouts, non-readability",
           like: "33",
           comment: "08",
           autor: "Calvin Carlo",
@@ -94,8 +90,7 @@ class PageBlogList extends Component {
           id: 6,
           image: blog19,
           title: "Design your apps in your own way",
-          desc:
-            "Due to its widespread use as filler text for layouts, non-readability",
+          desc: "Due to its widespread use as filler text for layouts, non-readability",
           like: "33",
           comment: "08",
           autor: "Calvin Carlo",
@@ -105,8 +100,7 @@ class PageBlogList extends Component {
           id: 7,
           image: blog13,
           title: "Design your apps in your own way",
-          desc:
-            "Due to its widespread use as filler text for layouts, non-readability",
+          desc: "Due to its widespread use as filler text for layouts, non-readability",
           like: "33",
           comment: "08",
           autor: "Calvin Carlo",
@@ -126,20 +120,12 @@ class PageBlogList extends Component {
     window.removeEventListener("scroll", this.scrollNavigation, true);
   }
 
-  scrollNavigation = () => {
-    var doc = document.documentElement;
-    var top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
-    if (top > 80) {
-      document.getElementById("topnav").classList.add("nav-sticky");
-    } else {
-      document.getElementById("topnav").classList.remove("nav-sticky");
-    }
-  };
-
   render() {
     return (
       <React.Fragment>
         {/* breadcrumb */}
+        <Topbar />
+
         <PageBreadcrumb title="Blog Listing" pathItems={this.state.pathItems} />
 
         <div className="position-relative">
@@ -166,28 +152,30 @@ class PageBlogList extends Component {
                     <Card className="blog rounded border-0 shadow overflow-hidden">
                       <Row className="align-items-center g-0">
                         <Col md={6}>
-                          <img
-                            src={blog.image}
-                            className="img-fluid"
-                            alt="Landrick"
-                          />
-                          <div className="overlay bg-dark"></div>
-                          <div className="author">
-                            <small className="text-light user d-block">
-                              <i className="uil uil-user"></i> {blog.autor}
-                            </small>
-                            <small className="text-light date">
-                              <i className="uil uil-calendar-alt"></i>{" "}
-                              {blog.date}
-                            </small>
-                          </div>
+                          <a href="/page-blog-detail">
+                            <img
+                              src={blog.image}
+                              className="img-fluid"
+                              alt="Landrick"
+                            />
+                            <div className="overlay bg-dark"></div>
+                            <div className="author">
+                              <small className="text-light user d-block">
+                                <i className="uil uil-user"></i> {blog.autor}
+                              </small>
+                              <small className="text-light date">
+                                <i className="uil uil-calendar-alt"></i>{" "}
+                                {blog.date}
+                              </small>
+                            </div>
+                          </a>
                         </Col>
 
                         <Col md={6}>
                           <CardBody className="content">
                             <h5>
                               <Link
-                                to="#"
+                                to="/page-blog-detail"
                                 className="card-title title text-dark"
                               >
                                 {blog.title}
@@ -230,7 +218,7 @@ class PageBlogList extends Component {
                           <CardBody className="content">
                             <h5>
                               <Link
-                                to="#"
+                                to="/page-blog-detail"
                                 className="card-title title text-dark"
                               >
                                 {blog.title}

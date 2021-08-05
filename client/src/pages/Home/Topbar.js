@@ -11,9 +11,10 @@ class Topbar extends Component {
     super(props);
     this.state = {
       navItems: [
-        { id: 1, idnm: "home", navheading: "Home" },
-        { id: 2, idnm: "demos", navheading: "Demos" },
-        { id: 3, idnm: "features", navheading: "Feature" },
+        { id: 1, idnm: "", navheading: "Home" },
+        { id: 2, idnm: "pricing", navheading: "Pricing" },
+        { id: 3, idnm: "blogs", navheading: "Blogs" },
+        { id: 4, idnm: "aboutus", navheading: "About Us" },
       ],
       isOpen: false,
     };
@@ -31,7 +32,11 @@ class Topbar extends Component {
     });
     return (
       <React.Fragment>
-        <header id="topnav" className="defaultscroll sticky">
+        <header
+          id="topnav"
+          className="defaultscroll sticky"
+          style={{ background: "white" }}
+        >
           <Container>
             <Link className="logo" to="/">
               <img src={logodark} height="24" alt="" />
@@ -63,25 +68,25 @@ class Topbar extends Component {
                 </Link>
               </div>
             </div>
-            <ScrollspyNav
+            {/* <ScrollspyNav
               scrollTargetIds={targetId}
               scrollDuration="800"
               headerBackground="false"
               activeNavClass="active"
+            > */}
+            <div
+              id="navigation"
+              style={{ display: this.state.isOpen ? "block" : "none" }}
             >
-              <div
-                id="navigation"
-                style={{ display: this.state.isOpen ? "block" : "none" }}
-              >
-                <ul className="navigation-menu">
-                  {this.state.navItems.map((item, key) => (
-                    <li key={key} className="has-submenu">
-                      <a href={"#" + item.idnm}> {item.navheading}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </ScrollspyNav>
+              <ul className="navigation-menu">
+                {this.state.navItems.map((item, key) => (
+                  <li key={key} className="has-submenu">
+                    <a href={`/${item.idnm}`}> {item.navheading}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* </ScrollspyNav> */}
           </Container>
         </header>
       </React.Fragment>

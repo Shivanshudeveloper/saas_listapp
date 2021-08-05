@@ -106,12 +106,12 @@ const SocialMarketing = React.lazy(() =>
 );
 const DigitalAgency = React.lazy(() => import("./pages/DigitalAgency/index"));
 const OnlineLearning = React.lazy(() => import("./pages/OnlineLearning/index"));
-const Finance = React.lazy(() => import('./pages/Finance/index'));
-const VideoCall = React.lazy(() => import('./pages/VideoCall/index'));
-const iTSolutionTwo = React.lazy(() => import('./pages/ITSolutionTwo/index'));
-const Freelancer = React.lazy(() => import('./pages/Freelancer/index'));
-const Blockchain = React.lazy(() => import('./pages/Blockchain/index'));
-const CryptoTwo = React.lazy(() => import('./pages/CryptoTwo/index'));
+const Finance = React.lazy(() => import("./pages/Finance/index"));
+const VideoCall = React.lazy(() => import("./pages/VideoCall/index"));
+const iTSolutionTwo = React.lazy(() => import("./pages/ITSolutionTwo/index"));
+const Freelancer = React.lazy(() => import("./pages/Freelancer/index"));
+const Blockchain = React.lazy(() => import("./pages/Blockchain/index"));
+const CryptoTwo = React.lazy(() => import("./pages/CryptoTwo/index"));
 
 //Docs
 const ChangeLog = React.lazy(() => import("./pages/Docs/ChangeLog"));
@@ -235,7 +235,9 @@ const PageContactTwo = React.lazy(() =>
 // forums
 const Overview = React.lazy(() => import("./pages/Pages/Forums/overview"));
 const ForumTopic = React.lazy(() => import("./pages/Pages/Forums/ForumTopic"));
-const ForumsComments = React.lazy(() => import('./pages/Pages/Forums/ForumsComments'));
+const ForumsComments = React.lazy(() =>
+  import("./pages/Pages/Forums/ForumsComments")
+);
 
 //Email
 const EmailAlert = React.lazy(() =>
@@ -291,7 +293,7 @@ const routes = [
     path: "/page-contact-detail",
     component: PageContactDetail,
     isWithoutLayout: true,
-    isTopbarDark: true
+    isTopbarDark: true,
   },
 
   //Email Pages
@@ -376,7 +378,11 @@ const routes = [
   { path: "/index-crypto", component: Cryptocurrency },
   { path: "/index-payments", component: Payments, isTopbarDark: true },
   { path: "/index-car-riding", component: IndexCarRiding, isTopbarDark: true },
-  { path: "/index-classic-saas", component: IndexclassicSaas, isTopbarDark: true },
+  {
+    path: "/index-classic-saas",
+    component: IndexclassicSaas,
+    isTopbarDark: true,
+  },
   { path: "/index-classic-app", component: ClassicApp, isTopbarDark: true },
   { path: "/index-saas", component: Saas, isTopbarDark: true },
   { path: "/index-apps", component: Apps, isTopbarDark: true },
@@ -415,9 +421,21 @@ const routes = [
   { path: "/index-shop", component: Shop, isTopbarDark: true },
   { path: "/index-insurance", component: Insurance },
   { path: "/index-ebook", component: Ebook, isTopbarDark: true },
-  { path: "/index-social-marketing", component: SocialMarketing, isTopbarDark: true },
-  { path: "/index-digital-agency", component: DigitalAgency, isTopbarDark: true },
-  { path: "/index-online-learning", component: OnlineLearning, isTopbarDark: true },
+  {
+    path: "/index-social-marketing",
+    component: SocialMarketing,
+    isTopbarDark: true,
+  },
+  {
+    path: "/index-digital-agency",
+    component: DigitalAgency,
+    isTopbarDark: true,
+  },
+  {
+    path: "/index-online-learning",
+    component: OnlineLearning,
+    isTopbarDark: true,
+  },
   { path: "/index-finance", component: Finance, isTopbarDark: true },
   { path: "/index-videocall", component: VideoCall, isTopbarDark: true },
   { path: "/index-it-solution-two", component: iTSolutionTwo },
@@ -426,22 +444,38 @@ const routes = [
   { path: "/index-crypto-two", component: CryptoTwo },
 
   { path: "/page-aboutus", component: PageAboutUs, isTopbarDark: true },
-  { path: "/page-aboutus-two", component: PageAboutusTwo },
+  // { path: "/page-aboutus-two", component: PageAboutusTwo },
   { path: "/page-history", component: PageHistory, isTopbarDark: true },
-  { path: "/page-pricing", component: PagePricing, isTopbarDark: true },
+  // { path: "/page-pricing", component: PagePricing, isTopbarDark: true },
   { path: "/page-services", component: PageServices, isTopbarDark: true },
   { path: "/page-team", component: PageTeam, isTopbarDark: true },
 
   //Help Center
-  { path: "/helpcenter-overview", component: HelpCenterOverview, isTopbarDark: true },
+  {
+    path: "/helpcenter-overview",
+    component: HelpCenterOverview,
+    isTopbarDark: true,
+  },
   { path: "/helpcenter-faqs", component: HelpCenterFaqs, isTopbarDark: true },
-  { path: "/helpcenter-guides", component: HelpCenterGuides, isTopbarDark: true },
-  { path: "/helpcenter-support-request", component: HelpCenterSupportRequest, isTopbarDark: true },
+  {
+    path: "/helpcenter-guides",
+    component: HelpCenterGuides,
+    isTopbarDark: true,
+  },
+  {
+    path: "/helpcenter-support-request",
+    component: HelpCenterSupportRequest,
+    isTopbarDark: true,
+  },
 
   //Shop
   { path: "/shop-grids", component: ShopProducts, isTopbarDark: true },
   { path: "/shop-lists", component: ShopProductsLists, isTopbarDark: true },
-  { path: "/shop-product-detail", component: ShopProductDetail, isTopbarDark: true },
+  {
+    path: "/shop-product-detail",
+    component: ShopProductDetail,
+    isTopbarDark: true,
+  },
   { path: "/shop-cart", component: ShopCart, isTopbarDark: true },
   { path: "/shop-checkouts", component: ShopCheckouts, isTopbarDark: true },
   { path: "/shop-myaccount", component: ShopMyAccount, isTopbarDark: true },
@@ -453,9 +487,17 @@ const routes = [
   //Page Work
   { path: "/page-work-modern", component: PageWorkModern, isTopbarDark: true },
   { path: "/page-work-detail", component: PageWorkDetail, isTopbarDark: true },
-  { path: "/page-work-classic", component: PageWorkClassic, isTopbarDark: true },
+  {
+    path: "/page-work-classic",
+    component: PageWorkClassic,
+    isTopbarDark: true,
+  },
   { path: "/page-work-grid", component: PageWorkGrid, isTopbarDark: true },
-  { path: "/page-work-masonry", component: PageWorkMasonry, isTopbarDark: true },
+  {
+    path: "/page-work-masonry",
+    component: PageWorkMasonry,
+    isTopbarDark: true,
+  },
 
   //Page Profile
   { path: "/page-profile", component: PageProfile },
@@ -470,9 +512,21 @@ const routes = [
   { path: "/page-job", component: PageJob, isTopbarDark: true },
   { path: "/page-job-apply", component: PageJobApply, isTopbarDark: true },
   { path: "/page-job-detail", component: PageJobDetail, isTopbarDark: true },
-  { path: "/page-jobs-sidebar", component: PageJobsSidebar, isTopbarDark: true },
-  { path: "/page-job-company-list", component: PageCompanyList, isTopbarDark: true },
-  { path: "/page-job-candidate-list", component: PageCandidateList, isTopbarDark: true },
+  {
+    path: "/page-jobs-sidebar",
+    component: PageJobsSidebar,
+    isTopbarDark: true,
+  },
+  {
+    path: "/page-job-company-list",
+    component: PageCompanyList,
+    isTopbarDark: true,
+  },
+  {
+    path: "/page-job-candidate-list",
+    component: PageCandidateList,
+    isTopbarDark: true,
+  },
   { path: "/page-job-company", component: PageJobCompany },
   { path: "/page-job-candidate", component: PageJobCandidate },
 
@@ -480,9 +534,17 @@ const routes = [
   { path: "/page-blog-grid", component: PageBlog, isTopbarDark: true },
   { path: "/page-blog-detail", component: PageBlogDetail, isTopbarDark: true },
   { path: "/page-blog-detail-two", component: PageBlogDetailTwo },
-  { path: "/page-blog-sidebar", component: PageBlogSidebar, isTopbarDark: true },
-  { path: "/page-blog-list", component: PageBlogList, isTopbarDark: true },
-  { path: "/page-blog-list-sidebar", component: PageBlogListSidebar, isTopbarDark: true },
+  {
+    path: "/page-blog-sidebar",
+    component: PageBlogSidebar,
+    isTopbarDark: true,
+  },
+
+  {
+    path: "/page-blog-list-sidebar",
+    component: PageBlogListSidebar,
+    isTopbarDark: true,
+  },
 
   //Page Case Study
   { path: "/page-all-cases", component: AllCases },
@@ -490,7 +552,11 @@ const routes = [
 
   //Page Contact
   { path: "/page-contact-one", component: PageContactOne, isTopbarDark: true },
-  { path: "/page-contact-three", component: PageContactThree, isTopbarDark: true },
+  {
+    path: "/page-contact-three",
+    component: PageContactThree,
+    isTopbarDark: true,
+  },
   { path: "/page-contact-two", component: PageContactTwo, isTopbarDark: true },
 
   // forums
@@ -505,11 +571,20 @@ const routes = [
   { path: "/widget", component: Widget, isTopbarDark: true },
 
   //Index Main
-  { path: "/index", component: Main, isTopbarDark: true },
+  // { path: "/index", component: Main, isTopbarDark: true },
 
   //Index root
+  // { path: "/", component: Root, isWithoutLayout: true, exact: true },
+  { path: "/", component: Main, isWithoutLayout: true, exact: true },
+  {
+    path: "/pricing",
+    component: PagePricing,
+    isWithoutLayout: true,
+    exact: true,
+  },
+  { path: "/blogs", component: PageBlogList, isTopbarDark: true },
+  { path: "/aboutus", component: PageAboutusTwo },
 
-  { path: "/", component: Root, isWithoutLayout: true, exact: true },
   { component: PageError, isWithoutLayout: true, exact: false },
 ];
 
