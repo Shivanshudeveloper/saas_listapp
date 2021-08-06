@@ -17,8 +17,8 @@ class Section extends Component {
                                     <h1 className="heading mb-3">Our Creativity Is Your <span className="text-primary">Success</span> </h1>
                                     <p className="para-desc text-muted">Launch your campaign and benefit from our expertise on designing and managing conversion centered bootstrap v5 html page.</p>
                                     <div className="mt-4">
-                                        <Link to="/page-contact-one" className="btn btn-primary mt-2 me-2"><i className="uil uil-envelope"></i> Get Started</Link>
-                                        <Link to="/documentation" className="btn btn-outline-primary mt-2"><i className="uil uil-book-alt"></i> Documentation</Link>
+                                        <Link to="/auth-cover-login" className="btn btn-primary mt-2 me-2">Log In</Link>
+                                        <Link to="/auth-signup" className="btn btn-outline-primary mt-2">Create an account</Link>
                                     </div>
                                 </div>
                             </Col>

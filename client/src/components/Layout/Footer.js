@@ -35,9 +35,9 @@ class Footer extends Component {
       grid2: [
         { title: "Terms of Services", link: "/page-terms" },
         { title: "Privacy Policy", link: "/page-privacy" },
-        { title: "Documentation", link: "/documentation" },
-        { title: "Changelog", link: "/changelog" },
-        { title: "Components", link: "/components" },
+        // { title: "Documentation", link: "/documentation" },
+        // { title: "Changelog", link: "/changelog" },
+        // { title: "Components", link: "/components" },
       ],
     };
   }
@@ -248,7 +248,7 @@ class Footer extends Component {
               </Col>
 
               <Col sm="6" className="mt-4 mt-sm-0 pt-2 pt-sm-0">
-                <ul className="list-unstyled text-sm-end mb-0">
+                {/* <ul className="list-unstyled text-sm-end mb-0">
                   <li className="list-inline-item me-1">
                     <Link to="">
                       <img
@@ -299,7 +299,7 @@ class Footer extends Component {
                       />
                     </Link>
                   </li>
-                </ul>
+                </ul> */}
               </Col>
             </Row>
           </Container>
