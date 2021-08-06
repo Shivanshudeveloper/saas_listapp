@@ -21,14 +21,16 @@ class Footer extends Component {
     super(props);
     this.state = {
       grid1: [
-        { title: "About us", link: "/page-aboutus" },
-        { title: "Services", link: "/page-services" },
-        { title: "Team", link: "/page-team" },
-        { title: "Pricing", link: "/page-pricing" },
-        { title: "Project", link: "/page-work" },
-        { title: "Careers", link: "/page-jobs" },
-        { title: "Blog", link: "/page-blog" },
-        { title: "Login", link: "/page-cover-login" },
+        
+        // { title: "Services", link: "/page-services" },
+        // { title: "Team", link: "/page-team" },
+        { title: "Home", link: "/" },
+        { title: "Pricing", link: "/pricing" },
+        // { title: "Project", link: "/page-work" },
+        // { title: "Careers", link: "/page-jobs" },
+        { title: "Blog", link: "/blogs" },
+        { title: "About us", link: "/aboutus" },
+        // { title: "Login", link: "/page-cover-login" },
       ],
       grid2: [
         { title: "Terms of Services", link: "/page-terms" },
@@ -53,14 +55,10 @@ class Footer extends Component {
                 name="footercolumn"
               >
                 <Link to="#" className="logo-footer">
-                  <img
-                    src={this.props.isLight ? logodark : logolight}
-                    height="24"
-                    alt=""
-                  />
+                  Company Logo
                 </Link>
                 <p className={this.props.isLight ? "mt-4 text-muted" : "mt-4"}>
-                  Start working with Landrick that can provide everything you
+                  Start working with comapany name that can provide everything you
                   need to generate awareness, drive traffic, connect.
                 </p>
                 <ul className={this.props.isLight ? "list-unstyled social-icon social mb-0 m t-4" : "list-unstyled social-icon foot-social-icon mb-0 mt-4"}>
@@ -244,17 +242,7 @@ class Footer extends Component {
               <Col sm="6">
                 <div className="text-sm-start">
                   <p className="mb-0">
-                    © 2020-21 Landrick. Develop by{" "}
-                    <i className="mdi mdi-heart text-danger"></i>{" "}
-                    <a
-                      href="https://themesbrand.com/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-reset"
-                    >
-                      Themesbrand
-                    </a>
-                    .
+                    © 2020-21 
                   </p>
                 </div>
               </Col>

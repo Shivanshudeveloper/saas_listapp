@@ -19,7 +19,7 @@ class ThemeSwitcher extends Component {
   render() {
     return (
       <React.Fragment>
-        <div
+        {/* <div
           id="style-switcher"
           style={{ left: this.state.isSwitchToggle ? "0px" : "-189px" }}
           className="bg-light border p-3 pt-2 pb-2"
@@ -60,7 +60,7 @@ class ThemeSwitcher extends Component {
               <i className="mdi mdi-cog ms-1 mdi-24px position-absolute mdi-spin text-primary"></i>
             </Link>
           </div>
-        </div>
+        </div> */}
       </React.Fragment>
     );
   }

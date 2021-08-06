@@ -108,14 +108,14 @@ export default class PageAboutusTwo extends Component {
                 <div className="page-next-level title-heading">
                   <h1 className="text-white title-dark"> Aboutus </h1>
                   <p className="text-white-50 para-desc mb-0 mx-auto">
-                    Start working with Landrick that can provide everything you
+                    Start working with comapany name that can provide everything you
                     need to generate awareness, drive traffic, connect.
                   </p>
-                  <div className="page-next">
+                  {/* <div className="page-next">
                     <nav aria-label="breadcrumb" className="d-inline-block">
                       <ul className="breadcrumb bg-white rounded shadow mb-0">
                         <li className="breadcrumb-item">
-                          <Link to="/index">Landrick</Link>
+                          <Link to="/index">comapany name</Link>
                         </li>
                         <li className="breadcrumb-item">
                           <Link to="#">Company</Link>
@@ -128,7 +128,7 @@ export default class PageAboutusTwo extends Component {
                         </li>
                       </ul>
                     </nav>
-                  </div>
+                  </div> */}
                 </div>
               </Col>
             </Row>
@@ -172,7 +172,7 @@ export default class PageAboutusTwo extends Component {
                     <h4 className="title mb-4">Who we are ?</h4>
                     <p className="text-muted">
                       Start working with{" "}
-                      <span className="text-primary fw-bold">Landrick</span>{" "}
+                      <span className="text-primary fw-bold">comapany name</span>{" "}
                       that can provide everything you need to generate
                       awareness, drive traffic, connect. Dummy text is text that
                       is used in the publishing industry or by web designers to

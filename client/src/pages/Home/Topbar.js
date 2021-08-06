@@ -39,7 +39,7 @@ class Topbar extends Component {
         >
           <Container>
             <Link className="logo" to="/">
-              <img src={logodark} height="24" alt="" />
+              Company Logo
             </Link>
             <div className="buy-button">
               <a
@@ -48,7 +48,7 @@ class Topbar extends Component {
                 rel="noopener noreferrer"
                 className="btn btn-primary"
               >
-                Download
+                Go to console
               </a>
             </div>
             <div className="menu-extras">
