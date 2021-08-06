@@ -166,7 +166,7 @@ class PageCoverLogin extends Component {
                                 </div>
                               </Col>
 
-                              <Col lg={12} className="mt-4 text-center">
+                              {/* <Col lg={12} className="mt-4 text-center">
                                 <h6>Or Login With</h6>
                                 <Row>
                                   <div className="col-6 mt-3">
@@ -181,19 +181,19 @@ class PageCoverLogin extends Component {
                                     </div>
                                   </div>
                                 </Row>
-                              </Col>
+                              </Col> */}
 
                               <Col className="text-center">
                                 <p className="mb-0 mt-3">
                                   <small className="text-dark me-2">
                                     Don't have an account ?
                                   </small>{" "}
-                                  <Link
-                                    to="page-cover-signup"
-                                    className="text-dark fw-bold"
+                                  <a
+                                    href="/auth-signup"
+                                    // className="text-dark fw-bold"
                                   >
                                     Sign Up
-                                  </Link>
+                                  </a>
                                 </p>
                               </Col>
                             </Row>

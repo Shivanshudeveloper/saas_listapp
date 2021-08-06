@@ -43,8 +43,7 @@ class Topbar extends Component {
             </Link>
             <div className="buy-button">
               <a
-                href="https://1.envato.market/landrickreactjs"
-                target="_blank"
+                href="/auth-cover-login"
                 rel="noopener noreferrer"
                 className="btn btn-primary"
               >
