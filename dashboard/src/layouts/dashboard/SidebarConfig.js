@@ -48,7 +48,7 @@ const sidebarConfig = [
       },
       {
         title: "pricing & Plan",
-        path: PATH_DASHBOARD.user.cards,
+        path: PATH_DASHBOARD.general.contacts,
         icon: ICONS.user,
       },
     ],
