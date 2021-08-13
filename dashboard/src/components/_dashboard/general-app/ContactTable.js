@@ -12,7 +12,6 @@ import {
   Card,
   Table,
   Button,
-  Divider,
   TableRow,
   TableBody,
   TableCell,
@@ -79,7 +78,7 @@ const INVOICES = [
 
 // ----------------------------------------------------------------------
 
-export default function AppNewInvoice() {
+export default function ContactTable() {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
 

@@ -1,17 +1,33 @@
+import React, { useState } from "react";
+
 // material
-import { Container, Grid } from "@material-ui/core";
 // hooks
 import useAuth from "../../hooks/useAuth";
 // components
 import Page from "../../components/Page";
-import { AppNewInvoice } from "../../components/_dashboard/general-app";
 
-import { Box, Card, Typography, TextField, Button } from "@material-ui/core";
+import { Box, Typography, Button, Divider, Container } from "@material-ui/core";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import ContactSection from "./ContactSection";
+import CompanySection from "./CompanySection";
+import SwipeableViews from "react-swipeable-views";
+import { useTheme } from "@material-ui/core/styles";
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
-  const { user } = useAuth();
+  const [value, setValue] = useState(0);
+  const theme = useTheme();
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
 
   function LinearProgressWithLabel(props) {
     return (
@@ -28,14 +44,44 @@ export default function GeneralApp() {
     );
   }
 
+  function a11yProps(index) {
+    return {
+      id: `full-width-tab-${index}`,
+      "aria-controls": `full-width-tabpanel-${index}`,
+    };
+  }
+
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`full-width-tabpanel-${index}`}
+        aria-labelledby={`full-width-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box p={3}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
   return (
     <Page title="Search | List App">
       <Container maxWidth="xl" style={{ padding: 0 }}>
         <Box
           style={{
+            margin: "30px auto",
+            marginTop: "0px",
             marginBottom: "30px",
             display: "flex",
             justifyContent: "space-between",
+            width: "95%",
           }}
         >
           <Typography variant="h4">Search</Typography>
@@ -68,72 +114,39 @@ export default function GeneralApp() {
             </Button>
           </div>
         </Box>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={3}>
-            <Card
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                p: 3,
-              }}
-            >
-              <Typography variant="subtitle1">Filters</Typography>
-              <br />
-              <Box style={{ margin: "10px 0" }}>
-                <Typography variant="subtitle2">Titles</Typography>
-                <TextField
-                  style={{ marginTop: "5px" }}
-                  label="Marketing Manager"
-                  variant="filled"
-                  size="small"
-                  fullWidth
-                />
-              </Box>
-              <Box style={{ margin: "10px 0" }}>
-                <Typography variant="subtitle2">
-                  Companies or Website
-                </Typography>
-                <TextField
-                  style={{ marginTop: "5px" }}
-                  label="Nike or nike.com"
-                  variant="filled"
-                  size="small"
-                  fullWidth
-                />
-              </Box>
-              <Box style={{ margin: "10px 0" }}>
-                <Typography variant="subtitle2">Keywords</Typography>
-                <TextField
-                  style={{ marginTop: "5px" }}
-                  label="Healthcare"
-                  variant="filled"
-                  size="small"
-                  fullWidth
-                />
-              </Box>
-              <Box style={{ margin: "10px 0" }}>
-                <Typography variant="subtitle2">Names</Typography>
-                <TextField
-                  style={{ marginTop: "5px" }}
-                  label="John Wick"
-                  variant="filled"
-                  size="small"
-                  fullWidth
-                />
-              </Box>
-              <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-                <Button color="primary">Clear</Button>
-                <Button variant="contained" color="primary">
-                  Search
-                </Button>
-              </Box>
-            </Card>
-          </Grid>
 
-          <Grid item xs={12} lg={9}>
-            <AppNewInvoice />
-          </Grid>
-        </Grid>
+        {/*  */}
+
+        <AppBar
+          position="static"
+          color="default"
+          style={{ marginBottom: "20px" }}
+        >
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            aria-label="full width tabs example"
+          >
+            <Tab label="Contacts" {...a11yProps(0)} />
+            <Tab label="Company" {...a11yProps(1)} />
+          </Tabs>
+        </AppBar>
+
+        <SwipeableViews
+          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+          index={value}
+          onChangeIndex={handleChangeIndex}
+        >
+          <TabPanel value={value} index={0} dir={theme.direction}>
+            <ContactSection />
+          </TabPanel>
+          <TabPanel value={value} index={1} dir={theme.direction}>
+            <CompanySection />
+          </TabPanel>
+        </SwipeableViews>
       </Container>
     </Page>
   );

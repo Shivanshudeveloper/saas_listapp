@@ -20,13 +20,13 @@ import { DocIcon } from "../../assets";
 
 // ----------------------------------------------------------------------
 
-const DRAWER_WIDTH = 240;
+const DRAWER_WIDTH = 270;
 
 const RootStyle = styled("div")(({ theme }) => ({
-  [theme.breakpoints.up("lg")]: {
-    flexShrink: 0,
-    width: DRAWER_WIDTH,
-  },
+  // [theme.breakpoints.down("lg")]: {
+  //   flexShrink: 0,
+  //   width: DRAWER_WIDTH,
+  // },
 }));
 
 const AccountStyle = styled("div")(({ theme }) => ({
@@ -123,6 +123,18 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
 
       <MHidden width="lgDown">
         <Drawer
+          open={isOpenSidebar}
+          onClose={onCloseSidebar}
+          PaperProps={{
+            sx: { width: DRAWER_WIDTH },
+          }}
+        >
+          {renderContent}
+        </Drawer>
+      </MHidden>
+
+      {/* <MHidden width="lgDown">
+        <Drawer
           open
           variant="persistent"
           PaperProps={{
@@ -131,7 +143,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         >
           {renderContent}
         </Drawer>
-      </MHidden>
+      </MHidden> */}
     </RootStyle>
   );
 }

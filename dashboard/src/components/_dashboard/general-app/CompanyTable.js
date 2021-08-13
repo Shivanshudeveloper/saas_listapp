@@ -1,0 +1,151 @@
+import React, { useState } from "react";
+
+import faker from "faker";
+import { Icon } from "@iconify/react";
+import { sentenceCase } from "change-case";
+import { Link as RouterLink } from "react-router-dom";
+// material
+import { useTheme } from "@material-ui/core/styles";
+import arrowIosForwardFill from "@iconify/icons-eva/arrow-ios-forward-fill";
+import {
+  Box,
+  Card,
+  Table,
+  Button,
+  TableRow,
+  TableBody,
+  TableCell,
+  TableHead,
+  CardHeader,
+  TableContainer,
+  IconButton,
+  Menu,
+  MenuItem,
+  Avatar,
+} from "@material-ui/core";
+import Scrollbar from "../../Scrollbar";
+
+import LockIcon from "@material-ui/icons/Lock";
+import SearchIcon from "@material-ui/icons/Search";
+import AddIcon from "@material-ui/icons/Add";
+// ----------------------------------------------------------------------
+
+const INVOICES = [
+  {
+    id: faker.datatype.uuid(),
+    name: faker.name.findName(),
+    company: "Microsoft",
+    keyword: "Marketing",
+  },
+  {
+    id: faker.datatype.uuid(),
+    name: faker.name.findName(),
+    company: "Google",
+    keyword: "Marketing",
+  },
+  {
+    id: faker.datatype.uuid(),
+    name: faker.name.findName(),
+    company: "Microsoft",
+    keyword: "Marketing",
+  },
+  {
+    id: faker.datatype.uuid(),
+    name: faker.name.findName(),
+    company: "Microsoft",
+    keyword: "Marketing",
+  },
+  {
+    id: faker.datatype.uuid(),
+    name: faker.name.findName(),
+    company: "Microsoft",
+    keyword: "Marketing",
+  },
+  {
+    id: faker.datatype.uuid(),
+    name: faker.name.findName(),
+    company: "Microsoft",
+    keyword: "Marketing",
+  },
+  {
+    id: faker.datatype.uuid(),
+    name: faker.name.findName(),
+    company: "Microsoft",
+    keyword: "Marketing",
+  },
+];
+
+// ----------------------------------------------------------------------
+
+export default function CompanyTable() {
+  const theme = useTheme();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <Card>
+      <CardHeader title="All Companies" sx={{ mb: 3 }} />
+
+      <Scrollbar>
+        <TableContainer sx={{ minWidth: 720 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Company</TableCell>
+                <TableCell>Industry</TableCell>
+                <TableCell>Sizes</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell>Technologies</TableCell>
+                <TableCell>Intel</TableCell>
+                <TableCell>Lists</TableCell>
+                <TableCell>Save</TableCell>
+                <TableCell>Find Contacts</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {INVOICES.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>
+                    <p style={{ fontWeight: "bold" }}>{row.name}</p>
+                    <p style={{ color: "grey" }}> {row.keyword}</p>
+                  </TableCell>
+                  <TableCell>Accounting</TableCell>
+                  <TableCell>1000-1500 employees</TableCell>
+                  <TableCell>New York, US</TableCell>
+                  <TableCell align="center"></TableCell>
+                  <TableCell align="center">
+                    <LockIcon />
+                  </TableCell>
+                  <TableCell align="center">
+                    <LockIcon />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Button color="primary" startIcon={<AddIcon />}>
+                      Save
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      startIcon={<SearchIcon />}
+                    >
+                      Find
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Scrollbar>
+    </Card>
+  );
+}
