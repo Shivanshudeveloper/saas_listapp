@@ -19,8 +19,6 @@ const CompanySection = () => {
             display: "flex",
             flexDirection: "column",
             p: 3,
-            maxHeight: "650px",
-            overflowY: "scroll",
           }}
         >
           <Typography variant="subtitle1">Filters</Typography>

@@ -2,7 +2,6 @@
 import { PATH_DASHBOARD } from "../../routes/paths";
 // components
 import SvgIconStyle from "../../components/SvgIconStyle";
-
 // ----------------------------------------------------------------------
 
 const getIcon = (name) => (
@@ -23,6 +22,7 @@ const ICONS = {
   analytics: getIcon("ic_analytics"),
   dashboard: getIcon("ic_dashboard"),
   kanban: getIcon("ic_kanban"),
+  company: getIcon("company"),
 };
 
 const sidebarConfig = [
@@ -39,7 +39,7 @@ const sidebarConfig = [
       {
         title: "company",
         path: PATH_DASHBOARD.general.company,
-        icon: ICONS.ecommerce,
+        icon: ICONS.company,
       },
       {
         title: "contacts",

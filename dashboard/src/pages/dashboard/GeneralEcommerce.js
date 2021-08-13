@@ -1,70 +1,167 @@
-// material
-import { Container, Grid } from "@material-ui/core";
-// components
 import Page from "../../components/Page";
 import {
-  EcommerceWelcome,
-  EcommerceNewProducts,
-  EcommerceProductSold,
-  EcommerceSalesProfit,
-  EcommerceYearlySales,
-  EcommerceBestSalesman,
-  EcommerceTotalBalance,
-  EcommerceSaleByGender,
-  EcommerceSalesOverview,
-  EcommerceLatestProducts,
-  EcommerceCurrentBalance,
-} from "../../components/_dashboard/general-ecommerce";
-
-// ----------------------------------------------------------------------
+  Box,
+  Typography,
+  Button,
+  Divider,
+  Container,
+  ListItem,
+  ListItemText,
+  List,
+} from "@material-ui/core";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import AddIcon from "@material-ui/icons/Add";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 export default function GeneralEcommerce() {
+  function LinearProgressWithLabel(props) {
+    return (
+      <Box display="flex" flexDirection="column">
+        <Box minWidth={35}>
+          <Typography variant="body2" color="textSecondary">{`${Math.round(
+            props.value
+          )}% to goal (0/100)`}</Typography>
+        </Box>
+        <Box width="100%" mr={1}>
+          <LinearProgress variant="determinate" {...props} />
+        </Box>
+      </Box>
+    );
+  }
+
+  const Highlight = ({ text }) => {
+    return <span style={{ color: "blue", padding: "0 5px" }}>{text}</span>;
+  };
+
+  function ListItemLink(props) {
+    return <ListItem button component="a" {...props} />;
+  }
+
   return (
-    <Page title="General: E-commerce | List App">
+    <Page title="Companies | List App">
       <Container maxWidth="xl">
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <EcommerceWelcome />
-          </Grid>
+        <Box
+          style={{
+            margin: "30px auto",
+            marginTop: "0px",
+            marginBottom: "30px",
+            display: "flex",
+            justifyContent: "space-between",
+            width: "95%",
+          }}
+        >
+          <Typography variant="h4">My Companies</Typography>
 
-          <Grid item xs={12} md={4}>
-            <EcommerceNewProducts />
-          </Grid>
+          <div style={{ display: "flex" }}>
+            <LinearProgressWithLabel
+              value="0"
+              style={{ marginRight: "10px", width: "150px" }}
+            />
+            <Button
+              variant="outlined"
+              color="primary"
+              style={{ marginRight: "10px" }}
+            >
+              Get Free Credits
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ marginRight: "10px" }}
+            >
+              Upgrade to Unlimited
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              style={{ marginRight: "10px" }}
+            >
+              Book a Demo
+            </Button>
+          </div>
+        </Box>
+        <Divider />
+        <Box display="flex" justifyContent="flex-end" marginTop={5}>
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ marginRight: "10px" }}
+            startIcon={<AddIcon />}
+          >
+            Import Companies
+          </Button>
+        </Box>
+        <Box
+          display="flex"
+          justifyContent="center"
+          flexDirection="column"
+          alignItems="center"
+          maxWidth="48%"
+          margin="0 auto"
+        >
+          {/* eslint-disable-next-line */}
+          <img
+            src={`/static/icons/navbar/company.svg`}
+            alt="company-image"
+            height="100"
+          />
+          <Typography variant="h6">
+            You don't have any companies yet!!
+          </Typography>
+          <Typography variant="body1">
+            Use the search bar on the left to easily find contacts or companies
+            for your targets, or simply click one of our search starters below
+            and see how Seamless.AI works!
+          </Typography>
 
-          <Grid item xs={12} md={4}>
-            <EcommerceProductSold />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <EcommerceTotalBalance />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <EcommerceSalesProfit />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <EcommerceSaleByGender />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <EcommerceYearlySales />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <EcommerceSalesOverview />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <EcommerceCurrentBalance />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <EcommerceBestSalesman />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <EcommerceLatestProducts />
-          </Grid>
-        </Grid>
+          <List component="nav" style={{ marginTop: "30px" }}>
+            <ListItemLink
+              href="#"
+              style={{
+                textAlign: "center",
+                border: "1px solid #dddddd",
+                marginTop: "10px",
+                borderRadius: "10px",
+              }}
+            >
+              <ListItemText>
+                Show me <Highlight text="Accounting" /> companies in
+                <Highlight text="New York" />
+              </ListItemText>
+            </ListItemLink>
+            <ListItemLink
+              href="#"
+              style={{
+                textAlign: "center",
+                border: "1px solid #dddddd",
+                marginTop: "10px",
+                borderRadius: "10px",
+              }}
+            >
+              <ListItemText>
+                Show me companies in <Highlight text="Computer Software" /> with
+                <Highlight text="500+ employees" />
+                in the
+                <Highlight text="US" />
+              </ListItemText>
+            </ListItemLink>
+            <ListItemLink
+              href="#"
+              style={{
+                textAlign: "center",
+                border: "1px solid #dddddd",
+                marginTop: "10px",
+                borderRadius: "10px",
+              }}
+            >
+              <ListItemText>
+                Show me <Highlight text="Internet" /> companies with
+                <Highlight text="10,000+ employees" /> in the
+                <Highlight text="US" />
+              </ListItemText>
+            </ListItemLink>
+          </List>
+        </Box>
       </Container>
     </Page>
   );

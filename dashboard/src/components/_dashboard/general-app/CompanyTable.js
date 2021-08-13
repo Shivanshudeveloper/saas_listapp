@@ -1,14 +1,8 @@
 import React, { useState } from "react";
 
 import faker from "faker";
-import { Icon } from "@iconify/react";
-import { sentenceCase } from "change-case";
-import { Link as RouterLink } from "react-router-dom";
-// material
 import { useTheme } from "@material-ui/core/styles";
-import arrowIosForwardFill from "@iconify/icons-eva/arrow-ios-forward-fill";
 import {
-  Box,
   Card,
   Table,
   Button,
@@ -18,10 +12,6 @@ import {
   TableHead,
   CardHeader,
   TableContainer,
-  IconButton,
-  Menu,
-  MenuItem,
-  Avatar,
 } from "@material-ui/core";
 import Scrollbar from "../../Scrollbar";
 

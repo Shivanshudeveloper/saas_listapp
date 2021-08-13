@@ -1,22 +1,22 @@
 // material
-import { experimentalStyled as styled } from '@material-ui/core/styles';
-import { Typography, Button, Card, CardContent } from '@material-ui/core';
+import { experimentalStyled as styled } from "@material-ui/core/styles";
+import { Typography, Button, Card, CardContent } from "@material-ui/core";
 //
-import { MotivationIllustration } from '../../../assets';
+import { MotivationIllustration } from "../../../assets";
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Card)(({ theme }) => ({
-  boxShadow: 'none',
-  textAlign: 'center',
+  boxShadow: "none",
+  textAlign: "center",
   backgroundColor: theme.palette.primary.lighter,
-  [theme.breakpoints.up('md')]: {
-    display: 'flex',
-    textAlign: 'left',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+  [theme.breakpoints.up("md")]: {
+    display: "flex",
+    textAlign: "left",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  [theme.breakpoints.up('xl')]: { height: 320 }
+  [theme.breakpoints.up("xl")]: { height: 320 },
 }));
 
 // ----------------------------------------------------------------------
@@ -26,9 +26,9 @@ export default function EcommerceWelcome() {
     <RootStyle>
       <CardContent
         sx={{
-          color: 'grey.800',
+          color: "grey.800",
           p: { md: 0 },
-          pl: { md: 5 }
+          pl: { md: 5 },
         }}
       >
         <Typography gutterBottom variant="h4">
@@ -36,7 +36,10 @@ export default function EcommerceWelcome() {
           <br /> Fabiana Capmany!
         </Typography>
 
-        <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>
+        <Typography
+          variant="body2"
+          sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: "auto" }}
+        >
           Best seller of the month You have done 57.6% more sales today.
         </Typography>
 
@@ -47,7 +50,7 @@ export default function EcommerceWelcome() {
         sx={{
           p: 2,
           height: 280,
-          margin: { xs: 'auto', md: 'inherit' }
+          margin: { xs: "auto", md: "inherit" },
         }}
       />
     </RootStyle>
