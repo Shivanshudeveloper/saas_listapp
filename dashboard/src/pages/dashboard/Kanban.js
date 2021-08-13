@@ -1,15 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 // material
-import { Container, Stack } from '@material-ui/core';
+import { Container, Stack } from "@material-ui/core";
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
-import { getBoard } from '../../redux/slices/kanban';
+import { useDispatch, useSelector } from "../../redux/store";
+import { getBoard } from "../../redux/slices/kanban";
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from "../../routes/paths";
 // components
-import Page from '../../components/Page';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { KanbanColumn, KanbanColumnAdd } from '../../components/_dashboard/kanban';
+import Page from "../../components/Page";
+import HeaderBreadcrumbs from "../../components/HeaderBreadcrumbs";
+import {
+  KanbanColumn,
+  KanbanColumnAdd,
+} from "../../components/_dashboard/kanban";
 
 // ----------------------------------------------------------------------
 
@@ -22,23 +25,23 @@ export default function Kanban() {
   }, [dispatch]);
 
   return (
-    <Page title="Kanban | Minimal-UI" sx={{ height: '100%' }}>
-      <Container maxWidth={false} sx={{ height: '100%' }}>
+    <Page title="Kanban | List App" sx={{ height: "100%" }}>
+      <Container maxWidth={false} sx={{ height: "100%" }}>
         <HeaderBreadcrumbs
           heading="Kanban"
           links={[
             {
-              name: 'Dashboard',
-              href: PATH_DASHBOARD.root
+              name: "Dashboard",
+              href: PATH_DASHBOARD.root,
             },
-            { name: 'Kanban' }
+            { name: "Kanban" },
           ]}
         />
         <Stack
           direction="row"
           alignItems="flex-start"
           spacing={3}
-          sx={{ height: 'calc(100% - 32px)', overflowY: 'hidden' }}
+          sx={{ height: "calc(100% - 32px)", overflowY: "hidden" }}
         >
           {board?.columns?.map((column) => (
             <KanbanColumn key={column.id} column={column} />

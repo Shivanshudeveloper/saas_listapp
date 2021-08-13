@@ -1,31 +1,38 @@
-import { useSnackbar } from 'notistack';
-import closeFill from '@iconify/icons-eva/close-fill';
-import { Icon } from '@iconify/react';
+import { useSnackbar } from "notistack";
+import closeFill from "@iconify/icons-eva/close-fill";
+import { Icon } from "@iconify/react";
 // material
-import { experimentalStyled as styled } from '@material-ui/core/styles';
-import { Box, Grid, Button, Container, Typography, IconButton } from '@material-ui/core';
+import { experimentalStyled as styled } from "@material-ui/core/styles";
+import {
+  Box,
+  Grid,
+  Button,
+  Container,
+  Typography,
+  IconButton,
+} from "@material-ui/core";
 // routes
-import { PATH_PAGE } from '../../../routes/paths';
+import { PATH_PAGE } from "../../../routes/paths";
 // components
-import Page from '../../../components/Page';
-import { MButton } from '../../../components/@material-extend';
-import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
+import Page from "../../../components/Page";
+import { MButton } from "../../../components/@material-extend";
+import HeaderBreadcrumbs from "../../../components/HeaderBreadcrumbs";
 //
-import { Block } from '../Block';
+import { Block } from "../Block";
 
 // ----------------------------------------------------------------------
 
 const style = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexWrap: 'wrap',
-  '& > *': { mx: '8px !important' }
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexWrap: "wrap",
+  "& > *": { mx: "8px !important" },
 };
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(11),
-  paddingBottom: theme.spacing(15)
+  paddingBottom: theme.spacing(15),
 }));
 
 // ----------------------------------------------------------------------
@@ -36,20 +43,24 @@ export default function SnackbarComponent() {
   const onSnackbarClose = (color) => {
     enqueueSnackbar(
       <div>
-        <Typography variant="subtitle2" sx={{ textTransform: 'capitalize' }}>
+        <Typography variant="subtitle2" sx={{ textTransform: "capitalize" }}>
           {color}
         </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
           This is an {color}
         </Typography>
       </div>,
       {
         variant: color,
         action: (key) => (
-          <IconButton size="small" color="inherit" onClick={() => closeSnackbar(key)}>
+          <IconButton
+            size="small"
+            color="inherit"
+            onClick={() => closeSnackbar(key)}
+          >
             <Icon icon={closeFill} width={24} height={24} />
           </IconButton>
-        )
+        ),
       }
     );
   };
@@ -62,36 +73,47 @@ export default function SnackbarComponent() {
         <>
           <Button
             size="small"
-            color={color !== 'default' ? color : 'primary'}
+            color={color !== "default" ? color : "primary"}
             onClick={() => {
               alert(`I belong to snackbar with key ${key}`);
             }}
           >
             Alert
           </Button>
-          <Button size="small" color="inherit" onClick={() => closeSnackbar(key)}>
+          <Button
+            size="small"
+            color="inherit"
+            onClick={() => closeSnackbar(key)}
+          >
             Dismiss
           </Button>
         </>
-      )
+      ),
     });
   };
 
   return (
-    <RootStyle title="Components: Snackbar | Minimal-UI">
+    <RootStyle title="Components: Snackbar | List App">
       <Box
         sx={{
           pt: 6,
           pb: 1,
           mb: 10,
-          bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.200' : 'grey.800')
+          bgcolor: (theme) =>
+            theme.palette.mode === "light" ? "grey.200" : "grey.800",
         }}
       >
         <Container maxWidth="lg">
           <HeaderBreadcrumbs
             heading="Snackbar"
-            links={[{ name: 'Components', href: PATH_PAGE.components }, { name: 'Snackbar' }]}
-            moreLink={['https://next.material-ui.com/components/snackbars', 'https://www.iamhosseindhv.com/notistack']}
+            links={[
+              { name: "Components", href: PATH_PAGE.components },
+              { name: "Snackbar" },
+            ]}
+            moreLink={[
+              "https://next.material-ui.com/components/snackbars",
+              "https://www.iamhosseindhv.com/notistack",
+            ]}
           />
         </Container>
       </Box>
@@ -100,13 +122,19 @@ export default function SnackbarComponent() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <Block title="Simple" sx={style}>
-              <Button variant="contained" color="inherit" onClick={() => enqueueSnackbar('This is an default')}>
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={() => enqueueSnackbar("This is an default")}
+              >
                 Default
               </Button>
               <MButton
                 variant="contained"
                 color="info"
-                onClick={() => enqueueSnackbar('This is an info', { variant: 'info' })}
+                onClick={() =>
+                  enqueueSnackbar("This is an info", { variant: "info" })
+                }
               >
                 Info
               </MButton>
@@ -114,8 +142,8 @@ export default function SnackbarComponent() {
                 variant="contained"
                 color="success"
                 onClick={() =>
-                  enqueueSnackbar('This is an success', {
-                    variant: 'success'
+                  enqueueSnackbar("This is an success", {
+                    variant: "success",
                   })
                 }
               >
@@ -125,8 +153,8 @@ export default function SnackbarComponent() {
                 variant="contained"
                 color="warning"
                 onClick={() =>
-                  enqueueSnackbar('This is an warning', {
-                    variant: 'warning'
+                  enqueueSnackbar("This is an warning", {
+                    variant: "warning",
                   })
                 }
               >
@@ -135,7 +163,9 @@ export default function SnackbarComponent() {
               <MButton
                 variant="contained"
                 color="error"
-                onClick={() => enqueueSnackbar('This is an error', { variant: 'error' })}
+                onClick={() =>
+                  enqueueSnackbar("This is an error", { variant: "error" })
+                }
               >
                 Error
               </MButton>
@@ -144,19 +174,39 @@ export default function SnackbarComponent() {
 
           <Grid item xs={12} md={6}>
             <Block title="With Close" sx={style}>
-              <Button variant="contained" color="inherit" onClick={() => onSnackbarClose('default')}>
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={() => onSnackbarClose("default")}
+              >
                 Default
               </Button>
-              <MButton variant="contained" color="info" onClick={() => onSnackbarClose('info')}>
+              <MButton
+                variant="contained"
+                color="info"
+                onClick={() => onSnackbarClose("info")}
+              >
                 Info
               </MButton>
-              <MButton variant="contained" color="success" onClick={() => onSnackbarClose('success')}>
+              <MButton
+                variant="contained"
+                color="success"
+                onClick={() => onSnackbarClose("success")}
+              >
                 Success
               </MButton>
-              <MButton variant="contained" color="warning" onClick={() => onSnackbarClose('warning')}>
+              <MButton
+                variant="contained"
+                color="warning"
+                onClick={() => onSnackbarClose("warning")}
+              >
                 Warning
               </MButton>
-              <MButton variant="contained" color="error" onClick={() => onSnackbarClose('error')}>
+              <MButton
+                variant="contained"
+                color="error"
+                onClick={() => onSnackbarClose("error")}
+              >
                 Error
               </MButton>
             </Block>
@@ -164,19 +214,39 @@ export default function SnackbarComponent() {
 
           <Grid item xs={12} md={6}>
             <Block title="With Action" sx={style}>
-              <Button variant="contained" color="inherit" onClick={() => onSnackbarAction('default')}>
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={() => onSnackbarAction("default")}
+              >
                 Default
               </Button>
-              <MButton variant="contained" color="info" onClick={() => onSnackbarAction('info')}>
+              <MButton
+                variant="contained"
+                color="info"
+                onClick={() => onSnackbarAction("info")}
+              >
                 Info
               </MButton>
-              <MButton variant="contained" color="success" onClick={() => onSnackbarAction('success')}>
+              <MButton
+                variant="contained"
+                color="success"
+                onClick={() => onSnackbarAction("success")}
+              >
                 Success
               </MButton>
-              <MButton variant="contained" color="warning" onClick={() => onSnackbarAction('warning')}>
+              <MButton
+                variant="contained"
+                color="warning"
+                onClick={() => onSnackbarAction("warning")}
+              >
                 Warning
               </MButton>
-              <MButton variant="contained" color="error" onClick={() => onSnackbarAction('error')}>
+              <MButton
+                variant="contained"
+                color="error"
+                onClick={() => onSnackbarAction("error")}
+              >
                 Error
               </MButton>
             </Block>
@@ -188,9 +258,9 @@ export default function SnackbarComponent() {
                 variant="text"
                 color="inherit"
                 onClick={() =>
-                  onSnackbarAction('default', {
-                    vertical: 'top',
-                    horizontal: 'left'
+                  onSnackbarAction("default", {
+                    vertical: "top",
+                    horizontal: "left",
                   })
                 }
               >
@@ -200,24 +270,28 @@ export default function SnackbarComponent() {
                 variant="text"
                 color="inherit"
                 onClick={() =>
-                  onSnackbarAction('default', {
-                    vertical: 'top',
-                    horizontal: 'center'
+                  onSnackbarAction("default", {
+                    vertical: "top",
+                    horizontal: "center",
                   })
                 }
               >
                 Top Center
               </Button>
-              <Button variant="text" color="inherit" onClick={() => onSnackbarAction('default')}>
+              <Button
+                variant="text"
+                color="inherit"
+                onClick={() => onSnackbarAction("default")}
+              >
                 Top Right
               </Button>
               <Button
                 variant="text"
                 color="inherit"
                 onClick={() =>
-                  onSnackbarAction('default', {
-                    vertical: 'bottom',
-                    horizontal: 'left'
+                  onSnackbarAction("default", {
+                    vertical: "bottom",
+                    horizontal: "left",
                   })
                 }
               >
@@ -227,9 +301,9 @@ export default function SnackbarComponent() {
                 variant="text"
                 color="inherit"
                 onClick={() =>
-                  onSnackbarAction('default', {
-                    vertical: 'bottom',
-                    horizontal: 'center'
+                  onSnackbarAction("default", {
+                    vertical: "bottom",
+                    horizontal: "center",
                   })
                 }
               >
@@ -239,9 +313,9 @@ export default function SnackbarComponent() {
                 variant="text"
                 color="inherit"
                 onClick={() =>
-                  onSnackbarAction('default', {
-                    vertical: 'bottom',
-                    horizontal: 'right'
+                  onSnackbarAction("default", {
+                    vertical: "bottom",
+                    horizontal: "right",
                   })
                 }
               >

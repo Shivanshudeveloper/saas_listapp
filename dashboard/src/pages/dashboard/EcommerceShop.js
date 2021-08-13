@@ -1,58 +1,71 @@
-import { useFormik } from 'formik';
-import { useEffect, useState } from 'react';
-import { filter, includes, orderBy } from 'lodash';
+import { useFormik } from "formik";
+import { useEffect, useState } from "react";
+import { filter, includes, orderBy } from "lodash";
 // material
-import { Backdrop, Container, Typography, CircularProgress, Stack } from '@material-ui/core';
+import {
+  Backdrop,
+  Container,
+  Typography,
+  CircularProgress,
+  Stack,
+} from "@material-ui/core";
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts, filterProducts } from '../../redux/slices/product';
+import { useDispatch, useSelector } from "../../redux/store";
+import { getProducts, filterProducts } from "../../redux/slices/product";
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from "../../routes/paths";
 // utils
-import fakeRequest from '../../utils/fakeRequest';
+import fakeRequest from "../../utils/fakeRequest";
 // components
-import Page from '../../components/Page';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import Page from "../../components/Page";
+import HeaderBreadcrumbs from "../../components/HeaderBreadcrumbs";
 import {
   ShopTagFiltered,
   ShopProductSort,
   ShopProductList,
-  ShopFilterSidebar
-} from '../../components/_dashboard/e-commerce/shop';
-import CartWidget from '../../components/_dashboard/e-commerce/CartWidget';
+  ShopFilterSidebar,
+} from "../../components/_dashboard/e-commerce/shop";
+import CartWidget from "../../components/_dashboard/e-commerce/CartWidget";
 
 // ----------------------------------------------------------------------
 
 function applyFilter(products, sortBy, filters) {
   // SORT BY
-  if (sortBy === 'featured') {
-    products = orderBy(products, ['sold'], ['desc']);
+  if (sortBy === "featured") {
+    products = orderBy(products, ["sold"], ["desc"]);
   }
-  if (sortBy === 'newest') {
-    products = orderBy(products, ['createdAt'], ['desc']);
+  if (sortBy === "newest") {
+    products = orderBy(products, ["createdAt"], ["desc"]);
   }
-  if (sortBy === 'priceDesc') {
-    products = orderBy(products, ['price'], ['desc']);
+  if (sortBy === "priceDesc") {
+    products = orderBy(products, ["price"], ["desc"]);
   }
-  if (sortBy === 'priceAsc') {
-    products = orderBy(products, ['price'], ['asc']);
+  if (sortBy === "priceAsc") {
+    products = orderBy(products, ["price"], ["asc"]);
   }
   // FILTER PRODUCTS
   if (filters.gender.length > 0) {
-    products = filter(products, (_product) => includes(filters.gender, _product.gender));
+    products = filter(products, (_product) =>
+      includes(filters.gender, _product.gender)
+    );
   }
-  if (filters.category !== 'All') {
-    products = filter(products, (_product) => _product.category === filters.category);
+  if (filters.category !== "All") {
+    products = filter(
+      products,
+      (_product) => _product.category === filters.category
+    );
   }
   if (filters.colors.length > 0) {
-    products = filter(products, (_product) => _product.colors.some((color) => filters.colors.includes(color)));
+    products = filter(products, (_product) =>
+      _product.colors.some((color) => filters.colors.includes(color))
+    );
   }
   if (filters.priceRange) {
     products = filter(products, (_product) => {
-      if (filters.priceRange === 'below') {
+      if (filters.priceRange === "below") {
         return _product.price < 25;
       }
-      if (filters.priceRange === 'between') {
+      if (filters.priceRange === "between") {
         return _product.price >= 25 && _product.price <= 75;
       }
       return _product.price > 75;
@@ -61,9 +74,9 @@ function applyFilter(products, sortBy, filters) {
   if (filters.rating) {
     products = filter(products, (_product) => {
       const convertRating = (value) => {
-        if (value === 'up4Star') return 4;
-        if (value === 'up3Star') return 3;
-        if (value === 'up2Star') return 2;
+        if (value === "up4Star") return 4;
+        if (value === "up3Star") return 3;
+        if (value === "up2Star") return 2;
         return 1;
       };
       return _product.totalRating > convertRating(filters.rating);
@@ -84,7 +97,7 @@ export default function EcommerceShop() {
       category: filters.category,
       colors: filters.colors,
       priceRange: filters.priceRange,
-      rating: filters.rating
+      rating: filters.rating,
     },
     onSubmit: async (values, { setSubmitting }) => {
       try {
@@ -94,10 +107,11 @@ export default function EcommerceShop() {
         console.error(error);
         setSubmitting(false);
       }
-    }
+    },
   });
 
-  const { values, resetForm, handleSubmit, isSubmitting, initialValues } = formik;
+  const { values, resetForm, handleSubmit, isSubmitting, initialValues } =
+    formik;
 
   useEffect(() => {
     dispatch(getProducts());
@@ -121,7 +135,7 @@ export default function EcommerceShop() {
   };
 
   return (
-    <Page title="Ecommerce: Shop | Minimal-UI">
+    <Page title="Ecommerce: Shop | List App">
       {values && (
         <Backdrop open={isSubmitting} sx={{ zIndex: 9999 }}>
           <CircularProgress />
@@ -132,12 +146,12 @@ export default function EcommerceShop() {
         <HeaderBreadcrumbs
           heading="Shop"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: "Dashboard", href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root
+              name: "E-Commerce",
+              href: PATH_DASHBOARD.eCommerce.root,
             },
-            { name: 'Shop' }
+            { name: "Shop" },
           ]}
         />
 
@@ -150,7 +164,13 @@ export default function EcommerceShop() {
           </Typography>
         )}
 
-        <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
+        <Stack
+          direction="row"
+          flexWrap="wrap-reverse"
+          alignItems="center"
+          justifyContent="flex-end"
+          sx={{ mb: 5 }}
+        >
           <ShopTagFiltered
             filters={filters}
             formik={formik}
@@ -170,7 +190,10 @@ export default function EcommerceShop() {
           </Stack>
         </Stack>
 
-        <ShopProductList products={filteredProducts} isLoad={!filteredProducts && !initialValues} />
+        <ShopProductList
+          products={filteredProducts}
+          isLoad={!filteredProducts && !initialValues}
+        />
         <CartWidget />
       </Container>
     </Page>

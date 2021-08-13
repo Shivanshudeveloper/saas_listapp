@@ -1,15 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 // material
-import { Container, Grid, Skeleton } from '@material-ui/core';
+import { Container, Grid, Skeleton } from "@material-ui/core";
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
-import { getUsers } from '../../redux/slices/user';
+import { useDispatch, useSelector } from "../../redux/store";
+import { getUsers } from "../../redux/slices/user";
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from "../../routes/paths";
 // components
-import Page from '../../components/Page';
-import { UserCard } from '../../components/_dashboard/user/cards';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import Page from "../../components/Page";
+import { UserCard } from "../../components/_dashboard/user/cards";
+import HeaderBreadcrumbs from "../../components/HeaderBreadcrumbs";
 
 // ----------------------------------------------------------------------
 
@@ -17,7 +17,11 @@ const SkeletonLoad = (
   <>
     {[...Array(8)].map((_, index) => (
       <Grid item xs={12} sm={6} md={4} key={index}>
-        <Skeleton variant="rectangular" width="100%" sx={{ paddingTop: '115%', borderRadius: 2 }} />
+        <Skeleton
+          variant="rectangular"
+          width="100%"
+          sx={{ paddingTop: "115%", borderRadius: 2 }}
+        />
       </Grid>
     ))}
   </>
@@ -32,14 +36,14 @@ export default function UserCards() {
   }, [dispatch]);
 
   return (
-    <Page title="User: Cards | Minimal-UI">
+    <Page title="User: Cards | List App">
       <Container>
         <HeaderBreadcrumbs
           heading="User Cards"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'Cards' }
+            { name: "Dashboard", href: PATH_DASHBOARD.root },
+            { name: "User", href: PATH_DASHBOARD.user.root },
+            { name: "Cards" },
           ]}
         />
         <Grid container spacing={3}>

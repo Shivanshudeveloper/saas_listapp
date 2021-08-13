@@ -1,52 +1,56 @@
 // material
-import { experimentalStyled as styled } from '@material-ui/core/styles';
-import { Box, Grid, Container } from '@material-ui/core';
+import { experimentalStyled as styled } from "@material-ui/core/styles";
+import { Box, Grid, Container } from "@material-ui/core";
 // routes
-import { PATH_PAGE } from '../../../../routes/paths';
+import { PATH_PAGE } from "../../../../routes/paths";
 // components
-import Page from '../../../../components/Page';
-import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
+import Page from "../../../../components/Page";
+import HeaderBreadcrumbs from "../../../../components/HeaderBreadcrumbs";
 //
-import FormDialogs from './FormDialogs';
-import AlertDialog from './AlertDialog';
-import ScrollDialog from './ScrollDialog';
-import SimpleDialogs from './SimpleDialogs';
-import MaxWidthDialog from './MaxWidthDialog';
-import FullScreenDialogs from './FullScreenDialogs';
-import TransitionsDialogs from './TransitionsDialogs';
+import FormDialogs from "./FormDialogs";
+import AlertDialog from "./AlertDialog";
+import ScrollDialog from "./ScrollDialog";
+import SimpleDialogs from "./SimpleDialogs";
+import MaxWidthDialog from "./MaxWidthDialog";
+import FullScreenDialogs from "./FullScreenDialogs";
+import TransitionsDialogs from "./TransitionsDialogs";
 //
-import { Block } from '../../Block';
+import { Block } from "../../Block";
 
 // ----------------------------------------------------------------------
 
 const style = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(11),
-  paddingBottom: theme.spacing(15)
+  paddingBottom: theme.spacing(15),
 }));
 
 // ----------------------------------------------------------------------
 
 export default function DialogComponent() {
   return (
-    <RootStyle title="Components: Dialog | Minimal-UI">
+    <RootStyle title="Components: Dialog | List App">
       <Box
         sx={{
           pt: 6,
           pb: 1,
           mb: 10,
-          bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.200' : 'grey.800')
+          bgcolor: (theme) =>
+            theme.palette.mode === "light" ? "grey.200" : "grey.800",
         }}
       >
         <Container maxWidth="lg">
           <HeaderBreadcrumbs
             heading="Dialog"
-            links={[{ name: 'Components', href: PATH_PAGE.components }, { name: 'Dialog' }]}
+            links={[
+              { name: "Components", href: PATH_PAGE.components },
+              { name: "Dialog" },
+            ]}
             moreLink="https://next.material-ui.com/components/dialogs"
           />
         </Container>

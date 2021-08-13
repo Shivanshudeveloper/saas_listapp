@@ -1,30 +1,30 @@
 // material
-import { experimentalStyled as styled } from '@material-ui/core/styles';
-import { Container } from '@material-ui/core';
+import { experimentalStyled as styled } from "@material-ui/core/styles";
+import { Container } from "@material-ui/core";
 // components
-import Page from '../components/Page';
+import Page from "../components/Page";
 import {
   ComponentHero,
   ComponentOther,
   ComponentFoundation,
-  ComponentMaterialUI
-} from '../components/_external-pages/components-overview';
+  ComponentMaterialUI,
+} from "../components/_external-pages/components-overview";
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(8),
   paddingBottom: theme.spacing(15),
-  [theme.breakpoints.up('md')]: {
-    paddingTop: theme.spacing(11)
-  }
+  [theme.breakpoints.up("md")]: {
+    paddingTop: theme.spacing(11),
+  },
 }));
 
 // ----------------------------------------------------------------------
 
 export default function ComponentsOverview() {
   return (
-    <RootStyle title="Components Overview | Minimal-UI">
+    <RootStyle title="Components Overview | List App">
       <ComponentHero />
       <Container maxWidth="lg">
         <ComponentFoundation />

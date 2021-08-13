@@ -1,39 +1,50 @@
 // material
-import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
-import { Box, Alert, Button, Container, AlertTitle, Stack } from '@material-ui/core';
+import { alpha, experimentalStyled as styled } from "@material-ui/core/styles";
+import {
+  Box,
+  Alert,
+  Button,
+  Container,
+  AlertTitle,
+  Stack,
+} from "@material-ui/core";
 // routes
-import { PATH_PAGE } from '../../../routes/paths';
+import { PATH_PAGE } from "../../../routes/paths";
 // components
-import Page from '../../../components/Page';
-import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
-import { MButton } from '../../../components/@material-extend';
+import Page from "../../../components/Page";
+import HeaderBreadcrumbs from "../../../components/HeaderBreadcrumbs";
+import { MButton } from "../../../components/@material-extend";
 //
-import { Block } from '../Block';
+import { Block } from "../Block";
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(11),
-  paddingBottom: theme.spacing(15)
+  paddingBottom: theme.spacing(15),
 }));
 
 // ----------------------------------------------------------------------
 
 export default function AlertsComponent() {
   return (
-    <RootStyle title="Components: Alert | Minimal-UI">
+    <RootStyle title="Components: Alert | List App">
       <Box
         sx={{
           pt: 6,
           pb: 1,
           mb: 10,
-          bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.200' : 'grey.800')
+          bgcolor: (theme) =>
+            theme.palette.mode === "light" ? "grey.200" : "grey.800",
         }}
       >
         <Container maxWidth="lg">
           <HeaderBreadcrumbs
             heading="Alert"
-            links={[{ name: 'Components', href: PATH_PAGE.components }, { name: 'Alert' }]}
+            links={[
+              { name: "Components", href: PATH_PAGE.components },
+              { name: "Alert" },
+            ]}
             moreLink="https://next.material-ui.com/components/alert"
           />
         </Container>
@@ -49,8 +60,12 @@ export default function AlertsComponent() {
               <Alert severity="warning" onClose={() => {}}>
                 This is a warning alert — check it out!
               </Alert>
-              <Alert severity="info">This is an info alert — check it out!</Alert>
-              <Alert severity="success">This is a success alert — check it out!</Alert>
+              <Alert severity="info">
+                This is an info alert — check it out!
+              </Alert>
+              <Alert severity="success">
+                This is a success alert — check it out!
+              </Alert>
             </Stack>
           </Block>
 
@@ -130,7 +145,8 @@ export default function AlertsComponent() {
                     size="small"
                     variant="outlined"
                     sx={{
-                      border: (theme) => `1px solid ${alpha(theme.palette.common.white, 0.48)}`
+                      border: (theme) =>
+                        `1px solid ${alpha(theme.palette.common.white, 0.48)}`,
                     }}
                   >
                     Undo

@@ -1,11 +1,11 @@
-import { last, slice } from 'lodash';
+import { last, slice } from "lodash";
 // material
-import HotelIcon from '@material-ui/icons/Hotel';
-import RepeatIcon from '@material-ui/icons/Repeat';
-import FastfoodIcon from '@material-ui/icons/Fastfood';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-import { experimentalStyled as styled } from '@material-ui/core/styles';
-import { Box, Grid, Paper, Container, Typography } from '@material-ui/core';
+import HotelIcon from "@material-ui/icons/Hotel";
+import RepeatIcon from "@material-ui/icons/Repeat";
+import FastfoodIcon from "@material-ui/icons/Fastfood";
+import LaptopMacIcon from "@material-ui/icons/LaptopMac";
+import { experimentalStyled as styled } from "@material-ui/core/styles";
+import { Box, Grid, Paper, Container, Typography } from "@material-ui/core";
 import {
   Timeline,
   TimelineDot,
@@ -13,80 +13,80 @@ import {
   TimelineContent,
   TimelineSeparator,
   TimelineConnector,
-  TimelineOppositeContent
-} from '@material-ui/lab';
+  TimelineOppositeContent,
+} from "@material-ui/lab";
 // routes
-import { PATH_PAGE } from '../../../routes/paths';
+import { PATH_PAGE } from "../../../routes/paths";
 // components
-import Page from '../../../components/Page';
-import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
-import { MTimelineDot } from '../../../components/@material-extend';
+import Page from "../../../components/Page";
+import HeaderBreadcrumbs from "../../../components/HeaderBreadcrumbs";
+import { MTimelineDot } from "../../../components/@material-extend";
 //
-import { Block } from '../Block';
+import { Block } from "../Block";
 
 // ----------------------------------------------------------------------
 
 const TIMELINES = [
   {
     key: 1,
-    title: 'Default',
-    des: 'Morbi mattis ullamcorper',
-    time: '09:30 am',
-    icon: <FastfoodIcon />
+    title: "Default",
+    des: "Morbi mattis ullamcorper",
+    time: "09:30 am",
+    icon: <FastfoodIcon />,
   },
   {
     key: 2,
-    title: 'Primary',
-    des: 'Morbi mattis ullamcorper',
-    time: '10:00 am',
-    color: 'primary',
-    icon: <LaptopMacIcon />
+    title: "Primary",
+    des: "Morbi mattis ullamcorper",
+    time: "10:00 am",
+    color: "primary",
+    icon: <LaptopMacIcon />,
   },
   {
     key: 3,
-    title: 'Secondary',
-    des: 'Morbi mattis ullamcorper',
-    time: '10:00 am',
-    color: 'secondary',
-    icon: <LaptopMacIcon />
+    title: "Secondary",
+    des: "Morbi mattis ullamcorper",
+    time: "10:00 am",
+    color: "secondary",
+    icon: <LaptopMacIcon />,
   },
   {
     key: 4,
-    title: 'Info',
-    des: 'Morbi mattis ullamcorper',
-    time: '10:30 am',
-    color: 'info',
-    icon: <HotelIcon />
+    title: "Info",
+    des: "Morbi mattis ullamcorper",
+    time: "10:30 am",
+    color: "info",
+    icon: <HotelIcon />,
   },
   {
     key: 5,
-    title: 'Success',
-    des: 'Morbi mattis ullamcorper',
-    time: '11:00 am',
-    color: 'success',
-    icon: <RepeatIcon />
+    title: "Success",
+    des: "Morbi mattis ullamcorper",
+    time: "11:00 am",
+    color: "success",
+    icon: <RepeatIcon />,
   },
   {
     key: 6,
-    title: 'Warning',
-    des: 'Morbi mattis ullamcorper',
-    time: '11:30 am',
-    color: 'warning',
-    icon: <FastfoodIcon />
+    title: "Warning",
+    des: "Morbi mattis ullamcorper",
+    time: "11:30 am",
+    color: "warning",
+    icon: <FastfoodIcon />,
   },
   {
     key: 7,
-    title: 'Error',
-    des: 'Morbi mattis ullamcorper',
-    time: '12:00 am',
-    color: 'error',
-    icon: <FastfoodIcon />
-  }
+    title: "Error",
+    des: "Morbi mattis ullamcorper",
+    time: "12:00 am",
+    color: "error",
+    icon: <FastfoodIcon />,
+  },
 ];
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(11),
-  paddingBottom: theme.spacing(15)
+  paddingBottom: theme.spacing(15),
 }));
 
 // ----------------------------------------------------------------------
@@ -96,19 +96,23 @@ export default function TimelineComponent() {
   const reduceTimeLine = slice(TIMELINES, TIMELINES.length - 3);
 
   return (
-    <RootStyle title="Components: Timeline | Minimal-UI">
+    <RootStyle title="Components: Timeline | List App">
       <Box
         sx={{
           pt: 6,
           pb: 1,
           mb: 10,
-          bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.200' : 'grey.800')
+          bgcolor: (theme) =>
+            theme.palette.mode === "light" ? "grey.200" : "grey.800",
         }}
       >
         <Container maxWidth="lg">
           <HeaderBreadcrumbs
             heading="Timeline"
-            links={[{ name: 'Components', href: PATH_PAGE.components }, { name: 'Timeline' }]}
+            links={[
+              { name: "Components", href: PATH_PAGE.components },
+              { name: "Timeline" },
+            ]}
             moreLink="https://next.material-ui.com/components/timeline"
           />
         </Container>
@@ -202,7 +206,9 @@ export default function TimelineComponent() {
                 {TIMELINES.map((item) => (
                   <TimelineItem key={item.key}>
                     <TimelineOppositeContent>
-                      <Typography sx={{ color: 'text.secondary' }}>{item.time}</Typography>
+                      <Typography sx={{ color: "text.secondary" }}>
+                        {item.time}
+                      </Typography>
                     </TimelineOppositeContent>
                     <TimelineSeparator>
                       <MTimelineDot color={item.color} />
@@ -223,23 +229,33 @@ export default function TimelineComponent() {
                 {TIMELINES.map((item) => (
                   <TimelineItem key={item.key}>
                     <TimelineOppositeContent>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary" }}
+                      >
                         {item.time}
                       </Typography>
                     </TimelineOppositeContent>
                     <TimelineSeparator>
-                      <MTimelineDot color={item.color}>{item.icon}</MTimelineDot>
+                      <MTimelineDot color={item.color}>
+                        {item.icon}
+                      </MTimelineDot>
                       <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
                       <Paper
                         sx={{
                           p: 3,
-                          bgcolor: 'grey.50012'
+                          bgcolor: "grey.50012",
                         }}
                       >
-                        <Typography variant="subtitle2">{item.title}</Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        <Typography variant="subtitle2">
+                          {item.title}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: "text.secondary" }}
+                        >
                           {item.des}
                         </Typography>
                       </Paper>

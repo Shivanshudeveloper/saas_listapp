@@ -1,35 +1,35 @@
-import { useState } from 'react';
+import { useState } from "react";
 // material
-import { experimentalStyled as styled } from '@material-ui/core/styles';
-import { Box, Container, Tab } from '@material-ui/core';
-import { TabPanel, TabContext, TabList } from '@material-ui/lab';
+import { experimentalStyled as styled } from "@material-ui/core/styles";
+import { Box, Container, Tab } from "@material-ui/core";
+import { TabPanel, TabContext, TabList } from "@material-ui/lab";
 // routes
-import { PATH_PAGE } from '../../../../routes/paths';
+import { PATH_PAGE } from "../../../../routes/paths";
 // material
-import Page from '../../../../components/Page';
-import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
+import Page from "../../../../components/Page";
+import HeaderBreadcrumbs from "../../../../components/HeaderBreadcrumbs";
 //
-import Filled from './Filled';
-import Standard from './Standard';
-import Outlined from './Outlined';
+import Filled from "./Filled";
+import Standard from "./Standard";
+import Outlined from "./Outlined";
 
 // ----------------------------------------------------------------------
 
 const TEXTFIELDS = [
-  { name: 'Filled', component: <Filled /> },
-  { name: 'Standard', component: <Standard /> },
-  { name: 'Outlined', component: <Outlined /> }
+  { name: "Filled", component: <Filled /> },
+  { name: "Standard", component: <Standard /> },
+  { name: "Outlined", component: <Outlined /> },
 ];
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(11),
-  paddingBottom: theme.spacing(15)
+  paddingBottom: theme.spacing(15),
 }));
 
 export default function TextFieldComponent() {
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState("1");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -38,19 +38,23 @@ export default function TextFieldComponent() {
   // ----------------------------------------------------------------------
 
   return (
-    <RootStyle title="Components: TextField | Minimal-UI">
+    <RootStyle title="Components: TextField | List App">
       <Box
         sx={{
           pt: 6,
           pb: 1,
           mb: 10,
-          bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.200' : 'grey.800')
+          bgcolor: (theme) =>
+            theme.palette.mode === "light" ? "grey.200" : "grey.800",
         }}
       >
         <Container maxWidth="lg">
           <HeaderBreadcrumbs
             heading="TextField"
-            links={[{ name: 'Components', href: PATH_PAGE.components }, { name: 'TextField' }]}
+            links={[
+              { name: "Components", href: PATH_PAGE.components },
+              { name: "TextField" },
+            ]}
             moreLink="https://next.material-ui.com/components/text-fields"
           />
         </Container>
@@ -61,7 +65,12 @@ export default function TextFieldComponent() {
           <TabContext value={value}>
             <TabList onChange={handleChange}>
               {TEXTFIELDS.map((tab, index) => (
-                <Tab disableRipple key={tab.name} label={tab.name} value={String(index + 1)} />
+                <Tab
+                  disableRipple
+                  key={tab.name}
+                  label={tab.name}
+                  value={String(index + 1)}
+                />
               ))}
             </TabList>
 

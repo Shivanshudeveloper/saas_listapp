@@ -1,33 +1,54 @@
-import PropTypes from 'prop-types';
-import { Icon } from '@iconify/react';
-import { useState } from 'react';
-import { useSnackbar } from 'notistack';
-import copyFill from '@iconify/icons-eva/copy-fill';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import PropTypes from "prop-types";
+import { Icon } from "@iconify/react";
+import { useState } from "react";
+import { useSnackbar } from "notistack";
+import copyFill from "@iconify/icons-eva/copy-fill";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 // material
-import { useTheme, hexToRgb, experimentalStyled as styled } from '@material-ui/core/styles';
-import { Box, Card, Tooltip, Container, Typography, IconButton } from '@material-ui/core';
+import {
+  useTheme,
+  hexToRgb,
+  experimentalStyled as styled,
+} from "@material-ui/core/styles";
+import {
+  Box,
+  Card,
+  Tooltip,
+  Container,
+  Typography,
+  IconButton,
+} from "@material-ui/core";
 // routes
-import { PATH_PAGE } from '../../../routes/paths';
+import { PATH_PAGE } from "../../../routes/paths";
 // components
-import Page from '../../../components/Page';
-import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
+import Page from "../../../components/Page";
+import HeaderBreadcrumbs from "../../../components/HeaderBreadcrumbs";
 
 // ----------------------------------------------------------------------
 
-const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'];
-const COLORS_VARIATIONS = ['lighter', 'light', 'main', 'dark', 'darker'];
-const GREY_VARIATIONS = ['100', '200', '300', '400', '500', '600', '700', '800', '900'];
+const COLORS = ["primary", "secondary", "info", "success", "warning", "error"];
+const COLORS_VARIATIONS = ["lighter", "light", "main", "dark", "darker"];
+const GREY_VARIATIONS = [
+  "100",
+  "200",
+  "300",
+  "400",
+  "500",
+  "600",
+  "700",
+  "800",
+  "900",
+];
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(11),
-  paddingBottom: theme.spacing(15)
+  paddingBottom: theme.spacing(15),
 }));
 
-const RowStyle = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
-  margin: theme.spacing(1.5, -1.5, 0)
+const RowStyle = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexWrap: "wrap",
+  margin: theme.spacing(1.5, -1.5, 0),
 }));
 
 // ----------------------------------------------------------------------
@@ -35,7 +56,7 @@ const RowStyle = styled('div')(({ theme }) => ({
 ColorCard.propTypes = {
   hexColor: PropTypes.string,
   variation: PropTypes.string,
-  onCopy: PropTypes.func
+  onCopy: PropTypes.func,
 };
 
 function ColorCard({ hexColor, variation, onCopy }) {
@@ -44,14 +65,14 @@ function ColorCard({ hexColor, variation, onCopy }) {
   return (
     <Card
       sx={{
-        position: 'relative',
+        position: "relative",
         m: 1.5,
         width: {
-          xs: '100%',
-          sm: 'calc((100%/2) - 24px)',
-          md: 'calc((100%/4) - 24px)',
-          lg: 'calc((100%/5) - 24px)'
-        }
+          xs: "100%",
+          sm: "calc((100%/2) - 24px)",
+          md: "calc((100%/4) - 24px)",
+          lg: "calc((100%/5) - 24px)",
+        },
       }}
     >
       <CopyToClipboard text={hexColor} onCopy={onCopy}>
@@ -60,8 +81,8 @@ function ColorCard({ hexColor, variation, onCopy }) {
             sx={{
               top: 8,
               right: 8,
-              position: 'absolute',
-              color: theme.palette.getContrastText(hexColor)
+              position: "absolute",
+              color: theme.palette.getContrastText(hexColor),
             }}
           >
             <Icon icon={copyFill} width={20} height={20} />
@@ -69,23 +90,31 @@ function ColorCard({ hexColor, variation, onCopy }) {
         </Tooltip>
       </CopyToClipboard>
 
-      <Box sx={{ bgcolor: hexColor, paddingTop: '56%' }} />
+      <Box sx={{ bgcolor: hexColor, paddingTop: "56%" }} />
 
       <Box sx={{ p: 2.5 }}>
-        <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
+        <Typography variant="subtitle1" sx={{ textTransform: "capitalize" }}>
           {variation}
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', mt: 1.5, mb: 1 }}>
-          <Typography variant="overline" sx={{ width: 56, color: 'text.secondary' }}>
+        <Box sx={{ display: "flex", alignItems: "center", mt: 1.5, mb: 1 }}>
+          <Typography
+            variant="overline"
+            sx={{ width: 56, color: "text.secondary" }}
+          >
             Hex
           </Typography>
           <Typography variant="body2">{hexColor}</Typography>
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="overline" sx={{ width: 56, color: 'text.secondary' }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Typography
+            variant="overline"
+            sx={{ width: 56, color: "text.secondary" }}
+          >
             Rgb
           </Typography>
-          <Typography variant="body2">{hexToRgb(hexColor).replace('rgb(', '').replace(')', '')}</Typography>
+          <Typography variant="body2">
+            {hexToRgb(hexColor).replace("rgb(", "").replace(")", "")}
+          </Typography>
         </Box>
       </Box>
     </Card>
@@ -100,25 +129,32 @@ export default function FoundationColors() {
   const onCopy = (color) => {
     setState(color);
     if (color) {
-      enqueueSnackbar(`Copied ${color}`, { variant: 'success' });
+      enqueueSnackbar(`Copied ${color}`, { variant: "success" });
     }
   };
 
   return (
-    <RootStyle title="Foundations: Color | Minimal-UI">
+    <RootStyle title="Foundations: Color | List App">
       <Box
         sx={{
           pt: 6,
           pb: 1,
           mb: 10,
-          bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.200' : 'grey.800')
+          bgcolor: (theme) =>
+            theme.palette.mode === "light" ? "grey.200" : "grey.800",
         }}
       >
         <Container maxWidth="lg">
           <HeaderBreadcrumbs
             heading="Color"
-            links={[{ name: 'Components', href: PATH_PAGE.components }, { name: 'Color' }]}
-            moreLink={['https://next.material-ui.com/customization/color', 'https://colors.eva.design']}
+            links={[
+              { name: "Components", href: PATH_PAGE.components },
+              { name: "Color" },
+            ]}
+            moreLink={[
+              "https://next.material-ui.com/customization/color",
+              "https://colors.eva.design",
+            ]}
           />
         </Container>
       </Box>
@@ -126,7 +162,7 @@ export default function FoundationColors() {
       <Container maxWidth="lg">
         {COLORS.map((color) => (
           <Box key={color} sx={{ mb: 5 }}>
-            <Typography variant="h5" sx={{ textTransform: 'capitalize' }}>
+            <Typography variant="h5" sx={{ textTransform: "capitalize" }}>
               {color}
             </Typography>
 
@@ -143,7 +179,7 @@ export default function FoundationColors() {
           </Box>
         ))}
 
-        <Typography variant="h5" sx={{ textTransform: 'capitalize' }}>
+        <Typography variant="h5" sx={{ textTransform: "capitalize" }}>
           Grey
         </Typography>
         <RowStyle>

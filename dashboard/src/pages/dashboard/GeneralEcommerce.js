@@ -1,7 +1,7 @@
 // material
-import { Container, Grid } from '@material-ui/core';
+import { Container, Grid } from "@material-ui/core";
 // components
-import Page from '../../components/Page';
+import Page from "../../components/Page";
 import {
   EcommerceWelcome,
   EcommerceNewProducts,
@@ -13,14 +13,14 @@ import {
   EcommerceSaleByGender,
   EcommerceSalesOverview,
   EcommerceLatestProducts,
-  EcommerceCurrentBalance
-} from '../../components/_dashboard/general-ecommerce';
+  EcommerceCurrentBalance,
+} from "../../components/_dashboard/general-ecommerce";
 
 // ----------------------------------------------------------------------
 
 export default function GeneralEcommerce() {
   return (
-    <Page title="General: E-commerce | Minimal-UI">
+    <Page title="General: E-commerce | List App">
       <Container maxWidth="xl">
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>

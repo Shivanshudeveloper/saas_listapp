@@ -1,15 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 // material
-import { Card, Container } from '@material-ui/core';
+import { Card, Container } from "@material-ui/core";
 // redux
-import { useDispatch } from '../../redux/store';
-import { getConversations, getContacts } from '../../redux/slices/chat';
+import { useDispatch } from "../../redux/store";
+import { getConversations, getContacts } from "../../redux/slices/chat";
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from "../../routes/paths";
 // components
-import Page from '../../components/Page';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { ChatSidebar, ChatWindow } from '../../components/_dashboard/chat';
+import Page from "../../components/Page";
+import HeaderBreadcrumbs from "../../components/HeaderBreadcrumbs";
+import { ChatSidebar, ChatWindow } from "../../components/_dashboard/chat";
 
 // ----------------------------------------------------------------------
 
@@ -22,13 +22,16 @@ export default function Chat() {
   }, [dispatch]);
 
   return (
-    <Page title="Chat | Minimal-UI">
+    <Page title="Chat | List App">
       <Container maxWidth="xl">
         <HeaderBreadcrumbs
           heading="Chat"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Chat' }]}
+          links={[
+            { name: "Dashboard", href: PATH_DASHBOARD.root },
+            { name: "Chat" },
+          ]}
         />
-        <Card sx={{ height: '72vh', display: 'flex' }}>
+        <Card sx={{ height: "72vh", display: "flex" }}>
           <ChatSidebar />
           <ChatWindow />
         </Card>

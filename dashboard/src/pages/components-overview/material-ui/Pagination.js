@@ -1,28 +1,34 @@
-import { useState } from 'react';
+import { useState } from "react";
 // material
-import { experimentalStyled as styled } from '@material-ui/core/styles';
-import { Box, Grid, Container, Pagination, TablePagination } from '@material-ui/core';
+import { experimentalStyled as styled } from "@material-ui/core/styles";
+import {
+  Box,
+  Grid,
+  Container,
+  Pagination,
+  TablePagination,
+} from "@material-ui/core";
 // routes
-import { PATH_PAGE } from '../../../routes/paths';
+import { PATH_PAGE } from "../../../routes/paths";
 // components
-import Page from '../../../components/Page';
-import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
+import Page from "../../../components/Page";
+import HeaderBreadcrumbs from "../../../components/HeaderBreadcrumbs";
 //
-import { Block } from '../Block';
+import { Block } from "../Block";
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Page)(({ theme }) => ({
   paddingTop: theme.spacing(11),
-  paddingBottom: theme.spacing(15)
+  paddingBottom: theme.spacing(15),
 }));
 
 const style = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexWrap: 'wrap',
-  '& > *': { my: 1 }
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexWrap: "wrap",
+  "& > *": { my: 1 },
 };
 
 // ----------------------------------------------------------------------
@@ -41,19 +47,23 @@ export default function PaginationComponent() {
   };
 
   return (
-    <RootStyle title="Components: Pagination | Minimal-UI">
+    <RootStyle title="Components: Pagination | List App">
       <Box
         sx={{
           pt: 6,
           pb: 1,
           mb: 10,
-          bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.200' : 'grey.800')
+          bgcolor: (theme) =>
+            theme.palette.mode === "light" ? "grey.200" : "grey.800",
         }}
       >
         <Container maxWidth="lg">
           <HeaderBreadcrumbs
             heading="Pagination"
-            links={[{ name: 'Components', href: PATH_PAGE.components }, { name: 'Pagination' }]}
+            links={[
+              { name: "Components", href: PATH_PAGE.components },
+              { name: "Pagination" },
+            ]}
             moreLink="https://next.material-ui.com/components/pagination"
           />
         </Container>
@@ -82,7 +92,12 @@ export default function PaginationComponent() {
               <Pagination count={10} shape="rounded" />
               <Pagination count={10} variant="outlined" shape="rounded" />
               <Pagination count={10} shape="rounded" color="primary" />
-              <Pagination count={10} variant="outlined" shape="rounded" color="primary" />
+              <Pagination
+                count={10}
+                variant="outlined"
+                shape="rounded"
+                color="primary"
+              />
             </Block>
           </Grid>
 
@@ -105,7 +120,12 @@ export default function PaginationComponent() {
             <Block title="Ranges" sx={style}>
               <Pagination count={11} defaultPage={6} siblingCount={0} />
               <Pagination count={11} defaultPage={6} />
-              <Pagination count={11} defaultPage={6} siblingCount={0} boundaryCount={2} />
+              <Pagination
+                count={11}
+                defaultPage={6}
+                siblingCount={0}
+                boundaryCount={2}
+              />
               <Pagination count={11} defaultPage={6} boundaryCount={2} />
             </Block>
           </Grid>

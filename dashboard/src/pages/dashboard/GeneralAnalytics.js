@@ -1,7 +1,7 @@
 // material
-import { Box, Grid, Container, Typography } from '@material-ui/core';
+import { Box, Grid, Container, Typography } from "@material-ui/core";
 // components
-import Page from '../../components/Page';
+import Page from "../../components/Page";
 import {
   AnalyticsTasks,
   AnalyticsNewUsers,
@@ -14,14 +14,14 @@ import {
   AnalyticsWebsiteVisits,
   AnalyticsTrafficBySite,
   AnalyticsCurrentSubject,
-  AnalyticsConversionRates
-} from '../../components/_dashboard/general-analytics';
+  AnalyticsConversionRates,
+} from "../../components/_dashboard/general-analytics";
 
 // ----------------------------------------------------------------------
 
 export default function GeneralAnalytics() {
   return (
-    <Page title="General: Analytics | Minimal-UI">
+    <Page title="General: Analytics | List App">
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
           <Typography variant="h4">Hi, Welcome back</Typography>
