@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import AddIcon from "@material-ui/icons/Add";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 export default function GeneralEcommerce() {
   function LinearProgressWithLabel(props) {

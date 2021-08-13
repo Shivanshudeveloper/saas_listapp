@@ -43,7 +43,7 @@ class Topbar extends Component {
             </Link>
             <div className="buy-button">
               <a
-                href="/auth-cover-login"
+                href="https://saas-listapp-dashboard.vercel.app/auth/login-unprotected"
                 rel="noopener noreferrer"
                 className="btn btn-primary"
               >
