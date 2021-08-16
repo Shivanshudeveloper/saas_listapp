@@ -100,17 +100,23 @@ export default function ContactTable() {
               <TableRow>
                 <TableCell>Contact</TableCell>
                 <TableCell>Company</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Phone</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell />
+                <TableCell align="center">Email</TableCell>
+                <TableCell align="center">Phone</TableCell>
+                <TableCell align="center">Location</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
               {INVOICES.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell style={{ display: "flex", alignItems: "center" }}>
+                  <TableCell
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "10px",
+                      paddingLeft: "20px",
+                    }}
+                  >
                     <Avatar
                       style={{
                         width: "42px",
@@ -134,16 +140,8 @@ export default function ContactTable() {
                     <LockIcon />
                   </TableCell>
                   <TableCell align="center">
-                    <LockIcon />
-                  </TableCell>
-                  <TableCell align="right">
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      startIcon={<SearchIcon />}
-                    >
-                      Find
-                    </Button>
+                    {/* <LockIcon /> */}
+                    Location
                   </TableCell>
                   <TableCell>
                     <IconButton>

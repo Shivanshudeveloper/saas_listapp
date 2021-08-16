@@ -43,7 +43,7 @@ const ListItemStyle = styled((props) => (
   height: 48,
   position: "relative",
   textTransform: "capitalize",
-  paddingLeft: theme.spacing(5),
+  paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(2.5),
   color: theme.palette.text.secondary,
   "&:before": {
@@ -173,11 +173,8 @@ function NavItem({ item, active }) {
         ...(isActiveRoot && activeRootStyle),
       }}
     >
-      <ListItemIconStyle>
-        {icon && icon}
-        {/* {logo && logo} */}
-      </ListItemIconStyle>
-      <ListItemText disableTypography primary={title} />
+      <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
+      {/* <ListItemText disableTypography primary={title} /> */}
       {info && info}
     </ListItemStyle>
   );

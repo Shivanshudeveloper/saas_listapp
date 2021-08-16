@@ -37,7 +37,7 @@ export default function GeneralEcommerce() {
   }
 
   return (
-    <Page title="Companies | List App">
+    <Page title="Companies | List App" style={{ marginLeft: "70px" }}>
       <Container maxWidth="xl">
         <Box
           style={{
@@ -52,10 +52,6 @@ export default function GeneralEcommerce() {
           <Typography variant="h4">My Companies</Typography>
 
           <div style={{ display: "flex" }}>
-            <LinearProgressWithLabel
-              value="0"
-              style={{ marginRight: "10px", width: "150px" }}
-            />
             <Button
               variant="outlined"
               color="primary"

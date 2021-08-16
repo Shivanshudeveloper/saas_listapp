@@ -29,21 +29,6 @@ export default function GeneralApp() {
     setValue(index);
   };
 
-  function LinearProgressWithLabel(props) {
-    return (
-      <Box display="flex" flexDirection="column">
-        <Box minWidth={35}>
-          <Typography variant="body2" color="textSecondary">{`${Math.round(
-            props.value
-          )}% to goal (0/100)`}</Typography>
-        </Box>
-        <Box width="100%" mr={1}>
-          <LinearProgress variant="determinate" {...props} />
-        </Box>
-      </Box>
-    );
-  }
-
   function a11yProps(index) {
     return {
       id: `full-width-tab-${index}`,
@@ -72,7 +57,7 @@ export default function GeneralApp() {
   }
 
   return (
-    <Page title="Search | List App">
+    <Page title="Search | List App" style={{ marginLeft: "90px" }}>
       <Container maxWidth="xl" style={{ padding: 0 }}>
         <Box
           style={{
@@ -85,34 +70,6 @@ export default function GeneralApp() {
           }}
         >
           <Typography variant="h4">Search</Typography>
-
-          <div style={{ display: "flex" }}>
-            <LinearProgressWithLabel
-              value="0"
-              style={{ marginRight: "10px", width: "150px" }}
-            />
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{ marginRight: "10px" }}
-            >
-              Get Free Credits
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginRight: "10px" }}
-            >
-              Upgrade to Unlimited
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{ marginRight: "10px" }}
-            >
-              Book a Demo
-            </Button>
-          </div>
         </Box>
 
         {/*  */}

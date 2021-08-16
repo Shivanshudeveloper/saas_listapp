@@ -20,13 +20,13 @@ import { DocIcon } from "../../assets";
 
 // ----------------------------------------------------------------------
 
-const DRAWER_WIDTH = 270;
+const DRAWER_WIDTH = 80;
 
 const RootStyle = styled("div")(({ theme }) => ({
-  // [theme.breakpoints.down("lg")]: {
-  //   flexShrink: 0,
-  //   width: DRAWER_WIDTH,
-  // },
+  [theme.breakpoints.down("lg")]: {
+    flexShrink: 0,
+    width: DRAWER_WIDTH,
+  },
 }));
 
 const AccountStyle = styled("div")(({ theme }) => ({
@@ -87,17 +87,17 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           component={RouterLink}
           to={PATH_DASHBOARD.user.account}
         >
-          <AccountStyle>
-            <MyAvatar />
-            <Box sx={{ ml: 2 }}>
+          {/* <AccountStyle> */}
+          <MyAvatar />
+          {/* <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
                 {user.displayName}
               </Typography>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
                 {user.role}
               </Typography>
-            </Box>
-          </AccountStyle>
+            </Box> */}
+          {/* </AccountStyle> */}
         </Link>
       </Box>
 
@@ -121,7 +121,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         </Drawer>
       </MHidden>
 
-      <MHidden width="lgDown">
+      {/* <MHidden width="lgDown">
         <Drawer
           open={isOpenSidebar}
           onClose={onCloseSidebar}
@@ -131,9 +131,9 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         >
           {renderContent}
         </Drawer>
-      </MHidden>
+      </MHidden> */}
 
-      {/* <MHidden width="lgDown">
+      <MHidden width="lgDown">
         <Drawer
           open
           variant="persistent"
@@ -143,7 +143,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         >
           {renderContent}
         </Drawer>
-      </MHidden> */}
+      </MHidden>
     </RootStyle>
   );
 }

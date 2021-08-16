@@ -37,11 +37,6 @@ export default function GeneralAnalytics() {
   function LinearProgressWithLabel(props) {
     return (
       <Box display="flex" flexDirection="column">
-        <Box minWidth={35}>
-          <Typography variant="body2" color="textSecondary">{`${Math.round(
-            props.value
-          )}% to goal (0/100)`}</Typography>
-        </Box>
         <Box width="100%" mr={1}>
           <LinearProgress variant="determinate" {...props} />
         </Box>
@@ -101,7 +96,7 @@ export default function GeneralAnalytics() {
   ];
 
   return (
-    <Page title="General: Analytics | List App">
+    <Page title="General: Analytics | List App" style={{ marginLeft: "70px" }}>
       <Container maxWidth="xl">
         <Box
           style={{
@@ -116,10 +111,10 @@ export default function GeneralAnalytics() {
           <Typography variant="h4">My Contacts</Typography>
 
           <div style={{ display: "flex" }}>
-            <LinearProgressWithLabel
+            {/* <LinearProgressWithLabel
               value="0"
               style={{ marginRight: "10px", width: "150px" }}
-            />
+            /> */}
             <Button
               variant="outlined"
               color="primary"

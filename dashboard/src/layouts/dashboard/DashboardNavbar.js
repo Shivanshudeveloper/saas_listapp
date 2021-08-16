@@ -3,15 +3,21 @@ import { Icon } from "@iconify/react";
 import menu2Fill from "@iconify/icons-eva/menu-2-fill";
 // material
 import { alpha, experimentalStyled as styled } from "@material-ui/core/styles";
-import { Box, Stack, AppBar, Toolbar, IconButton } from "@material-ui/core";
+import {
+  Box,
+  Stack,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+} from "@material-ui/core";
 // components
 import { MHidden } from "../../components/@material-extend";
 //
-import Searchbar from "./Searchbar";
 import AccountPopover from "./AccountPopover";
-import LanguagePopover from "./LanguagePopover";
-import ContactsPopover from "./ContactsPopover";
 import NotificationsPopover from "./NotificationsPopover";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 // ----------------------------------------------------------------------
 
@@ -24,6 +30,9 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
   backdropFilter: "blur(6px)",
   WebkitBackdropFilter: "blur(6px)", // Fix on Mobile
   backgroundColor: alpha(theme.palette.background.default, 0.72),
+  [theme.breakpoints.up("lg")]: {
+    width: `calc(100% - ${DRAWER_WIDTH + 1}px)`,
+  },
 }));
 
 const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
@@ -41,6 +50,21 @@ DashboardNavbar.propTypes = {
 };
 
 export default function DashboardNavbar({ onOpenSidebar }) {
+  function LinearProgressWithLabel(props) {
+    return (
+      <Box display="flex" flexDirection="column">
+        <Box minWidth={35}>
+          <Typography variant="body2" color="textSecondary">{`${Math.round(
+            props.value
+          )}% to goal (0/100)`}</Typography>
+        </Box>
+        <Box width="100%" mr={1}>
+          <LinearProgress variant="determinate" {...props} />
+        </Box>
+      </Box>
+    );
+  }
+
   return (
     <RootStyle>
       <ToolbarStyle>
@@ -52,19 +76,22 @@ export default function DashboardNavbar({ onOpenSidebar }) {
             <Icon icon={menu2Fill} />
           </IconButton>
         </MHidden>
-        <MHidden width="lgDown">
-          <IconButton
-            onClick={onOpenSidebar}
-            sx={{ mr: 1, color: "text.primary" }}
-          >
-            <Icon icon={menu2Fill} />
-          </IconButton>
-        </MHidden>
 
-        <Searchbar />
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" spacing={{ xs: 0.5, sm: 1.5 }}>
+          <LinearProgressWithLabel
+            value="0"
+            style={{ marginRight: "10px", width: "150px" }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginRight: "10px", height: "40px" }}
+            size="small"
+          >
+            Upgrade to Unlimited
+          </Button>
           <NotificationsPopover />
           <AccountPopover />
         </Stack>
