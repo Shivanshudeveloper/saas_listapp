@@ -49,31 +49,7 @@ export default function GeneralEcommerce() {
             width: "95%",
           }}
         >
-          <Typography variant="h4">My Companies</Typography>
-
-          <div style={{ display: "flex" }}>
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{ marginRight: "10px" }}
-            >
-              Get Free Credits
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginRight: "10px" }}
-            >
-              Upgrade to Unlimited
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{ marginRight: "10px" }}
-            >
-              Book a Demo
-            </Button>
-          </div>
+        <Typography variant="h4">My Companies</Typography>
         </Box>
         <Divider />
         <Box display="flex" justifyContent="flex-end" marginTop={5}>
