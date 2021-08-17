@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import { Container } from "reactstrap";
 import { Link } from "react-router-dom";
 import ScrollspyNav from "./scrollSpy";
-
-//Import Images
-import logodark from "../../assets/images/logo-dark.png";
+import logo from "../../assets/images/logo.png";
 
 class Topbar extends Component {
   constructor(props) {
@@ -39,7 +37,7 @@ class Topbar extends Component {
         >
           <Container>
             <Link className="logo" to="/">
-              Company Logo
+              <img src={logo} width="70" alt="logo" />
             </Link>
             <div className="buy-button">
               <a
