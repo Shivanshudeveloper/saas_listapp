@@ -20,7 +20,7 @@ export default function Logo({ sx }) {
         width: 40,
         height: 40,
         ...sx,
-        marginLeft: "15px",
+        marginLeft: "12px",
       }}
     >
       <img src={logo} alt="logo" />

@@ -11,8 +11,10 @@ import {
   TableCell,
   TableHead,
   CardHeader,
+  Typography,
   TableContainer,
 } from "@material-ui/core";
+import FilterListIcon from "@material-ui/icons/FilterList";
 import Scrollbar from "../../Scrollbar";
 
 import LockIcon from "@material-ui/icons/Lock";
@@ -67,7 +69,7 @@ const INVOICES = [
 
 // ----------------------------------------------------------------------
 
-export default function CompanyTable() {
+export default function CompanyTable({ handleClickOpen }) {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -81,7 +83,23 @@ export default function CompanyTable() {
 
   return (
     <Card>
-      <CardHeader title="All Companies" sx={{ mb: 3 }} />
+      <div
+        style={{
+          padding: "13px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography variant="h6">All Companies</Typography>
+        <Button
+          variant="outlined"
+          onClick={handleClickOpen}
+          startIcon={<FilterListIcon />}
+        >
+          Filter
+        </Button>
+      </div>
 
       <Scrollbar>
         <TableContainer sx={{ minWidth: 720 }}>

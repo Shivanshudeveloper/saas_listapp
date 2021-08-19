@@ -123,7 +123,7 @@ a.text-light:focus {
 }
 
 .bg-footer {
-  background-color: #202942 !important;
+  background-color: #0a0047 !important;
 }
 
 .text-footer {
@@ -569,7 +569,7 @@ p {
 }
 
 .btn-footer {
-  background-color: #202942 !important;
+  background-color: #0a0047 !important;
   border: 1px solid #202942 !important;
   color: #ffffff !important;
   -webkit-box-shadow: 0 3px 5px 0 rgba(32, 41, 66, 0.3);
@@ -737,7 +737,7 @@ button:not(:disabled) {
 }
 
 .badge-footer {
-  background-color: #202942 !important;
+  background-color: #0a0047 !important;
   color: #ffffff !important;
 }
 
@@ -977,7 +977,7 @@ button:not(:disabled) {
   letter-spacing: 1px !important;
   font-size: 18px;
 }
-.demos-box{
+.demos-box {
   position: relative !important;
   z-index: 1 !important;
   transition: all 0.5s ease !important;
@@ -1451,7 +1451,7 @@ button:not(:disabled) {
 }
 
 .footer {
-  background: #202942;
+  background: #0a0047;
   position: relative;
   color: #adb5bd;
 }

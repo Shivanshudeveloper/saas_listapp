@@ -22,13 +22,14 @@ import {
   Menu,
   MenuItem,
   Avatar,
+  Typography,
 } from "@material-ui/core";
 import Scrollbar from "../../Scrollbar";
 
 import LockIcon from "@material-ui/icons/Lock";
 import SearchIcon from "@material-ui/icons/Search";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-
+import FilterListIcon from "@material-ui/icons/FilterList";
 // ----------------------------------------------------------------------
 
 const INVOICES = [
@@ -78,7 +79,7 @@ const INVOICES = [
 
 // ----------------------------------------------------------------------
 
-export default function ContactTable() {
+export default function ContactTable({ handleClickOpen }) {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -92,7 +93,24 @@ export default function ContactTable() {
 
   return (
     <Card>
-      <CardHeader title="All Contacts" sx={{ mb: 3 }} />
+      {/* <CardHeader title="All Contacts" sx={{ mb: 3 }} /> */}
+      <div
+        style={{
+          padding: "13px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography variant="h6">All Contacts</Typography>
+        <Button
+          variant="outlined"
+          onClick={handleClickOpen}
+          startIcon={<FilterListIcon />}
+        >
+          Filter
+        </Button>
+      </div>
       <Scrollbar>
         <TableContainer sx={{ minWidth: 720 }}>
           <Table>

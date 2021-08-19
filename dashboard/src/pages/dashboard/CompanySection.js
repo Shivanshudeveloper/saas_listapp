@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+
 import { CompanyTable } from "../../components/_dashboard/general-app";
 
 import {
@@ -9,19 +10,36 @@ import {
   Button,
   Grid,
 } from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const CompanySection = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={3}>
-        <Card
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            p: 3,
-          }}
-        >
-          <Typography variant="subtitle1">Filters</Typography>
+      <Grid item xs={12} lg={12}>
+        <CompanyTable handleClickOpen={handleClickOpen} />
+      </Grid>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle id="form-dialog-title">Filter</DialogTitle>
+        <DialogContent>
           <br />
           <Box style={{ margin: "10px 0" }}>
             <Typography variant="subtitle2">Industries</Typography>
@@ -93,18 +111,16 @@ const CompanySection = () => {
               fullWidth
             />
           </Box>
-          <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button color="primary">Clear</Button>
-            <Button variant="contained" color="primary">
-              Search
-            </Button>
-          </Box>
-        </Card>
-      </Grid>
-
-      <Grid item xs={12} lg={9}>
-        <CompanyTable />
-      </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleClose} color="primary" variant="contained">
+            Search
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
   );
 };

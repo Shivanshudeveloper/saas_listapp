@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     // [theme.breakpoints.up("sm")]: {
     //   width: theme.spacing(9) + 1,
     // },
-    width: "70px",
+    width: "60px",
   },
   toolbar: {
     display: "flex",
@@ -99,29 +99,7 @@ export default function SideDrawer() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      {/* <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Mini variant drawer
-          </Typography>
-        </Toolbar>
-      </AppBar> */}
+
       <DashboardNavbar onClick={handleDrawerOpen} />
       <Drawer
         variant="permanent"
@@ -138,7 +116,6 @@ export default function SideDrawer() {
       >
         <Box
           sx={{
-            px: 1,
             py: 3,
             display: "flex",
             justifyContent: "space-between",
@@ -160,7 +137,7 @@ export default function SideDrawer() {
           )}
         </Box>
 
-        <Box sx={{ mb: 2, mx: 2.5 }}>
+        <Box sx={{ mb: 2, mx: 1.15 }}>
           {/* <Box sx={{ mb: 2, mx: 2.5, display: "flex", justifyContent: "center" }}> */}
           <Link
             underline="none"
