@@ -5,7 +5,7 @@ import { Container, Row, Col, Form, Input, Label } from "reactstrap";
 //Import Icons
 import FeatherIcon from "feather-icons-react";
 
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/icon2.png";
 
 class Footer extends Component {
   constructor(props) {

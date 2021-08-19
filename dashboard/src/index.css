@@ -1,0 +1,10 @@
+/* @font-face {
+  font-family: "Poppins";
+  src: local("Poppins"), url(./fonts/Poppins-Medium.otf) format("opentype");
+} */
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
+
+* {
+  font-family: "Poppins", sans-serif !important;
+}

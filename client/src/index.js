@@ -4,6 +4,8 @@ import App from "./App";
 // import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter } from "react-router-dom";
 
+import "./index.css";
+
 const app = (
   <BrowserRouter>
     <App />
