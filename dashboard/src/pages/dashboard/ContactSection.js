@@ -20,10 +20,8 @@ const ContactSection = () => {
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} lg={12}>
-        <ContactTable handleClickOpen={handleClickOpen} />
-      </Grid>
+    <div>
+      <ContactTable handleClickOpen={handleClickOpen} />
       <Dialog
         open={open}
         onClose={handleClose}
@@ -84,7 +82,7 @@ const ContactSection = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Grid>
+    </div>
   );
 };
 

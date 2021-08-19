@@ -86,7 +86,6 @@ function NavItem({ item, active }) {
   };
 
   const activeRootStyle = {
-    marginTop: "20vh",
     color: "primary.main",
     fontWeight: "fontWeightMedium",
     bgcolor: alpha(
@@ -191,7 +190,7 @@ export default function NavSection({ navConfig, ...other }) {
     path ? !!matchPath({ path, end: false }, pathname) : false;
 
   return (
-    <Box {...other}>
+    <Box {...other} sx={{ marginTop: "20vh" }}>
       {navConfig.map((list) => {
         const { subheader, items } = list;
         return (

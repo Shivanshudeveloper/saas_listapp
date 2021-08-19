@@ -93,7 +93,6 @@ export default function ContactTable({ handleClickOpen }) {
 
   return (
     <Card>
-      {/* <CardHeader title="All Contacts" sx={{ mb: 3 }} /> */}
       <div
         style={{
           padding: "13px",

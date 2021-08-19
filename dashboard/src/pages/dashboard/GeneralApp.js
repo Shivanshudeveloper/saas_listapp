@@ -6,7 +6,7 @@ import useAuth from "../../hooks/useAuth";
 // components
 import Page from "../../components/Page";
 
-import { Box, Typography, Button, Divider, Container } from "@material-ui/core";
+import { Box, Container } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -15,6 +15,8 @@ import ContactSection from "./ContactSection";
 import CompanySection from "./CompanySection";
 import SwipeableViews from "react-swipeable-views";
 import { useTheme } from "@material-ui/core/styles";
+import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
+import BusinessIcon from "@material-ui/icons/Business";
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
@@ -47,11 +49,7 @@ export default function GeneralApp() {
         aria-labelledby={`full-width-tab-${index}`}
         {...other}
       >
-        {value === index && (
-          <Box p={3}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
+        {value === index && <Box>{children}</Box>}
       </div>
     );
   }
@@ -59,36 +57,39 @@ export default function GeneralApp() {
   return (
     <Page title="Search | List App">
       <Container maxWidth="xl" style={{ padding: 0 }}>
-        <Box
-          style={{
-            margin: "30px auto",
-            marginTop: "0px",
-            marginBottom: "30px",
-            display: "flex",
-            justifyContent: "space-between",
-            width: "95%",
-          }}
-        >
-          <Typography variant="h4">Search</Typography>
-        </Box>
-
-        {/*  */}
-
         <AppBar
           position="static"
           color="default"
-          style={{ marginBottom: "20px" }}
+          style={{
+            marginBottom: "20px",
+            width: "fit-content",
+            boxShadow: "none",
+            background: "transparent",
+          }}
         >
           <Tabs
             value={value}
             onChange={handleChange}
             indicatorColor="primary"
             textColor="primary"
-            variant="fullWidth"
-            aria-label="full width tabs example"
           >
-            <Tab label="Contacts" {...a11yProps(0)} />
-            <Tab label="Company" {...a11yProps(1)} />
+            <Tab
+              icon={<BusinessIcon />}
+              label="Contacts"
+              {...a11yProps(0)}
+              style={{
+                marginLeft: "40px",
+                "& .MuiTab-wrapper": {
+                  display: "flex",
+                },
+              }}
+            />
+            <Tab
+              icon={<PermContactCalendarIcon />}
+              label="Company"
+              {...a11yProps(1)}
+              style={{ marginRight: "40px" }}
+            />
           </Tabs>
         </AppBar>
 
@@ -97,10 +98,20 @@ export default function GeneralApp() {
           index={value}
           onChangeIndex={handleChangeIndex}
         >
-          <TabPanel value={value} index={0} dir={theme.direction}>
+          <TabPanel
+            value={value}
+            index={0}
+            dir={theme.direction}
+            style={{ padding: 0 }}
+          >
             <ContactSection />
           </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction}>
+          <TabPanel
+            value={value}
+            index={1}
+            dir={theme.direction}
+            style={{ padding: 0 }}
+          >
             <CompanySection />
           </TabPanel>
         </SwipeableViews>

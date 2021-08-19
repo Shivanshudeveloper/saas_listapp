@@ -39,19 +39,6 @@ export default function GeneralEcommerce() {
   return (
     <Page title="Companies | List App">
       <Container maxWidth="xl">
-        <Box
-          style={{
-            margin: "30px auto",
-            marginTop: "0px",
-            marginBottom: "30px",
-            display: "flex",
-            justifyContent: "space-between",
-            width: "95%",
-          }}
-        >
-          <Typography variant="h4">My Companies</Typography>
-        </Box>
-        <Divider />
         <Box display="flex" justifyContent="flex-end" marginTop={5}>
           <Button
             variant="outlined"

@@ -101,47 +101,6 @@ export default function GeneralAnalytics() {
         <Box
           style={{
             margin: "30px auto",
-            marginTop: "0px",
-            marginBottom: "30px",
-            display: "flex",
-            justifyContent: "space-between",
-            width: "95%",
-          }}
-        >
-          <Typography variant="h4">My Contacts</Typography>
-
-          <div style={{ display: "flex" }}>
-            {/* <LinearProgressWithLabel
-              value="0"
-              style={{ marginRight: "10px", width: "150px" }}
-            /> */}
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{ marginRight: "10px" }}
-            >
-              Get Free Credits
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginRight: "10px" }}
-            >
-              Upgrade to Unlimited
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{ marginRight: "10px" }}
-            >
-              Book a Demo
-            </Button>
-          </div>
-        </Box>
-        <Divider />
-        <Box
-          style={{
-            margin: "30px auto",
             display: "flex",
             justifyContent: "space-between",
             width: "95%",
