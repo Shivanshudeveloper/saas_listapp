@@ -14,7 +14,15 @@ export default function Logo({ sx }) {
   const theme = useTheme();
 
   return (
-    <Box sx={{ width: 40, height: 40, ...sx }}>
+    <Box
+      sx={{
+        margin: "0 auto",
+        width: 40,
+        height: 40,
+        ...sx,
+        marginLeft: "15px",
+      }}
+    >
       <img src={logo} alt="logo" />
     </Box>
   );

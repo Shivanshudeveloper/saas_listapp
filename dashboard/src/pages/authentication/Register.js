@@ -74,9 +74,6 @@ export default function Register() {
               <Typography variant="h4" gutterBottom>
                 Get started absolutely free.
               </Typography>
-              <Typography sx={{ color: "text.secondary" }}>
-                Free forever. No credit card needed.
-              </Typography>
             </Box>
           </Box>
 

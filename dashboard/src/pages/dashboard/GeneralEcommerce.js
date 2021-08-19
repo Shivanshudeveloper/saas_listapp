@@ -37,7 +37,7 @@ export default function GeneralEcommerce() {
   }
 
   return (
-    <Page title="Companies | List App" style={{ marginLeft: "70px" }}>
+    <Page title="Companies | List App">
       <Container maxWidth="xl">
         <Box
           style={{
@@ -49,7 +49,7 @@ export default function GeneralEcommerce() {
             width: "95%",
           }}
         >
-        <Typography variant="h4">My Companies</Typography>
+          <Typography variant="h4">My Companies</Typography>
         </Box>
         <Divider />
         <Box display="flex" justifyContent="flex-end" marginTop={5}>

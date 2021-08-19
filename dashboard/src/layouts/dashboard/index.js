@@ -5,6 +5,7 @@ import { experimentalStyled as styled } from "@material-ui/core/styles";
 //
 import DashboardNavbar from "./DashboardNavbar";
 import DashboardSidebar from "./DashboardSidebar";
+import SideDrawer from "./SideDrawer";
 
 // ----------------------------------------------------------------------
 
@@ -37,11 +38,12 @@ export default function DashboardLayout() {
 
   return (
     <RootStyle>
-      <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
-      <DashboardSidebar
+      {/* <DashboardNavbar onOpenSidebar={() => setOpen(true)} /> */}
+      {/* <DashboardSidebar
         isOpenSidebar={open}
         onCloseSidebar={() => setOpen(false)}
-      />
+      /> */}
+      <SideDrawer />
       <MainStyle>
         <Outlet />
       </MainStyle>

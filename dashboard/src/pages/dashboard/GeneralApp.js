@@ -57,7 +57,7 @@ export default function GeneralApp() {
   }
 
   return (
-    <Page title="Search | List App" style={{ marginLeft: "90px" }}>
+    <Page title="Search | List App">
       <Container maxWidth="xl" style={{ padding: 0 }}>
         <Box
           style={{

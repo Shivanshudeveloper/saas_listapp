@@ -96,7 +96,7 @@ export default function GeneralAnalytics() {
   ];
 
   return (
-    <Page title="General: Analytics | List App" style={{ marginLeft: "70px" }}>
+    <Page title="General: Analytics | List App">
       <Container maxWidth="xl">
         <Box
           style={{
