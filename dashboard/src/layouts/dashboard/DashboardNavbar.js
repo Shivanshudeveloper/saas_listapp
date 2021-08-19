@@ -36,7 +36,7 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
   },
   [theme.breakpoints.down("lg")]: {
     // width: `calc(100% - ${DRAWER_WIDTH + 1}px)`,
-    width: "90%",
+    width: "100%",
   },
 }));
 

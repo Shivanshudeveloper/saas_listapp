@@ -68,6 +68,9 @@ const useStyles = makeStyles((theme) => ({
     //   width: theme.spacing(9) + 1,
     // },
     width: "60px",
+    [theme.breakpoints.down("md")]: {
+      width: 0,
+    },
   },
   toolbar: {
     display: "flex",

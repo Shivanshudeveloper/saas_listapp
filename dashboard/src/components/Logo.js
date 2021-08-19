@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 // material
 import { useTheme } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
-import logo from "../images/logo.jpg";
+import logo from "../images/logo2.png";
 
 // ----------------------------------------------------------------------
 

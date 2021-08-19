@@ -86,6 +86,7 @@ function NavItem({ item, active }) {
   };
 
   const activeRootStyle = {
+    marginTop: "20vh",
     color: "primary.main",
     fontWeight: "fontWeightMedium",
     bgcolor: alpha(
