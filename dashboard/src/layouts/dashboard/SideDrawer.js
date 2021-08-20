@@ -146,7 +146,9 @@ export default function SideDrawer() {
           sx={{
             py: 2,
             display: "flex",
-            justifyContent: "space-around",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Box
