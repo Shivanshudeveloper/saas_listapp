@@ -74,7 +74,7 @@ export default function GeneralApp() {
             textColor="primary"
           >
             <Tab
-              icon={<BusinessIcon />}
+              icon={<PermContactCalendarIcon />}
               label="Contacts"
               {...a11yProps(0)}
               style={{
@@ -85,7 +85,7 @@ export default function GeneralApp() {
               }}
             />
             <Tab
-              icon={<PermContactCalendarIcon />}
+              icon={<BusinessIcon />}
               label="Company"
               {...a11yProps(1)}
               style={{ marginRight: "40px" }}

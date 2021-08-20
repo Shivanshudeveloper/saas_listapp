@@ -17,6 +17,10 @@ import sidebarConfig from "./SidebarConfig";
 import { PATH_DASHBOARD } from "../../routes/paths";
 import NavSection from "../../components/NavSection";
 import DashboardNavbar from "./DashboardNavbar";
+import ExpandLessRoundedIcon from "@material-ui/icons/ExpandLessRounded";
+import { Icon } from "@iconify/react";
+import menu2Fill from "@iconify/icons-eva/menu-2-fill";
+import { MHidden } from "../../components/@material-extend";
 
 const drawerWidth = 240;
 
@@ -52,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerOpen: {
     width: drawerWidth,
+    overflowY: "hidden",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -63,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: "hidden",
+    overflowY: "hidden",
     // width: theme.spacing(7) + 1,
     // [theme.breakpoints.up("sm")]: {
     //   width: theme.spacing(9) + 1,
@@ -119,9 +125,28 @@ export default function SideDrawer() {
       >
         <Box
           sx={{
-            py: 3,
+            pt: 2,
             display: "flex",
             justifyContent: "space-between",
+          }}
+        >
+          <MHidden width="lgDown">
+            {!open && (
+              <IconButton
+                onClick={handleDrawerOpen}
+                sx={{ mx: "auto", color: "text.primary" }}
+              >
+                <ExpandLessRoundedIcon style={{ transform: "rotate(90deg)" }} />
+              </IconButton>
+            )}
+          </MHidden>
+        </Box>
+
+        <Box
+          sx={{
+            py: 2,
+            display: "flex",
+            justifyContent: "space-around",
           }}
         >
           <Box
@@ -140,24 +165,34 @@ export default function SideDrawer() {
           )}
         </Box>
 
-        <Box sx={{ mb: 2, mx: 1.15 }}>
-          {/* <Box sx={{ mb: 2, mx: 2.5, display: "flex", justifyContent: "center" }}> */}
+        <NavSection navConfig={sidebarConfig} />
+
+        <Box sx={{ flexGrow: 1 }} />
+
+        <Box
+          sx={{
+            mb: 2,
+            mx: 1.15,
+          }}
+        >
           <Link
             underline="none"
             component={RouterLink}
             to={PATH_DASHBOARD.user.account}
-            style={{ display: "flex", alignItems: "center" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-around",
+            }}
           >
             <MyAvatar />
-            <Typography variant="body1" style={{ marginLeft: "15px" }}>
-              Welcome User
-            </Typography>
+            {open && (
+              <Typography variant="body1" style={{ marginLeft: "15px" }}>
+                Welcome User
+              </Typography>
+            )}
           </Link>
         </Box>
-
-        <NavSection navConfig={sidebarConfig} />
-
-        <Box sx={{ flexGrow: 1 }} />
       </Drawer>
     </div>
   );

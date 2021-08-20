@@ -15,7 +15,7 @@ export default function MyAvatar({ ...other }) {
       alt={user.displayName}
       color={user.photoURL ? "default" : createAvatar(user.displayName).color}
       {...other}
-      style={{ width: "35px", height: "35px", marginLeft: "5px" }}
+      style={{ width: "35px", height: "35px" }}
     >
       {createAvatar(user.displayName).name}
     </MAvatar>

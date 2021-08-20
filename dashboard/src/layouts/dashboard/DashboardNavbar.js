@@ -18,6 +18,7 @@ import { MHidden } from "../../components/@material-extend";
 import AccountPopover from "./AccountPopover";
 import NotificationsPopover from "./NotificationsPopover";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import ExpandLessRoundedIcon from "@material-ui/icons/ExpandLessRounded";
 
 // ----------------------------------------------------------------------
 
@@ -73,7 +74,7 @@ export default function DashboardNavbar({ onOpenSidebar, onClick }) {
   return (
     <RootStyle>
       <ToolbarStyle>
-        <MHidden width="lgUp">
+        {/* <MHidden width="lgUp">
           <IconButton onClick={onClick} sx={{ mr: 1, color: "text.primary" }}>
             <Icon icon={menu2Fill} />
           </IconButton>
@@ -81,6 +82,15 @@ export default function DashboardNavbar({ onOpenSidebar, onClick }) {
         <MHidden width="lgDown">
           <IconButton onClick={onClick} sx={{ mr: 1, color: "text.primary" }}>
             <Icon icon={menu2Fill} />
+          </IconButton>
+        </MHidden> */}
+
+        <MHidden width="lgUp">
+          <IconButton
+            onClick={onClick}
+            sx={{ mx: "auto", color: "text.primary" }}
+          >
+            <ExpandLessRoundedIcon style={{ transform: "rotate(90deg)" }} />
           </IconButton>
         </MHidden>
 

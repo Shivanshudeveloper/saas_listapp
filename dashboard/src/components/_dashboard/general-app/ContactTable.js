@@ -91,6 +91,8 @@ export default function ContactTable({ handleClickOpen }) {
     setAnchorEl(null);
   };
 
+  const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
+
   return (
     <Card>
       <div
@@ -98,7 +100,6 @@ export default function ContactTable({ handleClickOpen }) {
           padding: "13px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
         }}
       >
         <Typography variant="h6">All Contacts</Typography>
@@ -106,6 +107,7 @@ export default function ContactTable({ handleClickOpen }) {
           variant="outlined"
           onClick={handleClickOpen}
           startIcon={<FilterListIcon />}
+          style={{ marginLeft: "20px" }}
         >
           Filter
         </Button>
@@ -130,7 +132,7 @@ export default function ContactTable({ handleClickOpen }) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      padding: "10px",
+                      padding: "5px",
                       paddingLeft: "20px",
                     }}
                   >
@@ -146,21 +148,20 @@ export default function ContactTable({ handleClickOpen }) {
                     </Avatar>
                     <div>
                       <p style={{ fontWeight: "bold" }}>{row.name}</p>
-                      <p style={{ color: "grey" }}> {row.keyword}</p>
                     </div>
                   </TableCell>
-                  <TableCell>{row.company}</TableCell>
-                  <TableCell align="center">
+                  <TableCell style={tableCellStyle}>{row.company}</TableCell>
+                  <TableCell align="center" style={tableCellStyle}>
                     <LockIcon />
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" style={tableCellStyle}>
                     <LockIcon />
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" style={tableCellStyle}>
                     {/* <LockIcon /> */}
                     Location
                   </TableCell>
-                  <TableCell>
+                  <TableCell style={tableCellStyle} align="center">
                     <IconButton>
                       <MoreHorizIcon onClick={handleClick} />
                       <Menu

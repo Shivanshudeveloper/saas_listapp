@@ -81,6 +81,8 @@ export default function CompanyTable({ handleClickOpen }) {
     setAnchorEl(null);
   };
 
+  const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
+
   return (
     <Card>
       <div
@@ -88,7 +90,6 @@ export default function CompanyTable({ handleClickOpen }) {
           padding: "13px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
         }}
       >
         <Typography variant="h6">All Companies</Typography>
@@ -96,6 +97,7 @@ export default function CompanyTable({ handleClickOpen }) {
           variant="outlined"
           onClick={handleClickOpen}
           startIcon={<FilterListIcon />}
+          style={{ marginLeft: "20px" }}
         >
           Filter
         </Button>
@@ -111,40 +113,35 @@ export default function CompanyTable({ handleClickOpen }) {
                 <TableCell>Sizes</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Technologies</TableCell>
-                <TableCell>Intel</TableCell>
-                <TableCell>Lists</TableCell>
-                <TableCell>Save</TableCell>
-                <TableCell>Find Contacts</TableCell>
+                {/* <TableCell align="center">Intel</TableCell> */}
+                <TableCell align="center">Lists</TableCell>
+                <TableCell align="center">Save</TableCell>
+                <TableCell align="center">Find Contacts</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {INVOICES.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell>
+                  <TableCell style={tableCellStyle}>
                     <p style={{ fontWeight: "bold" }}>{row.name}</p>
-                    <p style={{ color: "grey" }}> {row.keyword}</p>
                   </TableCell>
-                  <TableCell>Accounting</TableCell>
-                  <TableCell>1000-1500 employees</TableCell>
-                  <TableCell>New York, US</TableCell>
-                  <TableCell align="center"></TableCell>
-                  <TableCell align="center">
+                  <TableCell style={tableCellStyle}>Accounting</TableCell>
+                  <TableCell style={tableCellStyle}>1000-1500</TableCell>
+                  <TableCell style={tableCellStyle}>New York, US</TableCell>
+                  <TableCell style={tableCellStyle}>Technologies</TableCell>
+                  {/* <TableCell align="center" style={tableCellStyle}>
+                    <LockIcon />
+                  </TableCell> */}
+                  <TableCell align="center" style={tableCellStyle}>
                     <LockIcon />
                   </TableCell>
-                  <TableCell align="center">
-                    <LockIcon />
-                  </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" style={tableCellStyle}>
                     <Button color="primary" startIcon={<AddIcon />}>
                       Save
                     </Button>
                   </TableCell>
-                  <TableCell align="right">
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      startIcon={<SearchIcon />}
-                    >
+                  <TableCell align="center" style={tableCellStyle}>
+                    <Button color="primary" startIcon={<SearchIcon />}>
                       Find
                     </Button>
                   </TableCell>
