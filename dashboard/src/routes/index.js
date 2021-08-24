@@ -80,6 +80,7 @@ export default function Router() {
         { path: "/", element: <Navigate to="/dashboard/search" replace /> },
         { path: "search", element: <GeneralApp /> },
         { path: "company", element: <GeneralEcommerce /> },
+        { path: "tasks", element: <Tasks /> },
         {
           path: "contacts",
           element: <GeneralAnalytics />,
@@ -261,6 +262,7 @@ const VerifyCode = Loadable(
 const GeneralApp = Loadable(
   lazy(() => import("../pages/dashboard/GeneralApp"))
 );
+const Tasks = Loadable(lazy(() => import("../pages/dashboard/Tasks")));
 const GeneralEcommerce = Loadable(
   lazy(() => import("../pages/dashboard/GeneralEcommerce"))
 );

@@ -47,9 +47,14 @@ const sidebarConfig = [
         icon: ICONS.user,
       },
       {
+        title: "Tasks",
+        path: PATH_DASHBOARD.general.tasks,
+        icon: ICONS.analytics,
+      },
+      {
         title: "pricing & Plan",
         path: PATH_DASHBOARD.general.contacts,
-        icon: ICONS.user,
+        icon: ICONS.ecommerce,
       },
     ],
   },

@@ -3,6 +3,7 @@ export { default as AppCurrentDownload } from "./AppCurrentDownload";
 export { default as AppFeatured } from "./AppFeatured";
 export { default as ContactTable } from "./ContactTable";
 export { default as CompanyTable } from "./CompanyTable";
+export { default as TaskTable } from "./TaskTable";
 export { default as AppTopAuthors } from "./AppTopAuthors";
 export { default as AppTopInstalledCountries } from "./AppTopInstalledCountries";
 export { default as AppTopRelated } from "./AppTopRelated";

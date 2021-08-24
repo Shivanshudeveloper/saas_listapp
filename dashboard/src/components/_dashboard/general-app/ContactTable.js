@@ -27,7 +27,7 @@ import {
 import Scrollbar from "../../Scrollbar";
 
 import LockIcon from "@material-ui/icons/Lock";
-import SearchIcon from "@material-ui/icons/Search";
+
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import FilterListIcon from "@material-ui/icons/FilterList";
 // ----------------------------------------------------------------------

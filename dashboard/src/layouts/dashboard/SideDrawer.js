@@ -123,78 +123,67 @@ export default function SideDrawer() {
           }),
         }}
       >
-        <Box
-          sx={{
-            pt: 2,
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <MHidden width="lgDown">
-            {!open && (
-              <IconButton
-                onClick={handleDrawerOpen}
-                sx={{ mx: "auto", color: "text.primary" }}
-              >
-                <ExpandLessRoundedIcon style={{ transform: "rotate(90deg)" }} />
-              </IconButton>
-            )}
-          </MHidden>
-        </Box>
-
-        <Box
-          sx={{
-            py: 2,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <MHidden width="lgDown">
           <Box
-            component={RouterLink}
-            to="/"
-            sx={{ display: "inline-flex", alignItems: "center" }}
+            sx={{
+              pt: 2,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
           >
-            <Logo />
+            {!open && (
+              <>
+                <Box
+                  component={RouterLink}
+                  to="/"
+                  sx={{ display: "inline-flex", alignItems: "center" }}
+                >
+                  <Logo />
+                </Box>
+                <IconButton
+                  onClick={handleDrawerOpen}
+                  sx={{ mx: "auto", color: "text.primary" }}
+                >
+                  <ExpandLessRoundedIcon
+                    style={{ transform: "rotate(90deg)" }}
+                  />
+                </IconButton>
+              </>
+            )}
           </Box>
-          {open && (
-            <div className={classes.toolbar}>
-              <IconButton onClick={handleDrawerClose}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </div>
-          )}
-        </Box>
+        </MHidden>
+
+        {open && (
+          <Box
+            sx={{
+              py: 2,
+              px: 3,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <>
+              <Box
+                component={RouterLink}
+                to="/"
+                sx={{ display: "inline-flex", alignItems: "center" }}
+              >
+                <Logo />
+              </Box>
+              <div className={classes.toolbar}>
+                <IconButton onClick={handleDrawerClose}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </div>
+            </>
+          </Box>
+        )}
 
         <NavSection navConfig={sidebarConfig} />
 
         <Box sx={{ flexGrow: 1 }} />
-
-        <Box
-          sx={{
-            mb: 2,
-            mx: 1.15,
-          }}
-        >
-          <Link
-            underline="none"
-            component={RouterLink}
-            to={PATH_DASHBOARD.user.account}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-around",
-            }}
-          >
-            <MyAvatar />
-            {open && (
-              <Typography variant="body1" style={{ marginLeft: "15px" }}>
-                Welcome User
-              </Typography>
-            )}
-          </Link>
-        </Box>
       </Drawer>
     </div>
   );

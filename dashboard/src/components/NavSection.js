@@ -190,7 +190,7 @@ export default function NavSection({ navConfig, ...other }) {
     path ? !!matchPath({ path, end: false }, pathname) : false;
 
   return (
-    <Box {...other} sx={{ marginTop: "20vh" }}>
+    <Box {...other}>
       {navConfig.map((list) => {
         const { subheader, items } = list;
         return (
