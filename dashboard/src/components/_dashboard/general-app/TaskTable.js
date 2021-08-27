@@ -13,7 +13,7 @@ import {
   Typography,
   TextField,
   Grid,
-  ButtonGroup,
+  Box,
   Container,
 } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
@@ -32,9 +32,8 @@ import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import SmsIcon from "@material-ui/icons/Sms";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import Slide from "@material-ui/core/Slide";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
@@ -63,10 +62,6 @@ export default function TaskTable({ handleClickOpen }) {
     setOpenCall(false);
   };
 
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
-
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -77,161 +72,124 @@ export default function TaskTable({ handleClickOpen }) {
     setAnchorEl(null);
   };
 
+  const [value, setValue] = React.useState(0);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClickAdd}>Add Task</MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleClickCall();
-            setIsEmail(false);
-          }}
-        >
-          Add Call Log
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleClickCall();
-            setIsEmail(true);
-          }}
-        >
-          Add Email Log
-        </MenuItem>
-      </Menu>
-      <Dialog
-        fullScreen
-        open={openTask}
-        onClose={handleCloseAdd}
-        // TransitionComponent={Transition}
-      >
-        <DialogTitle>{"Add New Task"}</DialogTitle>
-        <DialogContent style={{ minWidth: "500px" }}>
-          <Container maxWidth="md">
-            <Grid container spacing={2}>
-              <Grid item xs={12} display="flex" justifyContent="center">
-                <RadioGroup row name="position" defaultValue="list">
-                  <FormControlLabel
-                    value="List"
-                    control={<Radio color="primary" />}
-                    label={<FormatListNumberedIcon />}
-                  />
-                  <FormControlLabel
-                    value="Phone"
-                    control={<Radio color="primary" />}
-                    label={<CallIcon />}
-                  />
-                  <FormControlLabel
-                    value="Mail"
-                    control={<Radio color="primary" />}
-                    label={<EmailIcon />}
-                  />
-                  <FormControlLabel
-                    value="SMS"
-                    control={<Radio color="primary" />}
-                    label={<SmsIcon />}
-                  />
-                  <FormControlLabel
-                    value="LinkedIn"
-                    control={<Radio color="primary" />}
-                    label={<LinkedInIcon />}
-                  />
-                </RadioGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField label="Contacts" variant="outlined" fullWidth />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField label="Title" variant="outlined" fullWidth />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Due Date and Time"
-                  type="datetime-local"
-                  defaultValue="2021-08-24T10:30"
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField label="Type" variant="outlined" fullWidth />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField label="Assign To" variant="outlined" fullWidth />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Notes"
-                  variant="outlined"
-                  fullWidth
-                  multiline
-                  rows={4}
-                />
-              </Grid>
-            </Grid>
-          </Container>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseAdd} color="primary">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleCloseAdd}
-            color="primary"
-            autoFocus
-            variant="contained"
+      <Dialog fullScreen open={openTask} onClose={handleCloseAdd}>
+        <Container maxWidth="md">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              margin: "10px 0",
+            }}
           >
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        fullScreen
-        open={openCall}
-        onClose={handleCloseAdd}
-        // TransitionComponent={Transition}
-      >
-        <DialogTitle>Add New {isEmail ? "Email" : "Call"} Log</DialogTitle>
-        <DialogContent style={{ minWidth: "500px" }}>
-          <Container maxWidth="md">
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField label="Contact" variant="outlined" fullWidth />
-              </Grid>
-              <Grid item xs={6}>
-                {isEmail ? (
-                  <TextField
-                    label="Date"
-                    type="date"
-                    defaultValue="2021-08-28"
-                    fullWidth
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                ) : (
-                  <TextField label="Template" variant="outlined" fullWidth />
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Description"
-                  variant="outlined"
-                  fullWidth
-                  multiline
-                  rows={4}
-                />
-              </Grid>
-            </Grid>
-          </Container>
-        </DialogContent>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              variant="fullWidth"
+              indicatorColor="secondary"
+              textColor="secondary"
+              aria-label="icon label tabs example"
+            >
+              <Tab icon={<FormatListNumberedIcon />} />
+              <Tab icon={<CallIcon />} />
+              <Tab icon={<EmailIcon />} />
+              <Tab icon={<SmsIcon />} />
+              <Tab icon={<LinkedInIcon />} />
+            </Tabs>
+          </div>
+          {value === 0 && (
+            <>
+              <DialogTitle>{"Add New Task"}</DialogTitle>
+              <DialogContent style={{ minWidth: "500px" }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField label="Contacts" variant="outlined" fullWidth />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField label="Title" variant="outlined" fullWidth />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Due Date and Time"
+                      type="datetime-local"
+                      defaultValue="2021-08-24T10:30"
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField label="Type" variant="outlined" fullWidth />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField label="Assign To" variant="outlined" fullWidth />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Notes"
+                      variant="outlined"
+                      fullWidth
+                      multiline
+                      rows={4}
+                    />
+                  </Grid>
+                </Grid>
+              </DialogContent>
+            </>
+          )}
+          {value > 0 && value < 3 && (
+            <>
+              <DialogTitle>
+                Add New {value === 2 ? "Email" : "Call"} Log
+              </DialogTitle>
+              <DialogContent style={{ minWidth: "500px" }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <TextField label="Contact" variant="outlined" fullWidth />
+                  </Grid>
+                  <Grid item xs={6}>
+                    {value === 2 && (
+                      <TextField
+                        label="Date"
+                        type="date"
+                        defaultValue="2021-08-28"
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    )}
+                    {value === 1 && (
+                      <TextField
+                        defaultValue=""
+                        label="Template"
+                        variant="outlined"
+                        fullWidth
+                      />
+                    )}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Description"
+                      variant="outlined"
+                      fullWidth
+                      multiline
+                      rows={4}
+                    />
+                  </Grid>
+                </Grid>
+              </DialogContent>
+            </>
+          )}
+        </Container>
+        <Box sx={{ flexGrow: 1 }} />
         <DialogActions>
           <Button onClick={handleCloseAdd} color="primary">
             Cancel
@@ -274,7 +232,7 @@ export default function TaskTable({ handleClickOpen }) {
           <Button
             variant="contained"
             style={{ marginLeft: "20px" }}
-            onClick={handleClick}
+            onClick={handleClickAdd}
           >
             Add
           </Button>
