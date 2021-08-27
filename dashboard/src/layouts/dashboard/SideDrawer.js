@@ -22,11 +22,12 @@ import { Icon } from "@iconify/react";
 import menu2Fill from "@iconify/icons-eva/menu-2-fill";
 import { MHidden } from "../../components/@material-extend";
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    position: "relative",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: "nowrap",
+    zIndex: "1201",
   },
   drawerOpen: {
     width: drawerWidth,
@@ -79,16 +81,32 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   toolbar: {
+    position: "absolute",
+    top: "5%",
+    left: "185px",
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
+    zIndex: "1200",
+    "& :hover": {
+      background: "whitesmoke",
+    },
+
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+  },
+  closeButton: {
+    border: "1px solid rgba(145, 158, 171, 0.24)",
+    borderRadius: "10px",
+    background: "white",
+    "& :hover": {
+      background: "whitesmoke",
+    },
   },
 }));
 
@@ -155,36 +173,34 @@ export default function SideDrawer() {
         </MHidden>
 
         {open && (
-          <Box
-            sx={{
-              py: 2,
-              px: 3,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <>
-              <Box
-                component={RouterLink}
-                to="/"
-                sx={{ display: "inline-flex", alignItems: "center" }}
-              >
-                <Logo />
-              </Box>
-              <div className={classes.toolbar}>
-                <IconButton onClick={handleDrawerClose}>
-                  <ChevronLeftIcon />
-                </IconButton>
-              </div>
-            </>
-          </Box>
+          <>
+            <Box
+              component={RouterLink}
+              to="/"
+              sx={{ display: "inline-flex", alignItems: "center" }}
+            >
+              <Logo />
+            </Box>
+          </>
         )}
 
         <NavSection navConfig={sidebarConfig} />
 
         <Box sx={{ flexGrow: 1 }} />
       </Drawer>
+      {open && (
+        <>
+          <div className={classes.toolbar}>
+            <IconButton
+              onClick={handleDrawerClose}
+              sx={{ p: 1 }}
+              className={classes.closeButton}
+            >
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
+        </>
+      )}
     </div>
   );
 }

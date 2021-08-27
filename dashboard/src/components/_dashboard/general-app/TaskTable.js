@@ -14,6 +14,7 @@ import {
   TextField,
   Grid,
   ButtonGroup,
+  Container,
 } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -30,9 +31,18 @@ import CallIcon from "@material-ui/icons/Call";
 import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
 import SmsIcon from "@material-ui/icons/Sms";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
+import Slide from "@material-ui/core/Slide";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 export default function TaskTable({ handleClickOpen }) {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
+  const [openTask, setOpenTask] = useState(false);
+  const [openCall, setOpenCall] = useState(false);
+  const [isEmail, setIsEmail] = useState(false);
   const [tasks, setTasks] = useState([
     {
       id: faker.datatype.uuid(),
@@ -40,74 +50,133 @@ export default function TaskTable({ handleClickOpen }) {
       company: "This is a simple task!",
     },
   ]);
-  const [open, setOpen] = React.useState(false);
 
   const handleClickAdd = () => {
-    setOpen(true);
+    setOpenTask(true);
+  };
+  const handleClickCall = () => {
+    setOpenCall(true);
   };
 
   const handleCloseAdd = () => {
-    setOpen(false);
+    setOpenTask(false);
+    setOpenCall(false);
   };
-  console.log(new Date());
+
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <>
-      <Dialog
-        open={open}
-        onClose={handleCloseAdd}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
       >
-        <DialogTitle id="alert-dialog-title">{"Add New Task"}</DialogTitle>
+        <MenuItem onClick={handleClickAdd}>Add Task</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClickCall();
+            setIsEmail(false);
+          }}
+        >
+          Add Call Log
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClickCall();
+            setIsEmail(true);
+          }}
+        >
+          Add Email Log
+        </MenuItem>
+      </Menu>
+      <Dialog
+        fullScreen
+        open={openTask}
+        onClose={handleCloseAdd}
+        // TransitionComponent={Transition}
+      >
+        <DialogTitle>{"Add New Task"}</DialogTitle>
         <DialogContent style={{ minWidth: "500px" }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} display="flex" justifyContent="center">
-              <ButtonGroup color="primary">
-                <Button>
-                  <FormatListNumberedIcon />
-                </Button>
-                <Button>
-                  <CallIcon />
-                </Button>
-                <Button>
-                  <EmailIcon />
-                </Button>
-                <Button>
-                  <SmsIcon />
-                </Button>
-                <Button>
-                  <LinkedInIcon />
-                </Button>
-              </ButtonGroup>
+          <Container maxWidth="md">
+            <Grid container spacing={2}>
+              <Grid item xs={12} display="flex" justifyContent="center">
+                <RadioGroup row name="position" defaultValue="list">
+                  <FormControlLabel
+                    value="List"
+                    control={<Radio color="primary" />}
+                    label={<FormatListNumberedIcon />}
+                  />
+                  <FormControlLabel
+                    value="Phone"
+                    control={<Radio color="primary" />}
+                    label={<CallIcon />}
+                  />
+                  <FormControlLabel
+                    value="Mail"
+                    control={<Radio color="primary" />}
+                    label={<EmailIcon />}
+                  />
+                  <FormControlLabel
+                    value="SMS"
+                    control={<Radio color="primary" />}
+                    label={<SmsIcon />}
+                  />
+                  <FormControlLabel
+                    value="LinkedIn"
+                    control={<Radio color="primary" />}
+                    label={<LinkedInIcon />}
+                  />
+                </RadioGroup>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField label="Contacts" variant="outlined" fullWidth />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField label="Title" variant="outlined" fullWidth />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Due Date and Time"
+                  type="datetime-local"
+                  defaultValue="2021-08-24T10:30"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField label="Type" variant="outlined" fullWidth />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField label="Assign To" variant="outlined" fullWidth />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Notes"
+                  variant="outlined"
+                  fullWidth
+                  multiline
+                  rows={4}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField label="Contacts" variant="outlined" fullWidth />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField label="Title" variant="outlined" fullWidth />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Due Date and Time"
-                type="datetime-local"
-                defaultValue="2021-08-24T10:30"
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField label="Type" variant="outlined" fullWidth />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField label="Assign To" variant="outlined" fullWidth />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField label="Notes" variant="outlined" fullWidth />
-            </Grid>
-          </Grid>
+          </Container>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseAdd} color="primary">
@@ -119,7 +188,61 @@ export default function TaskTable({ handleClickOpen }) {
             autoFocus
             variant="contained"
           >
-            Add
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        fullScreen
+        open={openCall}
+        onClose={handleCloseAdd}
+        // TransitionComponent={Transition}
+      >
+        <DialogTitle>Add New {isEmail ? "Email" : "Call"} Log</DialogTitle>
+        <DialogContent style={{ minWidth: "500px" }}>
+          <Container maxWidth="md">
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <TextField label="Contact" variant="outlined" fullWidth />
+              </Grid>
+              <Grid item xs={6}>
+                {isEmail ? (
+                  <TextField
+                    label="Date"
+                    type="date"
+                    defaultValue="2021-08-28"
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                ) : (
+                  <TextField label="Template" variant="outlined" fullWidth />
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Description"
+                  variant="outlined"
+                  fullWidth
+                  multiline
+                  rows={4}
+                />
+              </Grid>
+            </Grid>
+          </Container>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAdd} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleCloseAdd}
+            color="primary"
+            autoFocus
+            variant="contained"
+          >
+            Save
           </Button>
         </DialogActions>
       </Dialog>
@@ -151,9 +274,9 @@ export default function TaskTable({ handleClickOpen }) {
           <Button
             variant="contained"
             style={{ marginLeft: "20px" }}
-            onClick={handleClickAdd}
+            onClick={handleClick}
           >
-            Add Task
+            Add
           </Button>
         </div>
       </div>
