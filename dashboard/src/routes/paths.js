@@ -41,6 +41,7 @@ export const PATH_DASHBOARD = {
     contacts: path(ROOTS_DASHBOARD, "/contacts"),
     tasks: path(ROOTS_DASHBOARD, "/tasks"),
     templates: path(ROOTS_DASHBOARD, "/templates"),
+    snippets: path(ROOTS_DASHBOARD, "/snippets"),
   },
   mail: {
     root: path(ROOTS_DASHBOARD, "/mail"),

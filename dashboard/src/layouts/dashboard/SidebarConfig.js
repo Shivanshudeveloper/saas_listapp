@@ -61,6 +61,11 @@ const sidebarConfig = [
         path: PATH_DASHBOARD.general.templates,
         icon: ICONS.calendar,
       },
+      {
+        title: "Snippets",
+        path: PATH_DASHBOARD.general?.snippets,
+        icon: ICONS.kanban,
+      },
     ],
   },
 
