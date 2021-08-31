@@ -93,6 +93,7 @@
     "lazysizes": "^5.3.2",
     "lodash": "^4.17.21",
     "mapbox-gl": "^2.2.0",
+    "material-ui-dropzone": "^3.5.0",
     "notistack": "^1.0.9",
     "nprogress": "^0.2.0",
     "numeral": "^2.0.6",
