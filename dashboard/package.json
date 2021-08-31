@@ -37,6 +37,8 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.15.0",
+    "@ckeditor/ckeditor5-build-classic": "^29.1.0",
+    "@ckeditor/ckeditor5-react": "^3.0.2",
     "@emotion/cache": "^11.4.0",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
@@ -110,6 +112,7 @@
     "react-markdown": "^6.0.2",
     "react-quill": "^2.0.0-beta.2",
     "react-redux": "^7.2.4",
+    "react-render-html": "^0.6.0",
     "react-router": "^6.0.0-beta.0",
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "4.0.0",

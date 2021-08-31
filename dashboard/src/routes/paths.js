@@ -40,6 +40,7 @@ export const PATH_DASHBOARD = {
     company: path(ROOTS_DASHBOARD, "/company"),
     contacts: path(ROOTS_DASHBOARD, "/contacts"),
     tasks: path(ROOTS_DASHBOARD, "/tasks"),
+    templates: path(ROOTS_DASHBOARD, "/templates"),
   },
   mail: {
     root: path(ROOTS_DASHBOARD, "/mail"),

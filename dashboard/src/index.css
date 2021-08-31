@@ -8,3 +8,21 @@
 * {
   font-family: "Poppins", sans-serif !important;
 }
+
+.ck-editor__editable_inline {
+  min-height: 400px;
+}
+.templateForm {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.templateForm > label {
+  padding: 5px;
+}
+.templateForm > input {
+  width: 87%;
+  border: none;
+  outline: none;
+  padding: 5px;
+}

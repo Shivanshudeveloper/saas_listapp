@@ -77,9 +77,53 @@ export default function TaskTable({ handleClickOpen }) {
     setValue(newValue);
   };
 
+  const AddSection = ({ title }) => {
+    return (
+      <>
+        <DialogTitle>Add New {title}</DialogTitle>
+        <DialogContent style={{ minWidth: "500px" }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField label="Contacts" variant="outlined" fullWidth />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField label="Title" variant="outlined" fullWidth />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Due Date and Time"
+                type="datetime-local"
+                defaultValue="2021-08-24T10:30"
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField label="Type" variant="outlined" fullWidth />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField label="Assign To" variant="outlined" fullWidth />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Notes"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={4}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+      </>
+    );
+  };
+
   return (
     <>
-      <Dialog fullScreen open={openTask} onClose={handleCloseAdd}>
+      <Dialog open={openTask} onClose={handleCloseAdd}>
         <Container maxWidth="md">
           <div
             style={{
@@ -103,47 +147,9 @@ export default function TaskTable({ handleClickOpen }) {
               <Tab icon={<LinkedInIcon />} />
             </Tabs>
           </div>
-          {value === 0 && (
-            <>
-              <DialogTitle>{"Add New Task"}</DialogTitle>
-              <DialogContent style={{ minWidth: "500px" }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField label="Contacts" variant="outlined" fullWidth />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField label="Title" variant="outlined" fullWidth />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      label="Due Date and Time"
-                      type="datetime-local"
-                      defaultValue="2021-08-24T10:30"
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField label="Type" variant="outlined" fullWidth />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField label="Assign To" variant="outlined" fullWidth />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Notes"
-                      variant="outlined"
-                      fullWidth
-                      multiline
-                      rows={4}
-                    />
-                  </Grid>
-                </Grid>
-              </DialogContent>
-            </>
-          )}
+          {value === 0 && <AddSection title="Task" />}
+          {value === 3 && <AddSection title="Message" />}
+          {value === 4 && <AddSection title="LinkedIn" />}
           {value > 0 && value < 3 && (
             <>
               <DialogTitle>

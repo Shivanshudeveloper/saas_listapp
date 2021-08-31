@@ -81,6 +81,7 @@ export default function Router() {
         { path: "search", element: <GeneralApp /> },
         { path: "company", element: <GeneralEcommerce /> },
         { path: "tasks", element: <Tasks /> },
+        { path: "templates", element: <Templates /> },
         {
           path: "contacts",
           element: <GeneralAnalytics />,
@@ -263,6 +264,7 @@ const GeneralApp = Loadable(
   lazy(() => import("../pages/dashboard/GeneralApp"))
 );
 const Tasks = Loadable(lazy(() => import("../pages/dashboard/Tasks")));
+const Templates = Loadable(lazy(() => import("../pages/dashboard/Templates")));
 const GeneralEcommerce = Loadable(
   lazy(() => import("../pages/dashboard/GeneralEcommerce"))
 );

@@ -56,6 +56,11 @@ const sidebarConfig = [
         path: PATH_DASHBOARD.general.contacts,
         icon: ICONS.ecommerce,
       },
+      {
+        title: "Templates",
+        path: PATH_DASHBOARD.general.templates,
+        icon: ICONS.calendar,
+      },
     ],
   },
 
