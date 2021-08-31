@@ -82,6 +82,13 @@ export default function Templates() {
   return (
     <Page title="Templates | List App">
       <Container maxWidth="xl" style={{ padding: 0 }}>
+        <Button
+          variant="outlined"
+          onClick={handleClickOpen}
+          style={{ marginLeft: "20px", float: 'right' }}
+        >
+          Add Template
+        </Button>
         <AppBar
           position="static"
           color="default"
@@ -124,14 +131,7 @@ export default function Templates() {
               style={{ marginRight: "40px" }}
             />
           </Tabs>
-          <Button
-            variant="outlined"
-            onClick={handleClickOpen}
-            style={{ marginLeft: "20px" }}
-            size="small"
-          >
-            Add Template
-          </Button>
+          
         </AppBar>
 
         <SwipeableViews
@@ -170,12 +170,11 @@ export default function Templates() {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
         maxWidth="sm"
-        fullScreen
       >
         <Container maxWidth="lg" style={{ marginTop: "20px" }}>
           <DialogContent>
             <Grid container spacing={2}>
-              <Grid md={6}>
+              <Grid md={12}>
                 <TextField
                   label="Name"
                   variant="outlined"
@@ -205,20 +204,13 @@ export default function Templates() {
                   }}
                 />
                 <div style={{ margin: "10px 0" }}>
-                  <Typography variant="body1">Tags</Typography>
                   <TextField
                     label="Add New Tag"
                     variant="outlined"
-                    size="small"
+                    fullWidth
                     style={{ margin: "10px 0" }}
                   />
                 </div>
-              </Grid>
-              <Grid md={6} style={{ padding: "15px" }}>
-                <Typography variant="h5" style={{ marginBottom: "10px" }}>
-                  Preview
-                </Typography>
-                {renderHTML(template)}
               </Grid>
             </Grid>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -229,7 +221,7 @@ export default function Templates() {
               >
                 Cancel
               </Button>
-              <Button onClick={handleClose} color="primary" variant="contained">
+              <Button onClick={handleClose} color="primary" variant="outlined">
                 Save Template
               </Button>
             </div>

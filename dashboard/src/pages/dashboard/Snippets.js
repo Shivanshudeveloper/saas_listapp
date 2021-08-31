@@ -81,6 +81,13 @@ export default function Templates() {
   return (
     <Page title="Templates | List App">
       <Container maxWidth="xl" style={{ padding: 0 }}>
+          <Button
+            variant="outlined"
+            onClick={handleClickOpen}
+            style={{ marginLeft: "20px", float: 'right' }}
+          >
+            Add Snippet
+          </Button>
         <AppBar
           position="static"
           color="default"
@@ -115,14 +122,7 @@ export default function Templates() {
               style={{ marginRight: "40px" }}
             />
           </Tabs>
-          <Button
-            variant="outlined"
-            onClick={handleClickOpen}
-            style={{ marginLeft: "20px" }}
-            size="small"
-          >
-            Add Snippet
-          </Button>
+          
         </AppBar>
 
         <SwipeableViews
