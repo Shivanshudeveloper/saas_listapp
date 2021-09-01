@@ -5,17 +5,12 @@ const stripe = require("stripe")(
 );
 const { v4: uuidv4 } = require("uuid");
 // Getting Module
-const University_Model = require("../models/University");
+
 const Products_Model = require("../models/Products");
 const MainStore_Model = require("../models/MainStore");
 const Cart_Model = require("../models/Cart");
-const Payment_Model = require("../models/Payment");
-const Status_Model = require("../models/Status");
-const FeaturedProduct_Model = require("../models/FeaturedProduct");
-const Products2_Model = require("../models/Products2");
-const WishList_Model = require("../models/WishList");
-const OtherStore_Model = require("../models/OtherStore");
-const WeekProducts_Model = require("../models/WeekProducts");
+const Contact_Model = require("../models/Contact");
+const Company_Model = require("../models/Company");
 
 function isNumeric(str) {
   if (typeof str != "string") return false; // we only process strings!
@@ -24,6 +19,53 @@ function isNumeric(str) {
     !isNaN(parseFloat(str))
   ); // ...and ensure strings of whitespace fail
 }
+
+//
+router.post("/addcontact", async (req, res) => {
+  const formData = req.body;
+  const newContact = new Contact_Model({
+    ...formData,
+  });
+
+  try {
+    await newContact.save();
+    res.status(201).json(newContact);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.get("/getallcontact", async (req, res) => {
+  try {
+    const allContacts = await Contact_Model.find({});
+    res.status(201).json(allContacts);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.post("/addcompany", async (req, res) => {
+  const formData = req.body;
+  const newCompany = new Company_Model({
+    ...formData,
+  });
+
+  try {
+    await newCompany.save();
+    res.status(201).json(newCompany);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.get("/getallcompanies", async (req, res) => {
+  try {
+    const allCompanies = await Company_Model.find({});
+    res.status(201).json(allCompanies);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
 
 // TEST
 // @GET TEST
@@ -124,7 +166,5 @@ router.get(
       .catch((err) => res.status(400).json(`Error: ${err}`));
   }
 );
-
-
 
 module.exports = router;

@@ -49,7 +49,7 @@ export default function GeneralApp() {
         aria-labelledby={`full-width-tab-${index}`}
         {...other}
       >
-        {value === index && <Box>{children}</Box>}
+        {value === index && <Box sx={{ height: "100%" }}>{children}</Box>}
       </div>
     );
   }
