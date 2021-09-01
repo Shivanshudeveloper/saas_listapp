@@ -1,12 +1,6 @@
 import React, { useState } from "react";
+import renderHTML from "react-render-html";
 
-import faker from "faker";
-import { Icon } from "@iconify/react";
-import { sentenceCase } from "change-case";
-import { Link as RouterLink } from "react-router-dom";
-// material
-import { useTheme } from "@material-ui/core/styles";
-import arrowIosForwardFill from "@iconify/icons-eva/arrow-ios-forward-fill";
 import {
   Box,
   Card,
@@ -53,39 +47,9 @@ import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 // ----------------------------------------------------------------------
 
-const DATA = [
-  {
-    id: faker.datatype.uuid(),
-    name: "Sample Snippet 1",
-    desc: "Snippet text",
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: "Sample Snippet 2",
-    desc: "Snippet text....",
-    company: "Microsoft",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: "Sample Snippet 3",
-    desc: "Snippet text",
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: "Sample Snippet 4",
-    desc: "Snippet text123123",
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-];
-
 // ----------------------------------------------------------------------
 
-export default function TemplatePersonal() {
+export default function TemplatePersonal({ allSnippets }) {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
 
   function descendingComparator(a, b, orderBy) {
@@ -371,7 +335,7 @@ export default function TemplatePersonal() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = DATA.map((n) => n.id);
+      const newSelecteds = allSnippets.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -414,7 +378,8 @@ export default function TemplatePersonal() {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, DATA.length - page * rowsPerPage);
+    rowsPerPage -
+    Math.min(rowsPerPage, allSnippets.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -435,10 +400,10 @@ export default function TemplatePersonal() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={DATA.length}
+              rowCount={allSnippets.length}
             />
             <TableBody>
-              {stableSort(DATA, getComparator(order, orderBy))
+              {stableSort(allSnippets, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
@@ -461,7 +426,12 @@ export default function TemplatePersonal() {
                         />
                       </TableCell>
                       <TableCell style={tableCellStyle}>{row.name}</TableCell>
-                      <TableCell style={tableCellStyle}>{row.desc}</TableCell>
+                      <TableCell style={tableCellStyle}>
+                        <div style={{ display: "flex" }}>
+                          {renderHTML(row.description.slice(0, 20))}
+                          {row.description.slice(20).length > 0 && "..."}
+                        </div>
+                      </TableCell>
                       <TableCell
                         align="center"
                         style={{

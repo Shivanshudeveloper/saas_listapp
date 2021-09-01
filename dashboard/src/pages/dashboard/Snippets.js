@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // material
 // hooks
@@ -6,7 +6,7 @@ import useAuth from "../../hooks/useAuth";
 // components
 import Page from "../../components/Page";
 
-import { Box, Container, Grid, Divider } from "@material-ui/core";
+import { Box, Container, Grid, Divider, IconButton } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -24,6 +24,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import renderHTML from "react-render-html";
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
+
+import { API_SERVICE } from "../../config";
+import axios from "axios";
 // ----------------------------------------------------------------------
 
 export default function Templates() {
@@ -37,11 +42,14 @@ export default function Templates() {
 
   const handleClose = () => {
     setOpen(false);
-    setTemplate("");
   };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    setFormData({
+      ...formData,
+      type: newValue === 0 ? "personal" : "team",
+    });
   };
 
   const handleChangeIndex = (index) => {
@@ -71,23 +79,95 @@ export default function Templates() {
     );
   }
 
-  const [template, setTemplate] = useState("");
+  const [openS, setOpenS] = React.useState(false);
+
+  const handleClickS = () => {
+    setOpenS(true);
+  };
+
+  const handleCloseS = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenS(false);
+  };
 
   const changeText = (event, editor) => {
     const data = editor.getData();
-    setTemplate(data);
+    setFormData({ ...formData, description: data });
+  };
+
+  const initialState = {
+    name: "",
+    subject: "",
+    description: "",
+    type: "personal",
+  };
+
+  const [formData, setFormData] = useState(initialState);
+  useEffect(() => {
+    getSnippets();
+  }, [value]);
+
+  const addSnippet = async () => {
+    await axios
+      .post(`${API_SERVICE}/addsnippet`, formData)
+      .then((res) => {
+        console.log(res);
+        handleClickS();
+        setFormData(initialState);
+        handleClose();
+        getSnippets();
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const [allSnippets, setAllSnippets] = useState([]);
+
+  const getSnippets = async () => {
+    var type = "personal";
+    type = value === 0 ? "personal" : "team";
+    await axios
+      .get(`${API_SERVICE}/getallsnippets/${type}`)
+      .then((res) => {
+        setAllSnippets(res.data);
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
-    <Page title="Templates | List App">
+    <Page title="Snippets | List App">
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        open={openS}
+        autoHideDuration={6000}
+        onClose={handleCloseS}
+        message="Snippet Added"
+        action={
+          <React.Fragment>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleCloseS}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
       <Container maxWidth="xl" style={{ padding: 0 }}>
-          <Button
-            variant="outlined"
-            onClick={handleClickOpen}
-            style={{ marginLeft: "20px", float: 'right' }}
-          >
-            Add Snippet
-          </Button>
+        <Button
+          variant="outlined"
+          onClick={handleClickOpen}
+          style={{ marginLeft: "20px", float: "right" }}
+        >
+          Add Snippet
+        </Button>
         <AppBar
           position="static"
           color="default"
@@ -122,7 +202,6 @@ export default function Templates() {
               style={{ marginRight: "40px" }}
             />
           </Tabs>
-          
         </AppBar>
 
         <SwipeableViews
@@ -136,7 +215,7 @@ export default function Templates() {
             dir={theme.direction}
             style={{ padding: 0 }}
           >
-            <SnippetPersonal />
+            <SnippetPersonal type="personal" allSnippets={allSnippets} />
           </TabPanel>
           <TabPanel
             value={value}
@@ -144,7 +223,7 @@ export default function Templates() {
             dir={theme.direction}
             style={{ padding: 0 }}
           >
-            <SnippetPersonal />
+            <SnippetPersonal type="team" allSnippets={allSnippets} />
           </TabPanel>
         </SwipeableViews>
       </Container>
@@ -156,6 +235,8 @@ export default function Templates() {
             style={{ margin: "10px 0" }}
             fullWidth
             size="small"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
           <TextField
             label="Subject"
@@ -163,23 +244,13 @@ export default function Templates() {
             style={{ margin: "10px 0" }}
             fullWidth
             size="small"
+            value={formData.subject}
+            onChange={(e) =>
+              setFormData({ ...formData, subject: e.target.value })
+            }
           />
 
-          <CKEditor
-            editor={ClassicEditor}
-            data=""
-            onReady={(editor) => {
-              // You can store the "editor" and use when it is needed.
-              console.log("Editor is ready to use!", editor);
-            }}
-            onChange={changeText}
-            onBlur={(event, editor) => {
-              console.log("Blur.", editor);
-            }}
-            onFocus={(event, editor) => {
-              console.log("Focus.", editor);
-            }}
-          />
+          <CKEditor editor={ClassicEditor} data="" onChange={changeText} />
           <DialogActions>
             <Button
               onClick={handleClose}
@@ -188,7 +259,7 @@ export default function Templates() {
             >
               Cancel
             </Button>
-            <Button onClick={handleClose} color="primary" variant="contained">
+            <Button onClick={addSnippet} color="primary" variant="contained">
               Save Snippet
             </Button>
           </DialogActions>

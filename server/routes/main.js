@@ -11,6 +11,8 @@ const MainStore_Model = require("../models/MainStore");
 const Cart_Model = require("../models/Cart");
 const Contact_Model = require("../models/Contact");
 const Company_Model = require("../models/Company");
+const Template_Model = require("../models/Templates");
+const Snippet_Model = require("../models/Snippet");
 
 function isNumeric(str) {
   if (typeof str != "string") return false; // we only process strings!
@@ -61,6 +63,54 @@ router.post("/addcompany", async (req, res) => {
 router.get("/getallcompanies", async (req, res) => {
   try {
     const allCompanies = await Company_Model.find({});
+    res.status(201).json(allCompanies);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.post("/addtemplate", async (req, res) => {
+  const formData = req.body;
+  const newTemplate = new Template_Model({
+    ...formData,
+  });
+
+  try {
+    await newTemplate.save();
+    res.status(201).json(newTemplate);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.get("/getalltemplates/:type", async (req, res) => {
+  const { type: type } = req.params;
+  try {
+    const allCompanies = await Template_Model.find({ type: type });
+    res.status(201).json(allCompanies);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.post("/addsnippet", async (req, res) => {
+  const formData = req.body;
+  const newTemplate = new Snippet_Model({
+    ...formData,
+  });
+
+  try {
+    await newTemplate.save();
+    res.status(201).json(newTemplate);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.get("/getallsnippets/:type", async (req, res) => {
+  const { type: type } = req.params;
+  try {
+    const allCompanies = await Snippet_Model.find({ type: type });
     res.status(201).json(allCompanies);
   } catch (error) {
     res.status(409).json({ message: error.message });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import faker from "faker";
 import { Icon } from "@iconify/react";
@@ -51,34 +51,14 @@ import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
-// ----------------------------------------------------------------------
 
-const DATA = [
-  {
-    id: faker.datatype.uuid(),
-    name: "Sample Template",
-    desc: "This is a samp...",
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: "Sample Template",
-    desc: "This is a samp...",
-    company: "Microsoft",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: "Sample Template",
-    desc: "This is a samp...",
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-];
+import { API_SERVICE } from "../../config";
+import axios from "axios";
+// ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 
-export default function TemplatePersonal() {
+export default function TemplatePersonal({ allTemplates }) {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
 
   function descendingComparator(a, b, orderBy) {
@@ -106,24 +86,6 @@ export default function TemplatePersonal() {
     });
     return stabilizedThis.map((el) => el[0]);
   }
-
-  const headCells = [
-    {
-      id: "name",
-      numeric: false,
-      disablePadding: true,
-      label: "Dessert (100g serving)",
-    },
-    { id: "calories", numeric: true, disablePadding: false, label: "Calories" },
-    { id: "fat", numeric: true, disablePadding: false, label: "Fat (g)" },
-    { id: "carbs", numeric: true, disablePadding: false, label: "Carbs (g)" },
-    {
-      id: "protein",
-      numeric: true,
-      disablePadding: false,
-      label: "Protein (g)",
-    },
-  ];
 
   function EnhancedTableHead(props) {
     const {
@@ -364,7 +326,7 @@ export default function TemplatePersonal() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = DATA.map((n) => n.id);
+      const newSelecteds = allTemplates.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -407,7 +369,8 @@ export default function TemplatePersonal() {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, DATA.length - page * rowsPerPage);
+    rowsPerPage -
+    Math.min(rowsPerPage, allTemplates.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -428,10 +391,10 @@ export default function TemplatePersonal() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={DATA.length}
+              rowCount={allTemplates.length}
             />
             <TableBody>
-              {stableSort(DATA, getComparator(order, orderBy))
+              {stableSort(allTemplates, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
@@ -455,10 +418,10 @@ export default function TemplatePersonal() {
                       </TableCell>
                       <TableCell style={tableCellStyle}>{row.name}</TableCell>
                       <TableCell style={tableCellStyle}>
-                        {row.desc}
-                        {row?.keyword?.length > 0 && (
+                        {row.subject}
+                        {row?.tag.length > 0 && (
                           <Chip
-                            label={row.keyword}
+                            label={row.tag}
                             style={{
                               marginLeft: "10px",
                               background: "lightblue",

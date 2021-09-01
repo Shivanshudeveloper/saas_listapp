@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // material
 // hooks
@@ -6,7 +6,7 @@ import useAuth from "../../hooks/useAuth";
 // components
 import Page from "../../components/Page";
 
-import { Box, Container, Grid, Divider } from "@material-ui/core";
+import { Box, Container, Grid, IconButton } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -25,6 +25,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import renderHTML from "react-render-html";
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
+
+import { API_SERVICE } from "../../config";
+import axios from "axios";
 // ----------------------------------------------------------------------
 
 export default function Templates() {
@@ -41,8 +46,25 @@ export default function Templates() {
     setTemplate("");
   };
 
+  const [openS, setOpenS] = React.useState(false);
+
+  const handleClickS = () => {
+    setOpenS(true);
+  };
+
+  const handleCloseS = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenS(false);
+  };
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    setFormData({
+      ...formData,
+      type: newValue === 0 ? "personal" : newValue === 1 ? "team" : "library",
+    });
   };
 
   const handleChangeIndex = (index) => {
@@ -76,16 +98,79 @@ export default function Templates() {
 
   const changeText = (event, editor) => {
     const data = editor.getData();
-    setTemplate(data);
+    setFormData({ ...formData, description: data });
+  };
+
+  const initialState = {
+    name: "",
+    subject: "",
+    description: "",
+    tag: "",
+    type: "personal",
+  };
+
+  const [formData, setFormData] = useState(initialState);
+
+  useEffect(() => {
+    getTemplates();
+  }, [value]);
+
+  const addTemplate = async () => {
+    await axios
+      .post(`${API_SERVICE}/addtemplate`, formData)
+      .then((res) => {
+        console.log(res);
+        setFormData(initialState);
+        handleClose();
+        handleClickS();
+        getTemplates();
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const [allTemplates, setAllTemplates] = useState([]);
+
+  const getTemplates = async () => {
+    var type = "personal";
+    type = value === 0 ? "personal" : value === 1 ? "team" : "library";
+    await axios
+      .get(`${API_SERVICE}/getalltemplates/${type}`)
+      .then((res) => {
+        setAllTemplates(res.data);
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
     <Page title="Templates | List App">
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        open={openS}
+        autoHideDuration={6000}
+        onClose={handleCloseS}
+        message="Template Added"
+        action={
+          <React.Fragment>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleCloseS}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
       <Container maxWidth="xl" style={{ padding: 0 }}>
         <Button
           variant="outlined"
           onClick={handleClickOpen}
-          style={{ marginLeft: "20px", float: 'right' }}
+          style={{ marginLeft: "20px", float: "right" }}
         >
           Add Template
         </Button>
@@ -131,7 +216,6 @@ export default function Templates() {
               style={{ marginRight: "40px" }}
             />
           </Tabs>
-          
         </AppBar>
 
         <SwipeableViews
@@ -145,7 +229,7 @@ export default function Templates() {
             dir={theme.direction}
             style={{ padding: 0 }}
           >
-            <TemplatePersonal />
+            <TemplatePersonal allTemplates={allTemplates} />
           </TabPanel>
           <TabPanel
             value={value}
@@ -153,7 +237,7 @@ export default function Templates() {
             dir={theme.direction}
             style={{ padding: 0 }}
           >
-            <TemplatePersonal />
+            <TemplatePersonal allTemplates={allTemplates} />
           </TabPanel>
           <TabPanel
             value={value}
@@ -161,7 +245,7 @@ export default function Templates() {
             dir={theme.direction}
             style={{ padding: 0 }}
           >
-            <TemplatePersonal />
+            <TemplatePersonal allTemplates={allTemplates} />
           </TabPanel>
         </SwipeableViews>
       </Container>
@@ -180,28 +264,26 @@ export default function Templates() {
                   variant="outlined"
                   style={{ margin: "10px 0" }}
                   fullWidth
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                 />
                 <TextField
                   label="Subject"
                   variant="outlined"
                   style={{ margin: "10px 0" }}
                   fullWidth
+                  value={formData.subject}
+                  onChange={(e) =>
+                    setFormData({ ...formData, subject: e.target.value })
+                  }
                 />
 
                 <CKEditor
                   editor={ClassicEditor}
                   data=""
-                  onReady={(editor) => {
-                    // You can store the "editor" and use when it is needed.
-                    console.log("Editor is ready to use!", editor);
-                  }}
                   onChange={changeText}
-                  onBlur={(event, editor) => {
-                    console.log("Blur.", editor);
-                  }}
-                  onFocus={(event, editor) => {
-                    console.log("Focus.", editor);
-                  }}
                 />
                 <div style={{ margin: "10px 0" }}>
                   <TextField
@@ -209,6 +291,10 @@ export default function Templates() {
                     variant="outlined"
                     fullWidth
                     style={{ margin: "10px 0" }}
+                    value={formData.tag}
+                    onChange={(e) =>
+                      setFormData({ ...formData, tag: e.target.value })
+                    }
                   />
                 </div>
               </Grid>
@@ -221,7 +307,7 @@ export default function Templates() {
               >
                 Cancel
               </Button>
-              <Button onClick={handleClose} color="primary" variant="outlined">
+              <Button onClick={addTemplate} color="primary" variant="outlined">
                 Save Template
               </Button>
             </div>
