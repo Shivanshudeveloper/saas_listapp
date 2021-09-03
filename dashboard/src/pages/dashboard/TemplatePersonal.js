@@ -58,7 +58,7 @@ import axios from "axios";
 
 // ----------------------------------------------------------------------
 
-export default function TemplatePersonal({ allTemplates }) {
+export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
 
   function descendingComparator(a, b, orderBy) {
@@ -164,9 +164,52 @@ export default function TemplatePersonal({ allTemplates }) {
     };
 
     const [open, setOpen] = React.useState(false);
+    const [isAdd, setIsAdd] = React.useState(false);
+    const [tag, setTag] = React.useState("");
+    const [tagDisplay, setTagDisplay] = React.useState([]);
 
-    const handleClickOpen = () => {
+    const handleClickOpen = (e) => {
+      if (e.target.innerText === "Add") setIsAdd(true);
+      if (e.target.innerText === "Remove") {
+        setIsAdd(false);
+        selected.map((each) => {
+          const index = allTemplates.find((temp, index) => {
+            if (temp._id == each) return true;
+          });
+          setTagDisplay(index.tag);
+        });
+      }
       setOpen(true);
+    };
+
+    const handleSubmitTag = () => {
+      if (isAdd === true) {
+        axios
+          .patch(`${API_SERVICE}/addtagtotemplate`, { tag, selected, type })
+          .then((res) => {
+            console.log(res);
+            setTemplates(res.data);
+            setOpen(false);
+            handleClose();
+            setTag("");
+          })
+          .catch((err) => console.log(err));
+      } else {
+        axios
+          .patch(`${API_SERVICE}/removetagfromtemplate`, {
+            tag,
+            selected,
+            type,
+          })
+          .then((res) => {
+            console.log(res);
+            setTemplates(res.data);
+            setOpen(false);
+            handleClose();
+            setTag("");
+          })
+          .catch((err) => console.log(err));
+      }
     };
 
     const handleCloseDialog = () => {
@@ -179,9 +222,32 @@ export default function TemplatePersonal({ allTemplates }) {
       setOpen(true);
     };
 
-    const handleCloseFilter = () => {
-      setOpen(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    // const [hasDeleted, setHasDeleted] = useState(false);
+
+    const search = () => {
+      if (searchQuery !== "") {
+        axios
+          .post(`${API_SERVICE}/searchtemplate`, {
+            searchQuery,
+            type,
+          })
+          .then((res) => {
+            setTemplates(res.data);
+          })
+          .catch((err) => console.log(err));
+      } else setTemplates(allTemplates);
     };
+
+    const deleteRow = () => {
+      selected.map(async (s) => {
+        await axios
+          .delete(`${API_SERVICE}/deletetemplate/${s}`)
+          .catch((err) => console.log(err));
+      });
+      getTemplates();
+    };
+
     return (
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -211,28 +277,61 @@ export default function TemplatePersonal({ allTemplates }) {
                     id="form-dialog-title"
                     style={{ width: "500px" }}
                   >
-                    Add Tag
+                    {isAdd ? "Add Tag" : "Remove Tag"}
                   </DialogTitle>
                   <DialogContent>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="name"
-                      label="Tag"
-                      type="text"
-                      fullWidth
-                    />
+                    {isAdd ? (
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Tag"
+                        type="text"
+                        fullWidth
+                        value={tag}
+                        onChange={(e) => setTag(e.target.value)}
+                      />
+                    ) : (
+                      <div>
+                        {tagDisplay.map((tag) => (
+                          <Chip
+                            label={tag}
+                            style={{
+                              marginLeft: "10px",
+                              background: "lightblue",
+                            }}
+                          />
+                        ))}
+                        <hr style={{ margin: "15px 0" }} />
+                        <Typography
+                          variant="body1"
+                          style={{ margin: "10px 0" }}
+                        >
+                          Enter Tag Name
+                        </Typography>
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          id="name"
+                          label="Tag"
+                          type="text"
+                          fullWidth
+                          value={tag}
+                          onChange={(e) => setTag(e.target.value)}
+                        />
+                      </div>
+                    )}
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleCloseDialog} color="primary">
                       Cancel
                     </Button>
-                    <Button onClick={handleCloseDialog} color="primary">
-                      Add
+                    <Button onClick={handleSubmitTag} color="primary">
+                      {isAdd ? "Add" : "Remove "}
                     </Button>
                   </DialogActions>
                 </Dialog>
-                <MenuItem onClick={handleClose}>Remove</MenuItem>
+                <MenuItem onClick={handleClickOpen}>Remove</MenuItem>
               </Menu>
               <Tooltip title="Archive">
                 <IconButton>
@@ -244,7 +343,7 @@ export default function TemplatePersonal({ allTemplates }) {
                   <FileCopyIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Delete">
+              <Tooltip title="Delete" onClick={deleteRow}>
                 <IconButton>
                   <DeleteIcon />
                 </IconButton>
@@ -261,10 +360,17 @@ export default function TemplatePersonal({ allTemplates }) {
               <InputBase
                 placeholder="Search Templates"
                 style={{ width: "250px" }}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <IconButton sx={{ p: 1 }}>
+              <IconButton sx={{ p: 1 }} onClick={search}>
                 <SearchIcon />
               </IconButton>
+              {allTemplates.length !== templates.length && (
+                <Button onClick={() => setTemplates(allTemplates)}>
+                  Reset
+                </Button>
+              )}
             </Paper>
           )}
         </div>
@@ -324,9 +430,11 @@ export default function TemplatePersonal({ allTemplates }) {
     setOrderBy(property);
   };
 
+  const [templates, setTemplates] = useState(allTemplates);
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = allTemplates.map((n) => n.id);
+      const newSelecteds = templates.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
@@ -369,8 +477,7 @@ export default function TemplatePersonal({ allTemplates }) {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage -
-    Math.min(rowsPerPage, allTemplates.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, templates.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -391,19 +498,19 @@ export default function TemplatePersonal({ allTemplates }) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={allTemplates.length}
+              rowCount={templates.length}
             />
             <TableBody>
-              {stableSort(allTemplates, getComparator(order, orderBy))
+              {stableSort(templates, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+                  const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.id)}
+                      onClick={(event) => handleClick(event, row._id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -419,15 +526,16 @@ export default function TemplatePersonal({ allTemplates }) {
                       <TableCell style={tableCellStyle}>{row.name}</TableCell>
                       <TableCell style={tableCellStyle}>
                         {row.subject}
-                        {row?.tag.length > 0 && (
-                          <Chip
-                            label={row.tag}
-                            style={{
-                              marginLeft: "10px",
-                              background: "lightblue",
-                            }}
-                          />
-                        )}
+                        {row?.tag.length > 0 &&
+                          row?.tag.map((tag) => (
+                            <Chip
+                              label={tag}
+                              style={{
+                                marginLeft: "10px",
+                                background: "lightblue",
+                              }}
+                            />
+                          ))}
                       </TableCell>
                       <TableCell
                         align="center"

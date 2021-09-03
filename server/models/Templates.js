@@ -14,7 +14,7 @@ const templateSchema = new mongoose.Schema({
     required: false,
   },
   tag: {
-    type: String,
+    type: Array,
     required: false,
   },
   type: {

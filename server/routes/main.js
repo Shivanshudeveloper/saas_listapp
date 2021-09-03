@@ -73,6 +73,7 @@ router.post("/addtemplate", async (req, res) => {
   const formData = req.body;
   const newTemplate = new Template_Model({
     ...formData,
+    tag: formData.tag.split(","),
   });
 
   try {
@@ -83,14 +84,105 @@ router.post("/addtemplate", async (req, res) => {
   }
 });
 
+router.patch("/addtagtotemplate", async (req, res) => {
+  const { tag, selected, type } = req.body;
+
+  const promiseArray = selected.map(async (each) => {
+    return new Promise(async (resolve, reject) => {
+      const template = await Template_Model.find({ _id: each });
+      await template[0].tag.push(tag);
+      await Template_Model.findByIdAndUpdate(each, template[0], {
+        new: true,
+        useFindAndModify: false,
+      });
+      return resolve();
+    });
+  });
+  Promise.all(promiseArray).then(async () => {
+    try {
+      const allTemplates = await Template_Model.find({ type: type });
+      res.status(201).json(allTemplates);
+    } catch (error) {
+      res.status(409).json({ message: error.message });
+    }
+  });
+});
+
+router.patch("/removetagfromtemplate", async (req, res) => {
+  const { tag, selected, type } = req.body;
+  const promiseArray = selected.map(async (each) => {
+    return new Promise(async (resolve, reject) => {
+      const template = await Template_Model.find({ _id: each });
+      template[0].tag = template[0].tag.filter((t) => t !== String(tag));
+      await Template_Model.findByIdAndUpdate(each, template[0], {
+        new: true,
+        useFindAndModify: false,
+      });
+      return resolve();
+    });
+  });
+  Promise.all(promiseArray).then(async () => {
+    try {
+      const allTemplates = await Template_Model.find({ type: type });
+      res.status(201).json(allTemplates);
+    } catch (error) {
+      res.status(409).json({ message: error.message });
+    }
+  });
+});
+
 router.get("/getalltemplates/:type", async (req, res) => {
   const { type: type } = req.params;
   try {
-    const allCompanies = await Template_Model.find({ type: type });
-    res.status(201).json(allCompanies);
+    const allTemplates = await Template_Model.find({ type: type });
+    res.status(201).json(allTemplates);
   } catch (error) {
     res.status(409).json({ message: error.message });
   }
+});
+
+router.post("/searchtemplate", async (req, res) => {
+  try {
+    const { searchQuery: name, type } = req.body;
+    const allTemplates = await Template_Model.find({
+      $or: [
+        {
+          name,
+          type,
+        },
+      ],
+    });
+    res.status(201).json(allTemplates);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.post("/searchsnippet", async (req, res) => {
+  try {
+    const { searchQuery: name, type } = req.body;
+    const allSnippets = await Snippet_Model.find({
+      $or: [
+        {
+          name,
+          type,
+        },
+      ],
+    });
+    res.status(201).json(allSnippets);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.delete("/deletetemplate/:id", async (req, res) => {
+  const { id: _id } = req.params;
+  await Template_Model.findByIdAndRemove(_id, { useFindAndModify: false });
+});
+
+router.delete("/deletesnippet/:id", async (req, res) => {
+  const { id: _id } = req.params;
+  await Snippet_Model.findByIdAndRemove(_id, { useFindAndModify: false });
 });
 
 router.post("/addsnippet", async (req, res) => {

@@ -45,11 +45,14 @@ import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
+
+import { API_SERVICE } from "../../config";
+import axios from "axios";
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 
-export default function TemplatePersonal({ allSnippets }) {
+export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
 
   function descendingComparator(a, b, orderBy) {
@@ -123,9 +126,6 @@ export default function TemplatePersonal({ allSnippets }) {
         </TableCell>
         <TableCell>Name</TableCell>
         <TableCell>Description</TableCell>
-        <TableCell align="center">Tasks</TableCell>
-        <TableCell align="center">Email</TableCell>
-        <TableCell align="center">Customer</TableCell>
         <TableCell align="center">Date</TableCell>
         {/* </TableRow> */}
       </TableHead>
@@ -188,9 +188,29 @@ export default function TemplatePersonal({ allSnippets }) {
       setOpen(true);
     };
 
-    const handleCloseFilter = () => {
-      setOpen(false);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const search = () => {
+      if (searchQuery !== "") {
+        axios
+          .post(`${API_SERVICE}/searchsnippet`, {
+            searchQuery,
+            type,
+          })
+          .then((res) => {
+            setSnippets(res.data);
+          })
+          .catch((err) => console.log(err));
+      } else setSnippets(allSnippets);
     };
+
+    const deleteRow = () => {
+      selected.map(async (s) => {
+        await axios.delete(`${API_SERVICE}/deletesnippet/${s}`);
+      });
+      getSnippets();
+    };
+
     return (
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center" }}>
@@ -199,50 +219,6 @@ export default function TemplatePersonal({ allSnippets }) {
           </Typography>
           {numSelected > 0 ? (
             <div style={{ display: "flex", marginLeft: "20px" }}>
-              <Tooltip title="Add/Remove Tags">
-                <IconButton>
-                  <LocalOfferIcon onClick={handleClick} />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClickOpen}>Add</MenuItem>
-                <Dialog
-                  open={open}
-                  onClose={handleCloseDialog}
-                  aria-labelledby="form-dialog-title"
-                >
-                  <DialogTitle
-                    id="form-dialog-title"
-                    style={{ width: "500px" }}
-                  >
-                    Add Tag
-                  </DialogTitle>
-                  <DialogContent>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="name"
-                      label="Tag"
-                      type="text"
-                      fullWidth
-                    />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary">
-                      Cancel
-                    </Button>
-                    <Button onClick={handleCloseDialog} color="primary">
-                      Add
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                <MenuItem onClick={handleClose}>Remove</MenuItem>
-              </Menu>
               <Tooltip title="Archive">
                 <IconButton>
                   <ArchiveIcon />
@@ -254,7 +230,7 @@ export default function TemplatePersonal({ allSnippets }) {
                 </IconButton>
               </Tooltip>
               <Tooltip title="Delete">
-                <IconButton>
+                <IconButton onClick={deleteRow}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
@@ -268,12 +244,17 @@ export default function TemplatePersonal({ allSnippets }) {
               }}
             >
               <InputBase
-                placeholder="Search Snippets"
+                placeholder="Search Templates"
                 style={{ width: "250px" }}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <IconButton sx={{ p: 1 }}>
+              <IconButton sx={{ p: 1 }} onClick={search}>
                 <SearchIcon />
               </IconButton>
+              {allSnippets.length !== snippets.length && (
+                <Button onClick={() => setSnippets(allSnippets)}>Reset</Button>
+              )}
             </Paper>
           )}
         </div>
@@ -326,6 +307,7 @@ export default function TemplatePersonal({ allSnippets }) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [snippets, setSnippets] = useState(allSnippets);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -335,7 +317,7 @@ export default function TemplatePersonal({ allSnippets }) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = allSnippets.map((n) => n.id);
+      const newSelecteds = snippets.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
@@ -378,8 +360,7 @@ export default function TemplatePersonal({ allSnippets }) {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage -
-    Math.min(rowsPerPage, allSnippets.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, snippets.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -400,19 +381,19 @@ export default function TemplatePersonal({ allSnippets }) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={allSnippets.length}
+              rowCount={snippets.length}
             />
             <TableBody>
-              {stableSort(allSnippets, getComparator(order, orderBy))
+              {stableSort(snippets, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+                  const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.id)}
+                      onClick={(event) => handleClick(event, row._id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -431,58 +412,6 @@ export default function TemplatePersonal({ allSnippets }) {
                           {renderHTML(row.description.slice(0, 20))}
                           {row.description.slice(20).length > 0 && "..."}
                         </div>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "flex-end",
-                          paddingTop: "5px",
-                          paddingBottom: "5px",
-                        }}
-                      >
-                        <div
-                          style={{ display: "flex", flexDirection: "column" }}
-                        >
-                          <div>16</div>
-                          <div style={{ color: "grey" }}>Delivered</div>
-                        </div>
-                        &nbsp;/&nbsp;
-                        <div
-                          style={{ display: "flex", flexDirection: "column" }}
-                        >
-                          <div>7</div>
-                          <div style={{ color: "grey" }}>Opens</div>
-                        </div>
-                        &nbsp;/&nbsp;
-                        <div
-                          style={{ display: "flex", flexDirection: "column" }}
-                        >
-                          <div>6</div>
-                          <div style={{ color: "grey" }}>Replies</div>
-                        </div>
-                      </TableCell>
-                      <TableCell align="center" style={tableCellStyle}>
-                        <LockIcon />
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{
-                          paddingTop: "5px",
-                          paddingBottom: "5px",
-                        }}
-                      >
-                        <Avatar
-                          style={{
-                            width: "37px",
-                            height: "37px",
-                            margin: "0 auto",
-                            textTransform: "uppercase",
-                          }}
-                        >
-                          AB
-                        </Avatar>
                       </TableCell>
                       <TableCell style={tableCellStyle} align="center">
                         Aug 22

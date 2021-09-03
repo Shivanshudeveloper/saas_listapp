@@ -215,7 +215,11 @@ export default function Templates() {
             dir={theme.direction}
             style={{ padding: 0 }}
           >
-            <SnippetPersonal type="personal" allSnippets={allSnippets} />
+            <SnippetPersonal
+              type="personal"
+              allSnippets={allSnippets}
+              getSnippets={getSnippets}
+            />
           </TabPanel>
           <TabPanel
             value={value}
@@ -223,7 +227,11 @@ export default function Templates() {
             dir={theme.direction}
             style={{ padding: 0 }}
           >
-            <SnippetPersonal type="team" allSnippets={allSnippets} />
+            <SnippetPersonal
+              type="team"
+              allSnippets={allSnippets}
+              getSnippets={getSnippets}
+            />
           </TabPanel>
         </SwipeableViews>
       </Container>

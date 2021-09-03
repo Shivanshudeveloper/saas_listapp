@@ -137,7 +137,6 @@ export default function Templates() {
       .get(`${API_SERVICE}/getalltemplates/${type}`)
       .then((res) => {
         setAllTemplates(res.data);
-        console.log(res);
       })
       .catch((err) => console.log(err));
   };
@@ -229,7 +228,11 @@ export default function Templates() {
             dir={theme.direction}
             style={{ padding: 0 }}
           >
-            <TemplatePersonal allTemplates={allTemplates} />
+            <TemplatePersonal
+              allTemplates={allTemplates}
+              type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
+              getTemplates={getTemplates}
+            />
           </TabPanel>
           <TabPanel
             value={value}
@@ -237,7 +240,11 @@ export default function Templates() {
             dir={theme.direction}
             style={{ padding: 0 }}
           >
-            <TemplatePersonal allTemplates={allTemplates} />
+            <TemplatePersonal
+              allTemplates={allTemplates}
+              type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
+              getTemplates={getTemplates}
+            />
           </TabPanel>
           <TabPanel
             value={value}
@@ -245,7 +252,10 @@ export default function Templates() {
             dir={theme.direction}
             style={{ padding: 0 }}
           >
-            <TemplatePersonal allTemplates={allTemplates} />
+            <TemplatePersonal
+              allTemplates={allTemplates}
+              type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
+            />
           </TabPanel>
         </SwipeableViews>
       </Container>
