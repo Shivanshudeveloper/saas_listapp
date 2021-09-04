@@ -1,4 +1,5 @@
-export const API_SERVICE = "http://localhost:5000/api/v1/main";
+// export const API_SERVICE = "http://localhost:5000/api/v1/main";
+export const API_SERVICE = "https://saaslistapp.herokuapp.com/api/v1/main";
 
 export const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
