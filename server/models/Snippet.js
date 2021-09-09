@@ -13,6 +13,10 @@ const snippetSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  tag: {
+    type: Array,
+    required: false,
+  },
   type: {
     type: String,
     required: false,

@@ -36,16 +36,16 @@ const sidebarConfig = [
         path: PATH_DASHBOARD.general.app,
         icon: ICONS.dashboard,
       },
-      {
-        title: "company",
-        path: PATH_DASHBOARD.general.company,
-        icon: ICONS.company,
-      },
-      {
-        title: "contacts",
-        path: PATH_DASHBOARD.general.contacts,
-        icon: ICONS.user,
-      },
+      // {
+      //   title: "company",
+      //   path: PATH_DASHBOARD.general.company,
+      //   icon: ICONS.company,
+      // },
+      // {
+      //   title: "contacts",
+      //   path: PATH_DASHBOARD.general.contacts,
+      //   icon: ICONS.user,
+      // },
       {
         title: "Tasks",
         path: PATH_DASHBOARD.general.tasks,

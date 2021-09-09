@@ -22,7 +22,7 @@ import {
   Paper,
   Chip,
   Tooltip,
-  FormControlLabel,
+  Grid,
   Switch,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -38,12 +38,14 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import EditIcon from "@material-ui/icons/Edit";
 import clsx from "clsx";
 
 import LockIcon from "@material-ui/icons/Lock";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
+import { Editor } from "@tinymce/tinymce-react";
 import InputBase from "@material-ui/core/InputBase";
 
 import { API_SERVICE } from "../../config";
@@ -80,24 +82,6 @@ export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
     });
     return stabilizedThis.map((el) => el[0]);
   }
-
-  const headCells = [
-    {
-      id: "name",
-      numeric: false,
-      disablePadding: true,
-      label: "Dessert (100g serving)",
-    },
-    { id: "calories", numeric: true, disablePadding: false, label: "Calories" },
-    { id: "fat", numeric: true, disablePadding: false, label: "Fat (g)" },
-    { id: "carbs", numeric: true, disablePadding: false, label: "Carbs (g)" },
-    {
-      id: "protein",
-      numeric: true,
-      disablePadding: false,
-      label: "Protein (g)",
-    },
-  ];
 
   function EnhancedTableHead(props) {
     const {
@@ -162,30 +146,14 @@ export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
   const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
     const { numSelected } = props;
-    const [anchorEl, setAnchorEl] = React.useState(null);
-
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
-
-    const [open, setOpen] = React.useState(false);
-
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
-
-    const handleCloseDialog = () => {
-      setOpen(false);
-    };
 
     const [openFilter, setOpenFilter] = useState(false);
 
     const handleClickOpenFilter = () => {
-      setOpen(true);
+      setOpenFilter(true);
+    };
+    const handleCloseFilter = () => {
+      setOpenFilter(false);
     };
 
     const [searchQuery, setSearchQuery] = useState("");
@@ -211,14 +179,199 @@ export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
       getSnippets();
     };
 
+    const initialState = {
+      name: "",
+      subject: "",
+      description: "",
+      tag: "",
+      type: type,
+    };
+
+    const [openEdit, setOpenEdit] = useState(false);
+    const [formData, setFormData] = useState(initialState);
+    const handleChangeEditor = (content, editor) => {
+      setFormData({ ...formData, description: content });
+    };
+
+    const handleClickOpenEdit = () => {
+      setOpenEdit(true);
+    };
+    const handleCloseEdit = () => {
+      setOpenEdit(false);
+    };
+
+    const editTemplate = async () => {
+      handleClickOpenEdit();
+      await axios
+        .get(`${API_SERVICE}/searchonesnippet/${selected[0]}`)
+        .then((res) => {
+          const allTags = res.data[0].tag.join();
+          setFormData(res.data[0]);
+          setFormData({ ...res.data[0], tag: allTags });
+        })
+        .catch((err) => console.log(err));
+    };
+    const saveEdit = async () => {
+      await axios
+        .patch(`${API_SERVICE}/editsnippet`, formData)
+        .then((res) => {
+          handleCloseEdit();
+          getSnippets();
+        })
+        .catch((err) => console.log(err));
+    };
+
     return (
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
+        <Dialog
+          open={openFilter}
+          onClose={handleCloseFilter}
+          aria-labelledby="form-dialog-title"
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle id="form-dialog-title">Filter</DialogTitle>
+          <DialogContent>
+            <br />
+            <Box style={{ margin: "10px 0" }}>
+              <Typography variant="subtitle2">Name</Typography>
+              <TextField
+                style={{ marginTop: "5px" }}
+                label="Sample"
+                variant="filled"
+                size="small"
+                fullWidth
+              />
+            </Box>
+            <Box style={{ margin: "10px 0" }}>
+              <Typography variant="subtitle2">Description</Typography>
+              <TextField
+                style={{ marginTop: "5px" }}
+                label="Nike"
+                variant="filled"
+                size="small"
+                fullWidth
+              />
+            </Box>
+            <Box style={{ margin: "10px 0" }}>
+              <Typography variant="subtitle2">Date</Typography>
+              <TextField
+                style={{ marginTop: "5px" }}
+                label="date"
+                variant="filled"
+                size="small"
+                fullWidth
+              />
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseFilter} color="primary">
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCloseFilter}
+              color="primary"
+              variant="contained"
+            >
+              Search
+            </Button>
+          </DialogActions>
+        </Dialog>
         <div style={{ display: "flex", alignItems: "center" }}>
           <Typography className={classes.title} variant="h6" id="tableTitle">
             All Snippets
           </Typography>
           {numSelected > 0 ? (
             <div style={{ display: "flex", marginLeft: "20px" }}>
+              {numSelected < 2 && (
+                <Tooltip title="Edit Template">
+                  <IconButton>
+                    <EditIcon onClick={editTemplate} />
+                  </IconButton>
+                </Tooltip>
+              )}
+              <Dialog
+                open={openEdit}
+                onClose={handleCloseEdit}
+                aria-labelledby="form-dialog-title"
+                maxWidth="sm"
+                fullWidth
+              >
+                <DialogTitle id="form-dialog-title">Edit Template</DialogTitle>
+                <DialogContent>
+                  <Grid container spacing={2}>
+                    <Grid md={12}>
+                      <TextField
+                        label="Name"
+                        variant="outlined"
+                        style={{ margin: "10px 0" }}
+                        fullWidth
+                        value={formData.name}
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
+                      />
+                      <TextField
+                        label="Subject"
+                        variant="outlined"
+                        style={{ margin: "10px 0" }}
+                        fullWidth
+                        value={formData.subject}
+                        onChange={(e) =>
+                          setFormData({ ...formData, subject: e.target.value })
+                        }
+                      />
+
+                      <Editor
+                        apiKey="azhogyuiz16q8om0wns0u816tu8k6517f6oqgs5mfl36hptu"
+                        plugins="wordcount"
+                        value={formData.description}
+                        init={{
+                          height: 600,
+                          menubar: false,
+                          plugins: [
+                            "advlist autolink lists link image charmap print preview anchor",
+                            "searchreplace visualblocks code fullscreen",
+                            "insertdatetime media table paste code help wordcount",
+                          ],
+                          toolbar:
+                            "undo redo | formatselect | " +
+                            "bold italic backcolor | alignleft aligncenter " +
+                            "alignright alignjustify | bullist numlist outdent indent | " +
+                            "removeformat | help",
+                          content_style:
+                            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                        }}
+                        onEditorChange={handleChangeEditor}
+                      />
+                      <div style={{ margin: "10px 0" }}>
+                        <TextField
+                          label="Add New Tag"
+                          variant="outlined"
+                          fullWidth
+                          style={{ margin: "10px 0" }}
+                          value={formData.tag}
+                          onChange={(e) =>
+                            setFormData({ ...formData, tag: e.target.value })
+                          }
+                        />
+                      </div>
+                    </Grid>
+                  </Grid>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseEdit} color="primary">
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={saveEdit}
+                    color="primary"
+                    variant="contained"
+                  >
+                    Save
+                  </Button>
+                </DialogActions>
+              </Dialog>
               <Tooltip title="Archive">
                 <IconButton>
                   <ArchiveIcon />
@@ -408,9 +561,22 @@ export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
                       </TableCell>
                       <TableCell style={tableCellStyle}>{row.name}</TableCell>
                       <TableCell style={tableCellStyle}>
-                        <div style={{ display: "flex" }}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           {renderHTML(row.description.slice(0, 20))}
                           {row.description.slice(20).length > 0 && "..."}
+                          {row?.tag.length > 0 &&
+                            row?.tag.map((tag) => {
+                              if (tag !== "")
+                                return (
+                                  <Chip
+                                    label={tag}
+                                    style={{
+                                      marginLeft: "10px",
+                                      background: "lightblue",
+                                    }}
+                                  />
+                                );
+                            })}
                         </div>
                       </TableCell>
                       <TableCell style={tableCellStyle} align="center">

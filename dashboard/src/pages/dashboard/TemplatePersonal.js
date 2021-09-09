@@ -28,7 +28,7 @@ import {
   Paper,
   Chip,
   Tooltip,
-  FormControlLabel,
+  Grid,
   Switch,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -51,7 +51,8 @@ import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
-
+import EditIcon from "@material-ui/icons/Edit";
+import { Editor } from "@tinymce/tinymce-react";
 import { API_SERVICE } from "../../config";
 import axios from "axios";
 // ----------------------------------------------------------------------
@@ -115,8 +116,6 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
         <TableCell>Name</TableCell>
         <TableCell>Description</TableCell>
         <TableCell align="center">Tasks</TableCell>
-        <TableCell align="center">Email</TableCell>
-        <TableCell align="center">Customer</TableCell>
         <TableCell align="center">Date</TableCell>
         {/* </TableRow> */}
       </TableHead>
@@ -216,12 +215,6 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
       setOpen(false);
     };
 
-    const [openFilter, setOpenFilter] = useState(false);
-
-    const handleClickOpenFilter = () => {
-      setOpen(true);
-    };
-
     const [searchQuery, setSearchQuery] = useState("");
     // const [hasDeleted, setHasDeleted] = useState(false);
 
@@ -248,14 +241,218 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
       getTemplates();
     };
 
+    const [openFilter, setOpenFilter] = useState(false);
+
+    const handleClickOpenFilter = () => {
+      setOpenFilter(true);
+    };
+    const handleCloseFilter = () => {
+      setOpenFilter(false);
+    };
+
+    const initialState = {
+      name: "",
+      subject: "",
+      description: "",
+      tag: "",
+      type: type,
+    };
+
+    const [openEdit, setOpenEdit] = useState(false);
+    const [formData, setFormData] = useState(initialState);
+    const handleChangeEditor = (content, editor) => {
+      setFormData({ ...formData, description: content });
+    };
+
+    const handleClickOpenEdit = () => {
+      setOpenEdit(true);
+    };
+    const handleCloseEdit = () => {
+      setOpenEdit(false);
+    };
+
+    const editTemplate = async () => {
+      handleClickOpenEdit();
+      await axios
+        .get(`${API_SERVICE}/searchonetemplate/${selected[0]}`)
+        .then((res) => {
+          const allTags = res.data[0].tag.join();
+          setFormData(res.data[0]);
+          setFormData({ ...res.data[0], tag: allTags });
+        })
+        .catch((err) => console.log(err));
+    };
+    const saveEdit = async () => {
+      await axios
+        .patch(`${API_SERVICE}/edittemplate`, formData)
+        .then((res) => {
+          handleCloseEdit();
+          getTemplates();
+        })
+        .catch((err) => console.log(err));
+    };
+
     return (
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
+        <Dialog
+          open={openFilter}
+          onClose={handleCloseFilter}
+          aria-labelledby="form-dialog-title"
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle id="form-dialog-title">Filter</DialogTitle>
+          <DialogContent>
+            <br />
+            <Box style={{ margin: "10px 0" }}>
+              <Typography variant="subtitle2">Name</Typography>
+              <TextField
+                style={{ marginTop: "5px" }}
+                label="Sample"
+                variant="filled"
+                size="small"
+                fullWidth
+              />
+            </Box>
+            <Box style={{ margin: "10px 0" }}>
+              <Typography variant="subtitle2">Description</Typography>
+              <TextField
+                style={{ marginTop: "5px" }}
+                label="Nike"
+                variant="filled"
+                size="small"
+                fullWidth
+              />
+            </Box>
+            <Box style={{ margin: "10px 0" }}>
+              <Typography variant="subtitle2">Date</Typography>
+              <TextField
+                style={{ marginTop: "5px" }}
+                label="date"
+                variant="filled"
+                size="small"
+                fullWidth
+              />
+            </Box>
+            <Box style={{ margin: "10px 0" }}>
+              <Typography variant="subtitle2">Tags</Typography>
+              <TextField
+                style={{ marginTop: "5px" }}
+                label="tag"
+                variant="filled"
+                size="small"
+                fullWidth
+              />
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseFilter} color="primary">
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCloseFilter}
+              color="primary"
+              variant="contained"
+            >
+              Search
+            </Button>
+          </DialogActions>
+        </Dialog>
         <div style={{ display: "flex", alignItems: "center" }}>
           <Typography className={classes.title} variant="h6" id="tableTitle">
             All Templates
           </Typography>
           {numSelected > 0 ? (
             <div style={{ display: "flex", marginLeft: "20px" }}>
+              {numSelected < 2 && (
+                <Tooltip title="Edit Template">
+                  <IconButton>
+                    <EditIcon onClick={editTemplate} />
+                  </IconButton>
+                </Tooltip>
+              )}
+              <Dialog
+                open={openEdit}
+                onClose={handleCloseEdit}
+                aria-labelledby="form-dialog-title"
+                maxWidth="sm"
+                fullWidth
+              >
+                <DialogTitle id="form-dialog-title">Edit Template</DialogTitle>
+                <DialogContent>
+                  <Grid container spacing={2}>
+                    <Grid md={12}>
+                      <TextField
+                        label="Name"
+                        variant="outlined"
+                        style={{ margin: "10px 0" }}
+                        fullWidth
+                        value={formData.name}
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
+                      />
+                      <TextField
+                        label="Subject"
+                        variant="outlined"
+                        style={{ margin: "10px 0" }}
+                        fullWidth
+                        value={formData.subject}
+                        onChange={(e) =>
+                          setFormData({ ...formData, subject: e.target.value })
+                        }
+                      />
+
+                      <Editor
+                        apiKey="azhogyuiz16q8om0wns0u816tu8k6517f6oqgs5mfl36hptu"
+                        plugins="wordcount"
+                        value={formData.description}
+                        init={{
+                          height: 600,
+                          menubar: false,
+                          plugins: [
+                            "advlist autolink lists link image charmap print preview anchor",
+                            "searchreplace visualblocks code fullscreen",
+                            "insertdatetime media table paste code help wordcount",
+                          ],
+                          toolbar:
+                            "undo redo | formatselect | " +
+                            "bold italic backcolor | alignleft aligncenter " +
+                            "alignright alignjustify | bullist numlist outdent indent | " +
+                            "removeformat | help",
+                          content_style:
+                            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                        }}
+                        onEditorChange={handleChangeEditor}
+                      />
+                      <div style={{ margin: "10px 0" }}>
+                        <TextField
+                          label="Add New Tag"
+                          variant="outlined"
+                          fullWidth
+                          style={{ margin: "10px 0" }}
+                          value={formData.tag}
+                          onChange={(e) =>
+                            setFormData({ ...formData, tag: e.target.value })
+                          }
+                        />
+                      </div>
+                    </Grid>
+                  </Grid>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseEdit} color="primary">
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={saveEdit}
+                    color="primary"
+                    variant="contained"
+                  >
+                    Save
+                  </Button>
+                </DialogActions>
+              </Dialog>
               <Tooltip title="Add/Remove Tags">
                 <IconButton>
                   <LocalOfferIcon onClick={handleClick} />
@@ -361,7 +558,14 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
                 placeholder="Search Templates"
                 style={{ width: "250px" }}
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    search();
+                  }
+                }}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                }}
               />
               <IconButton sx={{ p: 1 }} onClick={search}>
                 <SearchIcon />
@@ -527,15 +731,18 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
                       <TableCell style={tableCellStyle}>
                         {row.subject}
                         {row?.tag.length > 0 &&
-                          row?.tag.map((tag) => (
-                            <Chip
-                              label={tag}
-                              style={{
-                                marginLeft: "10px",
-                                background: "lightblue",
-                              }}
-                            />
-                          ))}
+                          row?.tag.map((tag) => {
+                            if (tag !== "")
+                              return (
+                                <Chip
+                                  label={tag}
+                                  style={{
+                                    marginLeft: "10px",
+                                    background: "lightblue",
+                                  }}
+                                />
+                              );
+                          })}
                       </TableCell>
                       <TableCell
                         align="center"
@@ -574,27 +781,6 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
                           <div>0</div>
                           <div style={{ color: "grey" }}>Replies</div>
                         </div>
-                      </TableCell>
-                      <TableCell align="center" style={tableCellStyle}>
-                        <LockIcon />
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{
-                          paddingTop: "5px",
-                          paddingBottom: "5px",
-                        }}
-                      >
-                        <Avatar
-                          style={{
-                            width: "37px",
-                            height: "37px",
-                            margin: "0 auto",
-                            textTransform: "uppercase",
-                          }}
-                        >
-                          AB
-                        </Avatar>
                       </TableCell>
                       <TableCell style={tableCellStyle} align="center">
                         Aug 22

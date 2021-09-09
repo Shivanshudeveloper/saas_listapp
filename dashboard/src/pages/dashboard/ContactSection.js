@@ -342,7 +342,7 @@ const ContactSection = () => {
               padding: "13px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
             }}
           >
             <div

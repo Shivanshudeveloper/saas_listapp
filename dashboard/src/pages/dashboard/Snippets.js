@@ -26,6 +26,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import renderHTML from "react-render-html";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
+import { Editor } from "@tinymce/tinymce-react";
 
 import { API_SERVICE } from "../../config";
 import axios from "axios";
@@ -92,15 +93,15 @@ export default function Templates() {
     setOpenS(false);
   };
 
-  const changeText = (event, editor) => {
-    const data = editor.getData();
-    setFormData({ ...formData, description: data });
+  const handleChangeEditor = (content, editor) => {
+    setFormData({ ...formData, description: content });
   };
 
   const initialState = {
     name: "",
     subject: "",
     description: "",
+    tag: "",
     type: "personal",
   };
 
@@ -258,7 +259,40 @@ export default function Templates() {
             }
           />
 
-          <CKEditor editor={ClassicEditor} data="" onChange={changeText} />
+          <Editor
+            apiKey="azhogyuiz16q8om0wns0u816tu8k6517f6oqgs5mfl36hptu"
+            plugins="wordcount"
+            value={formData.description}
+            init={{
+              height: 600,
+              menubar: false,
+              plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table paste code help wordcount",
+              ],
+              toolbar:
+                "undo redo | formatselect | " +
+                "bold italic backcolor | alignleft aligncenter " +
+                "alignright alignjustify | bullist numlist outdent indent | " +
+                "removeformat | help",
+              content_style:
+                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+            }}
+            onEditorChange={handleChangeEditor}
+          />
+          <div style={{ margin: "10px 0" }}>
+            <TextField
+              label="Add New Tag"
+              variant="outlined"
+              fullWidth
+              style={{ margin: "10px 0" }}
+              value={formData.tag}
+              onChange={(e) =>
+                setFormData({ ...formData, tag: e.target.value })
+              }
+            />
+          </div>
           <DialogActions>
             <Button
               onClick={handleClose}
