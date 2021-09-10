@@ -141,66 +141,80 @@ router.post("/savetask", async (req, res) => {
 });
 
 router.patch("/edittask", async (req, res) => {
-  const { formData, value } = req.body;
-  switch (value) {
-    case 0:
-      const newTask0 = await Task_Model.findOneAndUpdate(
-        { _id: formData._id },
-        {
-          contact: formData.contact0,
-          notes: formData.notes0,
-        },
-        {
-          new: true,
-          useFindAndModify: false,
-        }
-      );
-      console.log(newTask0);
-      break;
-    case 1:
-      const newTask1 = await Task_Model.findOneAndUpdate(
-        { _id: formData._id },
-        {
-          contact: formData.contact1,
-          notes: formData.notes1,
-          result: formData.result1,
-        },
-        {
-          new: true,
-          useFindAndModify: false,
-        }
-      );
-      break;
-    case 2:
-      const newTask2 = await Task_Model.findOneAndUpdate(
-        { _id: formData._id },
-        {
-          contact: formData.contact2,
-          description: formData.desc2,
-          date: formData.date2,
-        },
-        {
-          new: true,
-          useFindAndModify: false,
-        }
-      );
-      break;
-    case 3:
-      const newTask3 = await Task_Model.findOneAndUpdate(
-        { _id: formData._id },
+  const { formData, option, value } = req.body;
+  if (value === 0) {
+    await Task_Model.findByIdAndUpdate(
+      formData.id,
+      {
+        contact: formData.contact0,
+        notes: formData.notes0,
+        type: option,
+        completed: false,
+        value,
+      },
+      {
+        new: true,
+        useFindAndModify: false,
+      }
+    );
+  }
+  if (value === 1) {
+    await Task_Model.findByIdAndUpdate(
+      formData.id,
+      {
+        contact: formData.contact1,
+        notes: formData.notes1,
+        result: formData.result1,
+        type: option,
+        completed: false,
+        value,
+      },
+      {
+        new: true,
+        useFindAndModify: false,
+      }
+    );
+  }
+  if (value === 2) {
+    await Task_Model.findByIdAndUpdate(
+      formData.id,
+      {
+        contact: formData.contact2,
+        description: formData.desc2,
+        date: formData.date2,
+        type: option,
+        completed: false,
+        value,
+      },
+      {
+        new: true,
+        useFindAndModify: false,
+      }
+    );
+  }
+  if (value === 3) {
+    try {
+      await Task_Model.findByIdAndUpdate(
+        formData.id,
         {
           contact: formData.contact3,
           description: formData.desc3,
           date: formData.date3,
           action: formData.action3,
+          type: option,
+          completed: false,
+          value,
         },
         {
           new: true,
           useFindAndModify: false,
         }
       );
-      break;
+    } catch (error) {
+      console.log(error);
+    }
   }
+
   res.status(201).json({ message: "Updated" });
 });
 
@@ -516,5 +530,55 @@ router.get(
       .catch((err) => res.status(400).json(`Error: ${err}`));
   }
 );
+
+router.post("/searchtask", async (req, res) => {
+  const { contact, type, status } = req.body;
+  try {
+    const contactr = new RegExp(contact, "i");
+    const typer = new RegExp(type, "i");
+    const newStatus =
+      status === "none"
+        ? null
+        : status.toUpperCase() === "COMPLETED"
+        ? true
+        : false;
+
+    const tasks = await Task_Model.find({
+      $or: [{ contact: contactr }, { type: typer }, { completed: newStatus }],
+    });
+    res.status(200).json(tasks);
+    // console.log(tasks);
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.post("/filtersnippet", async (req, res) => {
+  const { name, desc, tag, type } = req.body;
+  try {
+    const namer = new RegExp(name, "i");
+    const descr = new RegExp(desc, "i");
+    const snippets = await Snippet_Model.find({
+      $or: [{ name: namer }, { description: descr }, { tag: { $in: tag } }],
+      type: type,
+    });
+    res.status(200).json(snippets);
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.post("/filtertemplate", async (req, res) => {
+  const { name, desc, tag, type } = req.body;
+  try {
+    const namer = new RegExp(name, "i");
+    const descr = new RegExp(desc, "i");
+    const templates = await Template_Model.find({
+      $or: [{ name: namer }, { subject: descr }, { tag: { $in: tag } }],
+      type: type,
+    });
+    res.status(200).json(templates);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 module.exports = router;

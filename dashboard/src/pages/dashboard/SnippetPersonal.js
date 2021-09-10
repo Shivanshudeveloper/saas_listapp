@@ -221,6 +221,28 @@ export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
         .catch((err) => console.log(err));
     };
 
+    const [filterQuery, setfilterQuery] = useState({
+      name: "",
+      desc: "",
+      tag: "",
+    });
+    const filterSnippet = async () => {
+      await axios
+        .post(`${API_SERVICE}/filtersnippet`, {
+          name: filterQuery.name || "none",
+          desc: filterQuery.desc || "none",
+          tag: filterQuery.tag || "none",
+          type,
+        })
+        .then((res) => {
+          console.log(res);
+          setSnippets(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
     return (
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
         <Dialog
@@ -241,26 +263,38 @@ export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
                 variant="filled"
                 size="small"
                 fullWidth
+                value={filterQuery.name}
+                onChange={(e) =>
+                  setfilterQuery({ ...filterQuery, name: e.target.value })
+                }
               />
             </Box>
             <Box style={{ margin: "10px 0" }}>
               <Typography variant="subtitle2">Description</Typography>
               <TextField
                 style={{ marginTop: "5px" }}
-                label="Nike"
+                label="Sample"
                 variant="filled"
                 size="small"
                 fullWidth
+                value={filterQuery.desc}
+                onChange={(e) =>
+                  setfilterQuery({ ...filterQuery, desc: e.target.value })
+                }
               />
             </Box>
             <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Date</Typography>
+              <Typography variant="subtitle2">Tags</Typography>
               <TextField
                 style={{ marginTop: "5px" }}
-                label="date"
+                label="Sample"
                 variant="filled"
                 size="small"
                 fullWidth
+                value={filterQuery.tag}
+                onChange={(e) =>
+                  setfilterQuery({ ...filterQuery, tag: e.target.value })
+                }
               />
             </Box>
           </DialogContent>
@@ -268,11 +302,7 @@ export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
             <Button onClick={handleCloseFilter} color="primary">
               Cancel
             </Button>
-            <Button
-              onClick={handleCloseFilter}
-              color="primary"
-              variant="contained"
-            >
+            <Button onClick={filterSnippet} color="primary" variant="contained">
               Search
             </Button>
           </DialogActions>

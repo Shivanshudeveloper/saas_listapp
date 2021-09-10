@@ -44,7 +44,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import { API_SERVICE } from "../../../config";
 import axios from "axios";
 
-export default function TaskTable({ handleClickOpen }) {
+export default function TaskTable() {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
   const [openTask, setOpenTask] = useState(false);
   const [openCall, setOpenCall] = useState(false);
@@ -183,19 +183,28 @@ export default function TaskTable({ handleClickOpen }) {
       date3: row.date,
       action3: row.action,
       desc3: row.description,
+      id: row._id,
     });
     setValue(row.value);
-    handleClickAdd();
+    setOpenTask(true);
   };
 
   const editTask = async () => {
+    const option =
+      value === 0
+        ? "Note"
+        : value === 1
+        ? "Call Log"
+        : value === 2
+        ? "Email"
+        : "LinkedIn";
     await axios
       .patch(`${API_SERVICE}/edittask`, {
         formData,
+        option,
         value,
       })
       .then((res) => {
-        console.log(res.data);
         handleCloseAdd();
         getTasks();
         setFormData(initialState);
@@ -203,8 +212,110 @@ export default function TaskTable({ handleClickOpen }) {
       .catch((err) => console.log(err));
   };
 
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [searchQuery, setSearchQuery] = useState({
+    contact: "",
+    type: "",
+    status: "",
+  });
+
+  const searchTask = async () => {
+    await axios
+      .post(`${API_SERVICE}/searchtask?`, {
+        contact: searchQuery.contact || "none",
+        type: searchQuery.type || "none",
+        status: searchQuery.status || "none",
+      })
+      .then((res) => {
+        setAllTasks(res.data);
+        handleClose();
+        setSearchQuery({
+          contact: "",
+          type: "",
+          status: "",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle id="form-dialog-title">Filter</DialogTitle>
+        <DialogContent>
+          <br />
+          <Box style={{ margin: "10px 0" }}>
+            <Typography variant="subtitle2">Contact</Typography>
+            <TextField
+              style={{ marginTop: "5px" }}
+              label="John Due"
+              variant="filled"
+              size="small"
+              fullWidth
+              name="contact"
+              value={searchQuery.contact}
+              onChange={(e) =>
+                setSearchQuery({ ...searchQuery, contact: e.target.value })
+              }
+            />
+          </Box>
+          <Box style={{ margin: "10px 0" }}>
+            <Typography variant="subtitle2">Type</Typography>
+            <TextField
+              style={{ marginTop: "5px" }}
+              label="LinkedIn"
+              variant="filled"
+              size="small"
+              fullWidth
+              name="type"
+              value={searchQuery.type}
+              onChange={(e) =>
+                setSearchQuery({ ...searchQuery, type: e.target.value })
+              }
+            />
+          </Box>
+          <Box style={{ margin: "10px 0" }}>
+            <Typography variant="subtitle2">Status</Typography>
+            <TextField
+              style={{ marginTop: "5px" }}
+              label="Completed"
+              variant="filled"
+              size="small"
+              fullWidth
+              name="status"
+              value={searchQuery.status}
+              onChange={(e) =>
+                setSearchQuery({ ...searchQuery, status: e.target.value })
+              }
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={searchTask} color="primary" variant="contained">
+            Search
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Dialog open={openTask} onClose={handleCloseAdd}>
         <Container maxWidth="md">
           <div
@@ -493,6 +604,13 @@ export default function TaskTable({ handleClickOpen }) {
           >
             Filter
           </Button>
+          <Button
+            variant="outlined"
+            onClick={() => getTasks()}
+            style={{ marginLeft: "20px" }}
+          >
+            Refresh
+          </Button>
         </div>
         <div>
           <Button
@@ -562,7 +680,7 @@ export default function TaskTable({ handleClickOpen }) {
                     <IconButton onClick={() => deleteRow(row._id)}>
                       <DeleteIcon fontSize="small" />
                     </IconButton>
-                    <IconButton>
+                    {/* <IconButton>
                       <EmailIcon fontSize="small" />
                     </IconButton>
                     <IconButton>
@@ -570,7 +688,7 @@ export default function TaskTable({ handleClickOpen }) {
                     </IconButton>
                     <IconButton>
                       <CallIcon fontSize="small" />
-                    </IconButton>
+                    </IconButton> */}
                   </TableCell>
                 </TableRow>
               ))}

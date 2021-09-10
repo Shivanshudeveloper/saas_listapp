@@ -292,6 +292,28 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
         .catch((err) => console.log(err));
     };
 
+    const [filterQuery, setfilterQuery] = useState({
+      name: "",
+      desc: "",
+      tag: "",
+    });
+    const filterTemplate = async () => {
+      await axios
+        .post(`${API_SERVICE}/filtertemplate`, {
+          name: filterQuery.name || "none",
+          desc: filterQuery.desc || "none",
+          tag: filterQuery.tag || "none",
+          type
+        })
+        .then((res) => {
+          console.log(res);
+          setTemplates(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
     return (
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
         <Dialog
@@ -312,36 +334,38 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
                 variant="filled"
                 size="small"
                 fullWidth
+                value={filterQuery.name}
+                onChange={(e) =>
+                  setfilterQuery({ ...filterQuery, name: e.target.value })
+                }
               />
             </Box>
             <Box style={{ margin: "10px 0" }}>
               <Typography variant="subtitle2">Description</Typography>
               <TextField
                 style={{ marginTop: "5px" }}
-                label="Nike"
+                label="Sample"
                 variant="filled"
                 size="small"
                 fullWidth
-              />
-            </Box>
-            <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Date</Typography>
-              <TextField
-                style={{ marginTop: "5px" }}
-                label="date"
-                variant="filled"
-                size="small"
-                fullWidth
+                value={filterQuery.desc}
+                onChange={(e) =>
+                  setfilterQuery({ ...filterQuery, desc: e.target.value })
+                }
               />
             </Box>
             <Box style={{ margin: "10px 0" }}>
               <Typography variant="subtitle2">Tags</Typography>
               <TextField
                 style={{ marginTop: "5px" }}
-                label="tag"
+                label="Sample"
                 variant="filled"
                 size="small"
                 fullWidth
+                value={filterQuery.tag}
+                onChange={(e) =>
+                  setfilterQuery({ ...filterQuery, tag: e.target.value })
+                }
               />
             </Box>
           </DialogContent>
@@ -350,7 +374,7 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
               Cancel
             </Button>
             <Button
-              onClick={handleCloseFilter}
+              onClick={filterTemplate}
               color="primary"
               variant="contained"
             >
