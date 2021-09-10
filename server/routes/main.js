@@ -252,12 +252,12 @@ router.patch("/completetask/:id", async (req, res) => {
 
 router.post("/addtemplate", async (req, res) => {
   const formData = req.body;
-  const newTemplate = new Template_Model({
-    ...formData,
-    tag: formData.tag.split(","),
-  });
 
   try {
+    const newTemplate = new Template_Model({
+      ...formData,
+      tag: String(formData.tag).split(","),
+    });
     await newTemplate.save();
     res.status(201).json(newTemplate);
   } catch (error) {
@@ -358,9 +358,21 @@ router.post("/searchtemplate", async (req, res) => {
   }
 });
 
-router.delete("/deletetemplate/:id", async (req, res) => {
-  const { id: _id } = req.params;
-  await Template_Model.findByIdAndRemove(_id, { useFindAndModify: false });
+router.post("/deletetemplate", async (req, res) => {
+  const selected = req.body;
+  const promiseArray = selected.map(async (each) => {
+    return new Promise(async (resolve, reject) => {
+      await Template_Model.findByIdAndDelete(each);
+      return resolve();
+    });
+  });
+  Promise.all(promiseArray).then(async () => {
+    try {
+      res.status(200).json(selected);
+    } catch (error) {
+      res.status(409).json({ message: error.message });
+    }
+  });
 });
 
 // SNIPPETS
@@ -382,9 +394,21 @@ router.post("/searchsnippet", async (req, res) => {
   }
 });
 
-router.delete("/deletesnippet/:id", async (req, res) => {
-  const { id: _id } = req.params;
-  await Snippet_Model.findByIdAndRemove(_id, { useFindAndModify: false });
+router.post("/deletesnippet", async (req, res) => {
+  const selected = req.body;
+  const promiseArray = selected.map(async (each) => {
+    return new Promise(async (resolve, reject) => {
+      await Snippet_Model.findByIdAndDelete(each);
+      return resolve();
+    });
+  });
+  Promise.all(promiseArray).then(async () => {
+    try {
+      res.status(200).json(selected);
+    } catch (error) {
+      res.status(409).json({ message: error.message });
+    }
+  });
 });
 
 router.post("/addsnippet", async (req, res) => {

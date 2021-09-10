@@ -220,6 +220,8 @@ export default function Templates() {
               type="personal"
               allSnippets={allSnippets}
               getSnippets={getSnippets}
+              handleClickOpenPrev={handleClickOpen}
+              setFormDataPrev={setFormData}
             />
           </TabPanel>
           <TabPanel
@@ -232,6 +234,8 @@ export default function Templates() {
               type="team"
               allSnippets={allSnippets}
               getSnippets={getSnippets}
+              handleClickOpenPrev={handleClickOpen}
+              setFormDataPrev={setFormData}
             />
           </TabPanel>
         </SwipeableViews>

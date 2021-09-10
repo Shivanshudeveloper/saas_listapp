@@ -59,7 +59,13 @@ import axios from "axios";
 
 // ----------------------------------------------------------------------
 
-export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
+export default function TemplatePersonal({
+  allTemplates,
+  type,
+  value,
+  handleClickOpenPrev,
+  setFormDataPrev,
+}) {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
 
   function descendingComparator(a, b, orderBy) {
@@ -233,12 +239,23 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
     };
 
     const deleteRow = () => {
-      selected.map(async (s) => {
-        await axios
-          .delete(`${API_SERVICE}/deletetemplate/${s}`)
-          .catch((err) => console.log(err));
-      });
-      getTemplates();
+      axios
+        .post(`${API_SERVICE}/deletetemplate`, selected)
+        .then((res) => {
+          getTemplates();
+        })
+        .catch((err) => console.log(err));
+    };
+
+    const getTemplates = async () => {
+      var type = "personal";
+      type = value === 0 ? "personal" : value === 1 ? "team" : "library";
+      await axios
+        .get(`${API_SERVICE}/getalltemplates/${type}`)
+        .then((res) => {
+          setTemplates(res.data);
+        })
+        .catch((err) => console.log(err));
     };
 
     const [openFilter, setOpenFilter] = useState(false);
@@ -282,6 +299,7 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
         })
         .catch((err) => console.log(err));
     };
+
     const saveEdit = async () => {
       await axios
         .patch(`${API_SERVICE}/edittemplate`, formData)
@@ -303,7 +321,7 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
           name: filterQuery.name || "none",
           desc: filterQuery.desc || "none",
           tag: filterQuery.tag || "none",
-          type
+          type,
         })
         .then((res) => {
           console.log(res);
@@ -389,11 +407,33 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
           {numSelected > 0 ? (
             <div style={{ display: "flex", marginLeft: "20px" }}>
               {numSelected < 2 && (
-                <Tooltip title="Edit Template">
-                  <IconButton>
-                    <EditIcon onClick={editTemplate} />
-                  </IconButton>
-                </Tooltip>
+                <>
+                  <Tooltip title="Edit Template">
+                    <IconButton>
+                      <EditIcon onClick={editTemplate} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Clone">
+                    <IconButton
+                      onClick={() => {
+                        const data = allTemplates.filter(
+                          (temp) => temp._id === selected[0]
+                        );
+                        console.log({ ...data[0], tag: data[0].tag.join() });
+                        setFormDataPrev({
+                          name: data[0].name,
+                          subject: data[0].subject,
+                          description: data[0].description,
+                          type: data[0].type,
+                          tag: data[0].tag.join(),
+                        });
+                        handleClickOpenPrev();
+                      }}
+                    >
+                      <FileCopyIcon />
+                    </IconButton>
+                  </Tooltip>
+                </>
               )}
               <Dialog
                 open={openEdit}
@@ -559,13 +599,9 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
                   <ArchiveIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Clone">
-                <IconButton>
-                  <FileCopyIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Delete" onClick={deleteRow}>
-                <IconButton>
+
+              <Tooltip title="Delete">
+                <IconButton onClick={deleteRow}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
@@ -820,15 +856,15 @@ export default function TemplatePersonal({ allTemplates, type, getTemplates }) {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <TablePagination
+        <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={templates.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        /> */}
+        />
       </Paper>
     </div>
   );

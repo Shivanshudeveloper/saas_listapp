@@ -54,7 +54,13 @@ import axios from "axios";
 
 // ----------------------------------------------------------------------
 
-export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
+export default function SnippetPersonal({
+  allSnippets,
+  type,
+  getSnippets,
+  handleClickOpenPrev,
+  setFormDataPrev,
+}) {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
 
   function descendingComparator(a, b, orderBy) {
@@ -171,12 +177,13 @@ export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
           .catch((err) => console.log(err));
       } else setSnippets(allSnippets);
     };
-
     const deleteRow = () => {
-      selected.map(async (s) => {
-        await axios.delete(`${API_SERVICE}/deletesnippet/${s}`);
-      });
-      getSnippets();
+      axios
+        .post(`${API_SERVICE}/deletesnippet`, selected)
+        .then((res) => {
+          getSnippets();
+        })
+        .catch((err) => console.log(err));
     };
 
     const initialState = {
@@ -314,11 +321,33 @@ export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
           {numSelected > 0 ? (
             <div style={{ display: "flex", marginLeft: "20px" }}>
               {numSelected < 2 && (
-                <Tooltip title="Edit Template">
-                  <IconButton>
-                    <EditIcon onClick={editTemplate} />
-                  </IconButton>
-                </Tooltip>
+                <>
+                  <Tooltip title="Edit Template">
+                    <IconButton>
+                      <EditIcon onClick={editTemplate} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Clone">
+                    <IconButton
+                      onClick={() => {
+                        const data = allSnippets.filter(
+                          (temp) => temp._id === selected[0]
+                        );
+                        console.log({ ...data[0], tag: data[0].tag.join() });
+                        setFormDataPrev({
+                          name: data[0].name,
+                          subject: data[0].subject,
+                          description: data[0].description,
+                          type: data[0].type,
+                          tag: data[0].tag.join(),
+                        });
+                        handleClickOpenPrev();
+                      }}
+                    >
+                      <FileCopyIcon />
+                    </IconButton>
+                  </Tooltip>
+                </>
               )}
               <Dialog
                 open={openEdit}
@@ -405,11 +434,6 @@ export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
               <Tooltip title="Archive">
                 <IconButton>
                   <ArchiveIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Clone">
-                <IconButton>
-                  <FileCopyIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title="Delete">
@@ -623,15 +647,15 @@ export default function TemplatePersonal({ allSnippets, type, getSnippets }) {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <TablePagination
+        <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={snippets.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        /> */}
+        />
       </Paper>
     </div>
   );

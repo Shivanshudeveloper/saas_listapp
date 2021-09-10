@@ -229,9 +229,11 @@ export default function Templates() {
             style={{ padding: 0 }}
           >
             <TemplatePersonal
+              handleClickOpenPrev={handleClickOpen}
               allTemplates={allTemplates}
               type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
-              getTemplates={getTemplates}
+              setFormDataPrev={setFormData}
+              value={value}
             />
           </TabPanel>
           <TabPanel
@@ -241,9 +243,11 @@ export default function Templates() {
             style={{ padding: 0 }}
           >
             <TemplatePersonal
+              handleClickOpenPrev={handleClickOpen}
               allTemplates={allTemplates}
               type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
-              getTemplates={getTemplates}
+              setFormDataPrev={setFormData}
+              value={value}
             />
           </TabPanel>
           <TabPanel
@@ -254,7 +258,10 @@ export default function Templates() {
           >
             <TemplatePersonal
               allTemplates={allTemplates}
+              value={value}
+              handleClickOpenPrev={handleClickOpen}
               type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
+              setFormDataPrev={setFormData}
             />
           </TabPanel>
         </SwipeableViews>
