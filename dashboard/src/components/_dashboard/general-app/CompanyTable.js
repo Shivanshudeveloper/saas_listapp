@@ -374,8 +374,6 @@ export default function CompanyTable({ handleClickOpen }) {
                 <TableCell>Technologies</TableCell>
                 {/* <TableCell align="center">Intel</TableCell> */}
                 <TableCell align="center">Lists</TableCell>
-                <TableCell align="center">Save</TableCell>
-                <TableCell align="center">Find Contacts</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -395,16 +393,6 @@ export default function CompanyTable({ handleClickOpen }) {
                   </TableCell> */}
                   <TableCell align="center" style={tableCellStyle}>
                     <LockIcon />
-                  </TableCell>
-                  <TableCell align="center" style={tableCellStyle}>
-                    <Button color="primary" startIcon={<AddIcon />}>
-                      Save
-                    </Button>
-                  </TableCell>
-                  <TableCell align="center" style={tableCellStyle}>
-                    <Button color="primary" startIcon={<SearchIcon />}>
-                      Find
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

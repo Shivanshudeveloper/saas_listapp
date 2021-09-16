@@ -55,6 +55,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import { Editor } from "@tinymce/tinymce-react";
 import { API_SERVICE } from "../../config";
 import axios from "axios";
+
+
+let allfiltertags = [];
+
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
@@ -316,6 +320,15 @@ export default function TemplatePersonal({
       tag: "",
     });
     const filterTemplate = async () => {
+      if (filterQuery.name !== "") {
+        allfiltertags.push(filterQuery.name);
+      }
+      if (filterQuery.desc !== "") {
+        allfiltertags.push(filterQuery.desc);
+      }
+      if (filterQuery.tag !== "") {
+        allfiltertags.push(filterQuery.tag);
+      }
       await axios
         .post(`${API_SERVICE}/filtertemplate`, {
           name: filterQuery.name || "none",
@@ -349,9 +362,16 @@ export default function TemplatePersonal({
         })
         .catch((err) => console.log(err));
     }
+
+    const removeFilterTag = (tag) => {
+      setTemplates(allTemplates);
+      let index = allfiltertags.indexOf(tag);
+      allfiltertags.splice(index, 1);
+    }
    
 
     return (
+      <>
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
         <Dialog
           open={openFilter}
@@ -666,6 +686,26 @@ export default function TemplatePersonal({
           Filter
         </Button>
       </Toolbar>
+      <section style={{ margin: '10px' }}>
+      {
+        allfiltertags.length === 0 ? (
+          <>
+            
+          </>
+        ) : (
+          <>
+          {allfiltertags.map((tag) => {
+            return (
+              <>
+                <Chip onDelete={() => removeFilterTag(tag)} style={{ marginRight: '10px', marginTop: '10px' }} label={tag} />
+              </>
+            )
+          })}
+          </>
+        )
+      }
+    </section>
+    </>
     );
   };
 

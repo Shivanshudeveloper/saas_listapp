@@ -13,15 +13,6 @@ export default function BlogNewPost() {
   return (
     <Page title="Blog: New Post | List App">
       <Container>
-        <HeaderBreadcrumbs
-          heading="Create a new post"
-          links={[
-            { name: "Dashboard", href: PATH_DASHBOARD.root },
-            { name: "Blog", href: PATH_DASHBOARD.blog.root },
-            { name: "New Post" },
-          ]}
-        />
-
         <BlogNewPostForm />
       </Container>
     </Page>

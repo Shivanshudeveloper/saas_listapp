@@ -49,6 +49,10 @@ import InputBase from "@material-ui/core/InputBase";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { API_SERVICE } from "../../config";
 import axios from "axios";
+
+
+let allfiltertags = [];
+
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
@@ -232,8 +236,17 @@ export default function SnippetPersonal({
       desc: "",
       tag: "",
     });
+
     const filterSnippet = async () => {
-      console.log(filterQuery);
+      if (filterQuery.name !== "") {
+        allfiltertags.push(filterQuery.name);
+      }
+      if (filterQuery.desc !== "") {
+        allfiltertags.push(filterQuery.desc);
+      }
+      if (filterQuery.tag !== "") {
+        allfiltertags.push(filterQuery.tag);
+      }
       await axios
         .post(`${API_SERVICE}/filtersnippet`, {
           name: filterQuery.name || "none",
@@ -269,6 +282,12 @@ export default function SnippetPersonal({
         .catch((err) => console.log(err));
     }
 
+
+    const removeFilterTag = (tag) => {
+      setSnippets(allSnippets);
+      let index = allfiltertags.indexOf(tag);
+      allfiltertags.splice(index, 1);
+    }
 
     return (
       <>
@@ -497,20 +516,23 @@ export default function SnippetPersonal({
         </Button>
       </Toolbar>
       <section style={{ margin: '10px' }}>
-        <Chip
-          label="asd"
-          color="primary"
-          style={{ marginRight: '10px' }}
-          onDelete={handleDelete}
-          variant="outlined"
-        />
-        <Chip
-          label="123"
-          color="primary"
-          style={{ marginRight: '10px' }}
-          onDelete={handleDelete}
-          variant="outlined"
-        />
+        {
+          allfiltertags.length === 0 ? (
+            <>
+              
+            </>
+          ) : (
+            <>
+            {allfiltertags.map((tag) => {
+              return (
+                <>
+                  <Chip onDelete={() => removeFilterTag(tag)} style={{ marginRight: '10px', marginTop: '10px' }} label={tag} />
+                </>
+              )
+            })}
+            </>
+          )
+        }
       </section>
       
       </>

@@ -16,8 +16,16 @@ import {
   Typography,
   Autocomplete,
   FormHelperText,
-  FormControlLabel
+  FormControlLabel,
+  FormControl,
+  InputLabel,
+  Select,
+  Container,
+    MenuItem,
 } from '@material-ui/core';
+
+
+
 // utils
 import fakeRequest from '../../../utils/fakeRequest';
 //
@@ -65,10 +73,10 @@ export default function BlogNewPostForm() {
   };
 
   const NewBlogSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required'),
-    description: Yup.string().required('Description is required'),
-    content: Yup.string().min(1000).required('Content is required'),
-    cover: Yup.mixed().required('Cover is required')
+    // title: Yup.string().required('Title is required'),
+    // description: Yup.string().required('Description is required'),
+    // content: Yup.string().min(1000).required('Content is required'),
+    
   });
 
   const formik = useFormik({
@@ -82,7 +90,9 @@ export default function BlogNewPostForm() {
       comments: true,
       metaTitle: '',
       metaDescription: '',
-      metaKeywords: ['Logan']
+      metaKeywords: ['Logan'],
+      formData: {},
+
     },
     validationSchema: NewBlogSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
@@ -92,6 +102,7 @@ export default function BlogNewPostForm() {
         handleClosePreview();
         setSubmitting(false);
         enqueueSnackbar('Post success', { variant: 'success' });
+        console.log("THese are the posted values",values);
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -101,45 +112,168 @@ export default function BlogNewPostForm() {
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      if (file) {
-        setFieldValue('cover', {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
-      }
-    },
-    [setFieldValue]
-  );
+
+
+
+// Add Contact Form
+const initialState = {
+  fName: "",
+  lName: "",
+  company: "",
+  email: "",
+  emailType: "",
+  title: "",
+  phone: "",
+  extn: "",
+  phoneType: "",
+  stage: "",
+  street: "",
+  city: "",
+  state: "",
+  country: "",
+  code: "",
+  linkedin: "",
+  facebook: "",
+  owner: "",
+  tags: "",
+};
+const [formData, setFormData] = useState(initialState);
+
+const handleChange = (e) => {
+  setFormData({ ...formData, [e.target.name]: e.target.value });
+  console.log("this is the form data" , formData);
+};
+
+  const GridContact = ({ label, name }) => {
+    return (
+      <Grid item md={6}>
+        <TextField
+          style={{ marginTop: "5px" }}
+          label={label}
+          
+          size="small"
+          fullWidth
+          name={name}
+          onChange={handleChange}
+          value={formData.name}
+          
+        />
+      </Grid>
+    );
+  };
 
   return (
     <>
       <FormikProvider value={formik}>
         <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
-          <Grid container spacing={3}>
+          <Grid container spacing={0}>
             <Grid item xs={12} md={8}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
-                  <TextField
-                    fullWidth
-                    label="Post Title"
-                    {...getFieldProps('title')}
-                    error={Boolean(touched.title && errors.title)}
-                    helperText={touched.title && errors.title}
-                  />
+                  
 
-                  <TextField
-                    fullWidth
-                    multiline
-                    minRows={3}
-                    maxRows={5}
-                    label="Description"
-                    {...getFieldProps('description')}
-                    error={Boolean(touched.description && errors.description)}
-                    helperText={touched.description && errors.description}
-                  />
+                 
+
+                  
+                  <Container maxWidth="md">
+                <Grid container spacing={2}>
+                  {/* <GridContact label="First Name" name="fName" /> */}
+                  {GridContact({ label: "First Name", name: "fName" })}
+                  {GridContact({ label: "Last Name", name: "lName" })}
+                  {GridContact({ label: "Company", name: "company" })}
+                  {GridContact({ label: "Email", name: "email" })}
+                  <Grid item md={6}>
+                    <FormControl
+                      fullWidth
+                      
+                      style={{ marginTop: "5px" }}
+                    >
+                      <InputLabel>Email Type</InputLabel>
+                      <Select
+                        fullWidth
+                        size="small"
+                        onChange={handleChange}
+                        name="emailType"
+                        value={formData.emailType}                        
+                      >
+                        <MenuItem value="Work">Work</MenuItem>
+                        <MenuItem value="Personal">Personal</MenuItem>
+                        <MenuItem value="Other">Other</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  {GridContact({ label: "Title", name: "title" })}
+                  {GridContact({ label: "Phone", name: "phone" })}
+                  <Grid item md={6}>
+                    <FormControl
+                      fullWidth
+                      
+                      style={{ marginTop: "5px" }}
+                    >
+                      <InputLabel>Phone Type</InputLabel>
+                      <Select
+                        fullWidth
+                        size="small"
+                        onChange={handleChange}
+                        name="phoneType"
+                        value={formData.phoneType}
+                      >
+                        <MenuItem value="Work">Work</MenuItem>
+                        <MenuItem value="Home">Home</MenuItem>
+                        <MenuItem value="Mobile">Mobile</MenuItem>
+                        <MenuItem value="Other">Other</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {GridContact({ label: "Extn", name: "extn" })}
+                  <Grid item md={6}>
+                    <FormControl
+                      fullWidth
+                      
+                      style={{ marginTop: "5px" }}
+                    >
+                      <InputLabel>Stage</InputLabel>
+                      <Select
+                        fullWidth
+                        size="small"
+                        onChange={handleChange}
+                        name="stage"
+                        value={formData.stage}
+                      >
+                        <MenuItem value="New">New</MenuItem>
+                        <MenuItem value="Cold">Cold</MenuItem>
+                        <MenuItem value="Bad Contact Info">
+                          Bad Contact Info
+                        </MenuItem>
+                        <MenuItem value="Replied">Replied</MenuItem>
+                        <MenuItem value="Unresponsive">Unresponsive</MenuItem>
+                        <MenuItem value="Interested">Interested</MenuItem>
+                        <MenuItem value="Not Interested">
+                          Not Interested
+                        </MenuItem>
+                        <MenuItem value="Do Not Contact">
+                          Do Not Contact
+                        </MenuItem>
+                        <MenuItem value="Opt-Out">Opt-Out</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {GridContact({ label: "Street Address", name: "street" })}
+                  {GridContact({ label: "City", name: "city" })}
+                  {GridContact({ label: "State/Region", name: "state" })}
+                  {GridContact({ label: "Country", name: "country" })}
+                  {GridContact({ label: "Postal Code", name: "code" })}
+                  {GridContact({ label: "Linkedin", name: "linkedin" })}
+                  {GridContact({ label: "Facebook", name: "facebook" })}
+                  {GridContact({
+                    label: "Contact Owner (Users from the System)",
+                    name: "owner",
+                  })}
+                  {GridContact({ label: "Tags", name: "tags" })}
+                  </Grid>
+                </Container>
+                  
 
                   <div>
                     <LabelStyle>Content</LabelStyle>
@@ -157,14 +291,7 @@ export default function BlogNewPostForm() {
                   </div>
 
                   <div>
-                    <LabelStyle>Cover</LabelStyle>
-                    <UploadSingleFile
-                      maxSize={3145728}
-                      accept="image/*"
-                      file={values.cover}
-                      onDrop={handleDrop}
-                      error={Boolean(touched.cover && errors.cover)}
-                    />
+                    
                     {touched.cover && errors.cover && (
                       <FormHelperText error sx={{ px: 2 }}>
                         {touched.cover && errors.cover}
