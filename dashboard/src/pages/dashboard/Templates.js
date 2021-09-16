@@ -110,10 +110,25 @@ export default function Templates() {
   };
 
   const [formData, setFormData] = useState(initialState);
+  const [allSnippest, setallSnippest] = useState([]);
 
   useEffect(() => {
     getTemplates();
   }, [value]);
+
+  useEffect(() => {
+    getSnippests();
+  }, [value]);
+
+  const getSnippests = () => {
+    axios
+      .get(`${API_SERVICE}/getallsnippestfortemplates`)
+      .then((res) => {
+        console.log(res.data);
+        setallSnippest(res.data);
+      })
+      .catch((err) => console.log(err));
+  }
 
   const addTemplate = async () => {
     await axios
@@ -140,6 +155,11 @@ export default function Templates() {
       })
       .catch((err) => console.log(err));
   };
+
+  const addSnippetTemplate = (descriptionadd) => {
+    console.log(descriptionadd);
+    setFormData({ ...formData, description: descriptionadd })
+  }
 
   return (
     <Page title="Templates | List App">
@@ -334,11 +354,25 @@ export default function Templates() {
                   onEditorChange={handleChangeEditor}
                 />
                 <div style={{ margin: "10px 0" }}>
-                  <h4>Available Snippets</h4>
                   <br />
-                  <Chip style={{ marginRight: '10px', cursor: 'pointer' }} label="Sample" />
-                  <Chip style={{ marginRight: '10px', cursor: 'pointer' }} label="asddas213" />
-                  <Chip style={{ marginRight: '10px', cursor: 'pointer' }} label="asddas213" />
+                  {
+                    allSnippest.length === 0 ? (
+                      <>
+                        No Snippets Found
+                      </>
+                    ) : (
+                      <>
+                      <h4>Available Snippets</h4>
+                      {allSnippest.map((s) => {
+                        return (
+                          <>
+                            <Chip clickable onClick={() => addSnippetTemplate(s.description)} style={{ marginRight: '10px', marginTop: '10px' }} label={s.name} />
+                          </>
+                        )
+                      })}
+                      </>
+                    )
+                  }
                 </div>
                 <div style={{ margin: "10px 0" }}>
                   <TextField

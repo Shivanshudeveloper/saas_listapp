@@ -605,4 +605,13 @@ router.post("/filtertemplate", async (req, res) => {
   }
 });
 
+router.get("/getallsnippestfortemplates", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  Snippet_Model.find({})
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => res.status(400).json(`Error: ${err}`));
+});
+
 module.exports = router;
