@@ -120,7 +120,7 @@ export default function TemplatePersonal({
           />
         </TableCell>
         <TableCell>Name</TableCell>
-        <TableCell>Description</TableCell>
+        <TableCell>Subject</TableCell>
         <TableCell align="center">Tasks</TableCell>
         <TableCell align="center">Date</TableCell>
         {/* </TableRow> */}

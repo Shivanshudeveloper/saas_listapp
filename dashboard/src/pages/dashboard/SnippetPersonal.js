@@ -20,7 +20,6 @@ import {
   Typography,
   Toolbar,
   Paper,
-  Chip,
   Tooltip,
   Grid,
   Switch,
@@ -40,7 +39,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import EditIcon from "@material-ui/icons/Edit";
 import clsx from "clsx";
-
+import Chip from '@material-ui/core/Chip';
 import LockIcon from "@material-ui/icons/Lock";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import FilterListIcon from "@material-ui/icons/FilterList";
@@ -115,7 +114,7 @@ export default function SnippetPersonal({
           />
         </TableCell>
         <TableCell>Name</TableCell>
-        <TableCell>Description</TableCell>
+        <TableCell>Subject</TableCell>
         <TableCell align="center">Date</TableCell>
         {/* </TableRow> */}
       </TableHead>
@@ -250,7 +249,12 @@ export default function SnippetPersonal({
         });
     };
 
+    const handleDelete = () => {
+      console.info('You clicked the delete icon.');
+    };
+
     return (
+      <>
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
         <Dialog
           open={openFilter}
@@ -318,6 +322,7 @@ export default function SnippetPersonal({
           <Typography className={classes.title} variant="h6" id="tableTitle">
             All Snippets
           </Typography>
+          
           {numSelected > 0 ? (
             <div style={{ display: "flex", marginLeft: "20px" }}>
               {numSelected < 2 && (
@@ -474,6 +479,24 @@ export default function SnippetPersonal({
           Filter
         </Button>
       </Toolbar>
+      <section style={{ margin: '10px' }}>
+        <Chip
+          label="asd"
+          color="primary"
+          style={{ marginRight: '10px' }}
+          onDelete={handleDelete}
+          variant="outlined"
+        />
+        <Chip
+          label="123"
+          color="primary"
+          style={{ marginRight: '10px' }}
+          onDelete={handleDelete}
+          variant="outlined"
+        />
+      </section>
+      
+      </>
     );
   };
 

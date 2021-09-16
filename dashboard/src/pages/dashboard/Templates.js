@@ -6,7 +6,7 @@ import useAuth from "../../hooks/useAuth";
 // components
 import Page from "../../components/Page";
 
-import { Box, Container, Grid, IconButton } from "@material-ui/core";
+import { Box, Container, Grid, IconButton, Chip } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -173,6 +173,20 @@ export default function Templates() {
         >
           Add Template
         </Button>
+        <Button
+          variant="outlined"
+          onClick={handleClickOpen}
+          style={{ marginLeft: "20px", float: "right" }}
+        >
+          Import Template
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={handleClickOpen}
+          style={{ marginLeft: "20px", float: "right" }}
+        >
+          Export Template
+        </Button>
         <AppBar
           position="static"
           color="default"
@@ -319,6 +333,13 @@ export default function Templates() {
                   }}
                   onEditorChange={handleChangeEditor}
                 />
+                <div style={{ margin: "10px 0" }}>
+                  <h4>Available Snippets</h4>
+                  <br />
+                  <Chip style={{ marginRight: '10px', cursor: 'pointer' }} label="Sample" />
+                  <Chip style={{ marginRight: '10px', cursor: 'pointer' }} label="asddas213" />
+                  <Chip style={{ marginRight: '10px', cursor: 'pointer' }} label="asddas213" />
+                </div>
                 <div style={{ margin: "10px 0" }}>
                   <TextField
                     label="Add New Tag"

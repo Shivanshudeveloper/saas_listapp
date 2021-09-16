@@ -40,7 +40,7 @@ import Tab from "@material-ui/core/Tab";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Editor } from "@tinymce/tinymce-react";
-
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import { API_SERVICE } from "../../../config";
 import axios from "axios";
 
@@ -628,12 +628,12 @@ export default function TaskTable() {
             <TableHead>
               <TableRow>
                 {/* <TableCell /> */}
-                <TableCell>Contact</TableCell>
+                <TableCell>Action</TableCell>
+                <TableCell>Tasks</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell>Date & Time</TableCell>
                 <TableCell align="center">Status</TableCell>
-                <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -644,7 +644,29 @@ export default function TaskTable() {
                       inputProps={{ "aria-label": "select all desserts" }}
                     />
                   </TableCell> */}
-                  <TableCell style={tableCellStyle}>{row.contact}</TableCell>
+                  <TableCell style={tableCellStyle} align="left">
+                    <IconButton onClick={() => startEdit(row)}>
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton onClick={() => completeTask(row._id)}>
+                      <CheckIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton onClick={() => deleteRow(row._id)}>
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                    {/* <IconButton>
+                      <EmailIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton>
+                      <MessageIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton>
+                      <CallIcon fontSize="small" />
+                    </IconButton> */}
+                  </TableCell>
+                  <TableCell style={tableCellStyle}>
+                    {row.contact}
+                    </TableCell>
                   <TableCell style={tableCellStyle}>
                     {row.description != "" && row.description}
                     {row.notes != "" && row.notes}
@@ -670,26 +692,7 @@ export default function TaskTable() {
                       />
                     )}
                   </TableCell>
-                  <TableCell style={tableCellStyle} align="center">
-                    <IconButton onClick={() => startEdit(row)}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton onClick={() => completeTask(row._id)}>
-                      <CheckIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton onClick={() => deleteRow(row._id)}>
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                    {/* <IconButton>
-                      <EmailIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton>
-                      <MessageIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton>
-                      <CallIcon fontSize="small" />
-                    </IconButton> */}
-                  </TableCell>
+                  
                 </TableRow>
               ))}
             </TableBody>

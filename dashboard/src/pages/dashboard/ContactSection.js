@@ -411,10 +411,10 @@ const ContactSection = () => {
                         {row.company}
                       </TableCell>
                       <TableCell align="center" style={tableCellStyle}>
-                        <LockIcon />
+                        {row.email}
                       </TableCell>
                       <TableCell align="center" style={tableCellStyle}>
-                        <LockIcon />
+                        {row.phone}
                       </TableCell>
                       <TableCell align="center" style={tableCellStyle}>
                         {/* <LockIcon /> */}
