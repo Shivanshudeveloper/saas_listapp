@@ -45,7 +45,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import clsx from "clsx";
-
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import LockIcon from "@material-ui/icons/Lock";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import FilterListIcon from "@material-ui/icons/FilterList";
@@ -332,6 +332,25 @@ export default function TemplatePersonal({
         });
     };
 
+
+    
+    
+    const [alltags, setalltags] = useState([]);
+
+    React.useEffect(() => {
+      getallTags();
+    }, []);
+  
+    const getallTags = () => {
+      axios
+        .get(`${API_SERVICE}/getalltagstemplates`)
+        .then((res) => {
+          setalltags(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+   
+
     return (
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
         <Dialog
@@ -374,16 +393,16 @@ export default function TemplatePersonal({
             </Box>
             <Box style={{ margin: "10px 0" }}>
               <Typography variant="subtitle2">Tags</Typography>
-              <TextField
+              <Autocomplete
                 style={{ marginTop: "5px" }}
-                label="Sample"
-                variant="filled"
-                size="small"
+                id="combo-box-demo"
+                options={alltags}
+                onChange={(event, newValue) => {
+                  setfilterQuery({ ...filterQuery, tag: newValue.t })
+                }}
+                getOptionLabel={(option) => option.t}
                 fullWidth
-                value={filterQuery.tag}
-                onChange={(e) =>
-                  setfilterQuery({ ...filterQuery, tag: e.target.value })
-                }
+                renderInput={(params) => <TextField {...params} label="Tags" variant="outlined" />}
               />
             </Box>
           </DialogContent>

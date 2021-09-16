@@ -118,13 +118,12 @@ export default function Templates() {
 
   useEffect(() => {
     getSnippests();
-  }, [value]);
+  }, []);
 
   const getSnippests = () => {
     axios
       .get(`${API_SERVICE}/getallsnippestfortemplates`)
       .then((res) => {
-        console.log(res.data);
         setallSnippest(res.data);
       })
       .catch((err) => console.log(err));
@@ -160,6 +159,25 @@ export default function Templates() {
     console.log(descriptionadd);
     setFormData({ ...formData, description: descriptionadd })
   }
+
+
+  const [alltags, setalltags] = useState([]);
+
+
+  useEffect(() => {
+    getallTags();
+  }, []);
+
+  const getallTags = () => {
+    axios
+      .get(`${API_SERVICE}/getalltagstemplates`)
+      .then((res) => {
+        setalltags(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => console.log(err));
+  }
+
 
   return (
     <Page title="Templates | List App">
@@ -362,7 +380,7 @@ export default function Templates() {
                       </>
                     ) : (
                       <>
-                      <h4>Available Snippets</h4>
+                      <h5>Available Snippets</h5>
                       {allSnippest.map((s) => {
                         return (
                           <>
@@ -386,6 +404,29 @@ export default function Templates() {
                     }
                   />
                 </div>
+                
+                <div style={{ margin: "10px 0" }}>
+                  {
+                    alltags.length === 0 ? (
+                      <>
+                        No Available Tags Found
+                      </>
+                    ) : (
+                      <>
+                      <h5>Available Tags</h5>
+                      {alltags.map((tag) => {
+                        return (
+                          <>
+                            <Chip clickable onClick={() => setFormData({ ...formData, tag: tag.t })} style={{ marginRight: '10px', marginTop: '10px' }} label={tag.t} />
+                          </>
+                        )
+                      })}
+                      </>
+                    )
+                  }
+                </div>
+
+
               </Grid>
             </Grid>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>

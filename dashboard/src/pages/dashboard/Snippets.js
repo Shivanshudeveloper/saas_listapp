@@ -6,7 +6,7 @@ import useAuth from "../../hooks/useAuth";
 // components
 import Page from "../../components/Page";
 
-import { Box, Container, Grid, Divider, IconButton } from "@material-ui/core";
+import { Box, Container, Grid, Chip, IconButton } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -27,7 +27,7 @@ import renderHTML from "react-render-html";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import { Editor } from "@tinymce/tinymce-react";
-
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { API_SERVICE } from "../../config";
 import axios from "axios";
 // ----------------------------------------------------------------------
@@ -136,6 +136,22 @@ export default function Templates() {
       })
       .catch((err) => console.log(err));
   };
+
+  const [alltags, setalltags] = useState([]);
+
+
+  useEffect(() => {
+    getallTags();
+  }, []);
+
+  const getallTags = () => {
+    axios
+      .get(`${API_SERVICE}/getalltags`)
+      .then((res) => {
+        setalltags(res.data);
+      })
+      .catch((err) => console.log(err));
+  }
 
   return (
     <Page title="Snippets | List App">
@@ -302,6 +318,31 @@ export default function Templates() {
               }
             />
           </div>
+
+          <div style={{ margin: "10px 0" }}>
+            {
+              alltags.length === 0 ? (
+                <>
+                  No Available Tags Found
+                </>
+              ) : (
+                <>
+                <h5>Available Tags</h5>
+                {alltags.map((tag) => {
+                  return (
+                    <>
+                      <Chip clickable onClick={() => setFormData({ ...formData, tag: tag.t })} style={{ marginRight: '10px', marginTop: '10px' }} label={tag.t} />
+                    </>
+                  )
+                })}
+                </>
+              )
+            }
+          </div>
+
+          
+
+
           <DialogActions>
             <Button
               onClick={handleClose}

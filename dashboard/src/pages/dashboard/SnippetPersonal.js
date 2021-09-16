@@ -46,7 +46,7 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
 import { Editor } from "@tinymce/tinymce-react";
 import InputBase from "@material-ui/core/InputBase";
-
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { API_SERVICE } from "../../config";
 import axios from "axios";
 // ----------------------------------------------------------------------
@@ -233,6 +233,7 @@ export default function SnippetPersonal({
       tag: "",
     });
     const filterSnippet = async () => {
+      console.log(filterQuery);
       await axios
         .post(`${API_SERVICE}/filtersnippet`, {
           name: filterQuery.name || "none",
@@ -252,6 +253,22 @@ export default function SnippetPersonal({
     const handleDelete = () => {
       console.info('You clicked the delete icon.');
     };
+
+    const [alltags, setalltags] = useState([]);
+
+    React.useEffect(() => {
+      getallTags();
+    }, []);
+  
+    const getallTags = () => {
+      axios
+        .get(`${API_SERVICE}/getalltags`)
+        .then((res) => {
+          setalltags(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+
 
     return (
       <>
@@ -296,16 +313,16 @@ export default function SnippetPersonal({
             </Box>
             <Box style={{ margin: "10px 0" }}>
               <Typography variant="subtitle2">Tags</Typography>
-              <TextField
+              <Autocomplete
                 style={{ marginTop: "5px" }}
-                label="Sample"
-                variant="filled"
-                size="small"
+                id="combo-box-demo"
+                options={alltags}
+                onChange={(event, newValue) => {
+                  setfilterQuery({ ...filterQuery, tag: newValue.t })
+                }}
+                getOptionLabel={(option) => option.t}
                 fullWidth
-                value={filterQuery.tag}
-                onChange={(e) =>
-                  setfilterQuery({ ...filterQuery, tag: e.target.value })
-                }
+                renderInput={(params) => <TextField {...params} label="Tags" variant="outlined" />}
               />
             </Box>
           </DialogContent>
