@@ -28,6 +28,7 @@ import renderHTML from "react-render-html";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import { Editor } from "@tinymce/tinymce-react";
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { API_SERVICE } from "../../config";
 import axios from "axios";
@@ -380,14 +381,17 @@ export default function Templates() {
                       </>
                     ) : (
                       <>
-                      <h5>Available Snippets</h5>
-                      {allSnippest.map((s) => {
-                        return (
-                          <>
-                            <Chip clickable onClick={() => addSnippetTemplate(s.description)} style={{ marginRight: '10px', marginTop: '10px' }} label={s.name} />
-                          </>
-                        )
-                      })}
+                      <Autocomplete
+                        style={{ marginTop: "5px" }}
+                        id="combo-box-demo"
+                        options={allSnippest}
+                        onChange={(event, newValue) => {
+                          addSnippetTemplate(newValue.description)
+                        }}
+                        getOptionLabel={(option) => option.name}
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="Available Snippets" variant="outlined" />}
+                      />
                       </>
                     )
                   }

@@ -32,9 +32,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { v4 as uuid4 } from "uuid";
-import LockIcon from "@material-ui/icons/Lock";
-import SearchIcon from "@material-ui/icons/Search";
-import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
+
 // ----------------------------------------------------------------------
 
 import { API_SERVICE } from "../../../config";
@@ -238,6 +237,10 @@ export default function CompanyTable({ handleClickOpen }) {
       .catch((err) => console.log(err));
   };
 
+  const editContact = (contact) => {
+    setFormData(contact);
+  }
+
   return (
     <Card>
       <Dialog fullScreen open={open} onClose={handleCloseDialog} fullWidth>
@@ -373,7 +376,9 @@ export default function CompanyTable({ handleClickOpen }) {
                 <TableCell>Location</TableCell>
                 <TableCell>Technologies</TableCell>
                 {/* <TableCell align="center">Intel</TableCell> */}
-                <TableCell align="center">Lists</TableCell>
+                <TableCell align="center">
+                  
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -392,7 +397,9 @@ export default function CompanyTable({ handleClickOpen }) {
                     <LockIcon />
                   </TableCell> */}
                   <TableCell align="center" style={tableCellStyle}>
-                    <LockIcon />
+                    <IconButton>
+                      <EditIcon onClick={() => editContact(row)} fontSize="small" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}

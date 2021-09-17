@@ -201,6 +201,10 @@ const ContactSection = () => {
     );
   };
 
+  const editContact = (contact) => {
+    setFormData(contact);
+  }
+
   return (
     <>
       <Snackbar
@@ -437,7 +441,7 @@ const ContactSection = () => {
                       </TableCell>
                       <TableCell style={tableCellStyle} align="center">
                         <IconButton>
-                          <EditIcon fontSize="small" />
+                          <EditIcon onClick={() => editContact(row)} fontSize="small" />
                         </IconButton>
                       </TableCell>
                     </TableRow>
