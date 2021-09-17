@@ -32,9 +32,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
-
+import Alert from '@material-ui/lab/Alert'
 import { API_SERVICE } from "../../config";
 import axios from "axios";
+import EditIcon from "@material-ui/icons/Edit";
 
 const INVOICES = [
   {
@@ -86,6 +87,7 @@ const ContactSection = () => {
   const [allContacts, setAllContacts] = useState([]);
 
   const [openS, setOpenS] = React.useState(false);
+  const [message, setmessage] = React.useState("");
 
   const handleClickS = () => {
     setOpenS(true);
@@ -166,14 +168,20 @@ const ContactSection = () => {
   };
 
   const addContact = async () => {
-    await axios
+    setmessage("");
+    if (formData.fName === "" || formData.lName === ""|| formData.phone === "" || formData.company === "" || formData.email === "") {
+      setmessage("Empty Fields Found");
+    } else {
+      await axios
       .post(`${API_SERVICE}/addcontact`, formData)
-      .then((res) => {
-        handleClickS();
-        handleCloseDialog();
-        getContacts();
-      })
-      .catch((err) => console.log(err));
+        .then((res) => {
+          setmessage("Contact Added");
+          handleClickS();
+          handleCloseDialog();
+          getContacts();
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const GridContact = ({ label, name }) => {
@@ -203,7 +211,7 @@ const ContactSection = () => {
         open={openS}
         autoHideDuration={6000}
         onClose={handleCloseS}
-        message="Contact Added"
+        message={message}
         action={
           <React.Fragment>
             <IconButton
@@ -231,6 +239,13 @@ const ContactSection = () => {
             <DialogContent>
               <br />
               <Container maxWidth="md">
+                {
+                  message === "Empty Fields Found" ? (
+                    <Alert severity="error">Empty Fields Found</Alert>
+                  ) : null
+                }
+
+
                 <Grid container spacing={2}>
                   {/* <GridContact label="First Name" name="fName" /> */}
                   {GridContact({ label: "First Name", name: "fName" })}
@@ -422,18 +437,7 @@ const ContactSection = () => {
                       </TableCell>
                       <TableCell style={tableCellStyle} align="center">
                         <IconButton>
-                          <MoreHorizIcon onClick={handleCloseA} />
-                          <Menu
-                            id="simple-menu"
-                            anchorEl={anchorEl}
-                            keepMounted
-                            open={Boolean(anchorEl)}
-                            onClose={handleCloseA}
-                          >
-                            <MenuItem onClick={handleCloseA}>
-                              Not Interested
-                            </MenuItem>
-                          </Menu>
+                          <EditIcon fontSize="small" />
                         </IconButton>
                       </TableCell>
                     </TableRow>
