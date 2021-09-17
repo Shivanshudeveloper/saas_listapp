@@ -448,7 +448,7 @@ router.patch("/editsnippet", async (req, res) => {
 router.get("/getallsnippets/:type", async (req, res) => {
   const { type: type } = req.params;
   try {
-    const allCompanies = await Snippet_Model.find({ type: type });
+    const allCompanies = await Snippet_Model.find({ type: type, archive: false });
     res.status(201).json(allCompanies);
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -647,6 +647,40 @@ router.get("/getalltagstemplates", (req, res) => {
       res.status(200).json(allTagsaArr);
     })
     .catch((err) => res.status(400).json(`Error: ${err}`));
+});
+
+
+
+router.post("/archivesnippet", async (req, res) => {
+  const selected = req.body;
+  res.setHeader("Content-Type", "application/json");
+
+
+  selected.map((s) => {
+    Snippet_Model.findOne({ _id: s }).then((data) => {
+      let a = data.archive;
+      Snippet_Model.findOneAndUpdate(
+        { _id: s },
+        { archive: !a },
+        { useFindAndModify: false }
+      )
+        .then(() => {
+          res.status(200).json("Added Archive");
+        })
+        .catch((err) => console.log(err));
+    }).catch((err) => console.log(err));
+  })
+});
+
+
+router.get("/getallsnippetsarchive/:type", async (req, res) => {
+  const { type: type } = req.params;
+  try {
+    const allCompanies = await Snippet_Model.find({ type: type, archive: true });
+    res.status(201).json(allCompanies);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
 });
 
 

@@ -103,6 +103,7 @@ export default function Templates() {
     description: "",
     tag: "",
     type: "personal",
+    archive: false
   };
 
   const [formData, setFormData] = useState(initialState);
@@ -126,6 +127,7 @@ export default function Templates() {
   const [allSnippets, setAllSnippets] = useState([]);
 
   const getSnippets = async () => {
+    setarchivestatus(false);
     var type = "personal";
     type = value === 0 ? "personal" : "team";
     await axios
@@ -136,6 +138,21 @@ export default function Templates() {
       })
       .catch((err) => console.log(err));
   };
+
+  const [archivestatus, setarchivestatus] = useState(false);
+  const showArchive = async () => {
+    setarchivestatus(true);
+    var type = "personal";
+    type = value === 0 ? "personal" : "team";
+    await axios
+      .get(`${API_SERVICE}/getallsnippetsarchive/${type}`)
+      .then((res) => {
+        setAllSnippets(res.data);
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+  };
+
 
   const [alltags, setalltags] = useState([]);
 
@@ -235,7 +252,9 @@ export default function Templates() {
             <SnippetPersonal
               type="personal"
               allSnippets={allSnippets}
+              archivestatus={archivestatus}
               getSnippets={getSnippets}
+              showArchive={showArchive}
               handleClickOpenPrev={handleClickOpen}
               setFormDataPrev={setFormData}
             />
@@ -249,7 +268,9 @@ export default function Templates() {
             <SnippetPersonal
               type="team"
               allSnippets={allSnippets}
+              archivestatus={archivestatus}
               getSnippets={getSnippets}
+              showArchive={showArchive}
               handleClickOpenPrev={handleClickOpen}
               setFormDataPrev={setFormData}
             />
@@ -263,7 +284,6 @@ export default function Templates() {
             variant="outlined"
             style={{ margin: "10px 0" }}
             fullWidth
-            size="small"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
@@ -272,7 +292,6 @@ export default function Templates() {
             variant="outlined"
             style={{ margin: "10px 0" }}
             fullWidth
-            size="small"
             value={formData.subject}
             onChange={(e) =>
               setFormData({ ...formData, subject: e.target.value })

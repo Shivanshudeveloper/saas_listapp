@@ -49,7 +49,8 @@ import InputBase from "@material-ui/core/InputBase";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { API_SERVICE } from "../../config";
 import axios from "axios";
-
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 
 let allfiltertags = [];
 
@@ -61,6 +62,8 @@ export default function SnippetPersonal({
   allSnippets,
   type,
   getSnippets,
+  showArchive,
+  archivestatus,
   handleClickOpenPrev,
   setFormDataPrev,
 }) {
@@ -189,6 +192,15 @@ export default function SnippetPersonal({
         .catch((err) => console.log(err));
     };
 
+    const archiveRow = () => {
+      axios
+        .post(`${API_SERVICE}/archivesnippet`, selected)
+        .then((res) => {
+          getSnippets();
+        })
+        .catch((err) => console.log(err));
+    }
+
     const initialState = {
       name: "",
       subject: "",
@@ -289,8 +301,44 @@ export default function SnippetPersonal({
       allfiltertags.splice(index, 1);
     }
 
+    const [openS, setOpenS] = React.useState(false);
+
+    const handleClickS = () => {
+      setOpenS(true);
+    };
+
+    const handleCloseS = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+      setOpenS(false);
+    };
+
     return (
       <>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        open={openS}
+        autoHideDuration={6000}
+        onClose={handleCloseS}
+        message="Snippet Added to Archive"
+        action={
+          <React.Fragment>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleCloseS}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
+
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
         <Dialog
           open={openFilter}
@@ -472,8 +520,8 @@ export default function SnippetPersonal({
                   </Button>
                 </DialogActions>
               </Dialog>
-              <Tooltip title="Archive">
-                <IconButton>
+              <Tooltip title="Archive/Unarchive">
+                <IconButton onClick={archiveRow}>
                   <ArchiveIcon />
                 </IconButton>
               </Tooltip>
@@ -534,6 +582,25 @@ export default function SnippetPersonal({
           )
         }
       </section>
+      {
+        archivestatus ? (
+        <Button
+            onClick={getSnippets}
+            style={{ margin: "10px" }}
+          >
+            Show Snippets
+        </Button>
+        ) : (
+        <Button
+            onClick={showArchive}
+            style={{ margin: "10px" }}
+          >
+            Show Archive Snippets
+        </Button>
+        )
+      }
+      
+      
       
       </>
     );

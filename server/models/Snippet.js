@@ -17,6 +17,10 @@ const snippetSchema = new mongoose.Schema({
     type: Array,
     required: false,
   },
+  archive: {
+    type: Boolean,
+    required: false,
+  },
   type: {
     type: String,
     required: false,
