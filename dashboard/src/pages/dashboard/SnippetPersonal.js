@@ -427,7 +427,7 @@ export default function SnippetPersonal({
                         plugins="wordcount"
                         value={formData.description}
                         init={{
-                          height: 600,
+                          height: '400px',
                           menubar: false,
                           plugins: [
                             "advlist autolink lists link image charmap print preview anchor",

@@ -21,6 +21,10 @@ const templateSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  date: {
+    type: Date,
+    default: Date.now
+  }
 });
 const template = mongoose.model("template", templateSchema);
 module.exports = template;

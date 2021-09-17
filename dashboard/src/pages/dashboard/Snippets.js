@@ -256,7 +256,7 @@ export default function Templates() {
           </TabPanel>
         </SwipeableViews>
       </Container>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog maxWidth="md" open={open} onClose={handleClose}>
         <DialogContent>
           <TextField
             label="Name"
@@ -284,7 +284,7 @@ export default function Templates() {
             plugins="wordcount"
             value={formData.description}
             init={{
-              height: 600,
+              height: '400px',
               menubar: false,
               plugins: [
                 "advlist autolink lists link image charmap print preview anchor",

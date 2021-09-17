@@ -106,6 +106,7 @@
     "react-draft-wysiwyg": "^1.14.7",
     "react-dropzone": "^11.3.4",
     "react-helmet-async": "^1.0.9",
+    "react-html-table-to-excel": "^2.0.0",
     "react-i18next": "^11.8.13",
     "react-image-lightbox": "^5.1.1",
     "react-infinite-scroll-component": "^6.1.0",

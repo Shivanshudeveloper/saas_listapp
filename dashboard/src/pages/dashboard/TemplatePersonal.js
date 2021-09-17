@@ -42,11 +42,9 @@ import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import clsx from "clsx";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import LockIcon from "@material-ui/icons/Lock";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
@@ -55,7 +53,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import { Editor } from "@tinymce/tinymce-react";
 import { API_SERVICE } from "../../config";
 import axios from "axios";
-
+import renderHTML from 'react-render-html';
 
 let allfiltertags = [];
 
@@ -368,10 +366,59 @@ export default function TemplatePersonal({
       let index = allfiltertags.indexOf(tag);
       allfiltertags.splice(index, 1);
     }
+
+    const [openExport, setOpenExport] = React.useState(false);
+
+    const handleClickOpenExport = () => {
+      setOpenExport(true);
+    };
+
+    const handleCloseExport = () => {
+      setOpenExport(false);
+    };
    
 
     return (
       <>
+
+      <Dialog
+        open={openExport}
+        onClose={handleCloseExport}
+        fullWidth
+        maxWidth="sm"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Export Data</DialogTitle>
+        <DialogContent>
+          <center style={{ marginBottom: '20px' }}>
+            <img alt="Excel" src="https://img.icons8.com/color/68/000000/microsoft-excel-2019--v1.png"/>
+          </center>
+          {
+            templates && templates.length ? (
+              <ReactHTMLTableToExcel
+                id="test-table-xls-button"
+                className="excelbutton"
+                table="table-to-xls"
+                filename="orders"
+                sheet="orders"
+                buttonText="Download as XLS"
+              />
+            ) : (
+              <h5>No Data Found</h5>
+            )
+          }
+          
+          
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseExport} color="primary" autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
         <Dialog
           open={openFilter}
@@ -687,24 +734,36 @@ export default function TemplatePersonal({
         </Button>
       </Toolbar>
       <section style={{ margin: '10px' }}>
-      {
-        allfiltertags.length === 0 ? (
-          <>
-            
-          </>
-        ) : (
-          <>
-          {allfiltertags.map((tag) => {
-            return (
-              <>
-                <Chip onDelete={() => removeFilterTag(tag)} style={{ marginRight: '10px', marginTop: '10px' }} label={tag} />
-              </>
-            )
-          })}
-          </>
-        )
-      }
-    </section>
+        {
+          allfiltertags.length === 0 ? (
+            <>
+              
+            </>
+          ) : (
+            <>
+            {allfiltertags.map((tag) => {
+              return (
+                <>
+                  <Chip onDelete={() => removeFilterTag(tag)} style={{ marginRight: '10px', marginTop: '10px' }} label={tag} />
+                </>
+              )
+            })}
+            </>
+          )
+        }
+      </section>
+      <Button
+      style={{ margin: '10px' }}
+      onClick={handleClickOpenExport}
+      >
+        Export Data
+      </Button>
+
+      <Button
+      style={{ margin: '10px' }}
+      >
+        Import Data
+      </Button>
     </>
     );
   };
@@ -754,6 +813,23 @@ export default function TemplatePersonal({
   };
 
   const [templates, setTemplates] = useState(allTemplates);
+
+  const List2 = ({ template }) => {
+    return (
+      <tr>
+        <th>{template?.name}</th>
+        <th>{template?.subject}</th>
+        <th>{renderHTML(template?.description)}</th>
+        <th>{template?.date.split("T")[0]}</th>
+      </tr>
+    );
+  };
+
+  const ShowList2 = () => {
+    return templates.map((template) => {
+      return <List2 template={template} key={template._id} />;
+    });
+  };
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -915,6 +991,17 @@ export default function TemplatePersonal({
             </TableBody>
           </Table>
         </TableContainer>
+        
+        <table hidden id="table-to-xls">
+          <tr>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Description</th>
+            <th>Date</th>
+          </tr>
+          <ShowList2 />
+        </table>
+
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"

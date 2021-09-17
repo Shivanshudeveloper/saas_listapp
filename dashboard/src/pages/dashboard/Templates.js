@@ -212,20 +212,6 @@ export default function Templates() {
         >
           Add Template
         </Button>
-        <Button
-          variant="outlined"
-          onClick={handleClickOpen}
-          style={{ marginLeft: "20px", float: "right" }}
-        >
-          Import Template
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={handleClickOpen}
-          style={{ marginLeft: "20px", float: "right" }}
-        >
-          Export Template
-        </Button>
         <AppBar
           position="static"
           color="default"
@@ -323,7 +309,7 @@ export default function Templates() {
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
-        maxWidth="sm"
+        maxWidth="md"
       >
         <Container maxWidth="lg" style={{ marginTop: "20px" }}>
           <DialogContent>
@@ -350,12 +336,35 @@ export default function Templates() {
                   }
                 />
 
+                <div style={{ margin: "10px 0" }}>
+                  {
+                    allSnippest.length === 0 ? (
+                      <>
+                        No Snippets Found
+                      </>
+                    ) : (
+                      <>
+                      <Autocomplete
+                        id="combo-box-demo"
+                        options={allSnippest}
+                        onChange={(event, newValue) => {
+                          addSnippetTemplate(newValue.description)
+                        }}
+                        getOptionLabel={(option) => option.name}
+                        fullWidth
+                        renderInput={(params) => <TextField {...params} label="Add Snippets" variant="outlined" />}
+                      />
+                      </>
+                    )
+                  }
+                </div>
+
                 <Editor
                   apiKey="azhogyuiz16q8om0wns0u816tu8k6517f6oqgs5mfl36hptu"
                   plugins="wordcount"
                   value={formData.description}
                   init={{
-                    height: 600,
+                    height: '400px',
                     menubar: false,
                     plugins: [
                       "advlist autolink lists link image charmap print preview anchor",
@@ -372,30 +381,7 @@ export default function Templates() {
                   }}
                   onEditorChange={handleChangeEditor}
                 />
-                <div style={{ margin: "10px 0" }}>
-                  <br />
-                  {
-                    allSnippest.length === 0 ? (
-                      <>
-                        No Snippets Found
-                      </>
-                    ) : (
-                      <>
-                      <Autocomplete
-                        style={{ marginTop: "5px" }}
-                        id="combo-box-demo"
-                        options={allSnippest}
-                        onChange={(event, newValue) => {
-                          addSnippetTemplate(newValue.description)
-                        }}
-                        getOptionLabel={(option) => option.name}
-                        fullWidth
-                        renderInput={(params) => <TextField {...params} label="Available Snippets" variant="outlined" />}
-                      />
-                      </>
-                    )
-                  }
-                </div>
+                
                 <div style={{ margin: "10px 0" }}>
                   <TextField
                     label="Add New Tag"
