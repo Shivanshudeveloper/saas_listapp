@@ -46,6 +46,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
+import UploadFile from "@material-ui/icons/UploadFile";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
@@ -54,6 +55,9 @@ import { Editor } from "@tinymce/tinymce-react";
 import { API_SERVICE } from "../../config";
 import axios from "axios";
 import renderHTML from 'react-render-html';
+import Dropzone from "react-dropzone";
+import { storage } from "../../Firebase/index";
+import { v4 as uuid4 } from "uuid";
 
 let allfiltertags = [];
 
@@ -376,6 +380,77 @@ export default function TemplatePersonal({
     const handleCloseExport = () => {
       setOpenExport(false);
     };
+
+    const [openImport, setOpenImport] = React.useState(false);
+
+    const handleClickOpenImport = () => {
+      setOpenImport(true);
+    };
+
+    const handleCloseImport = () => {
+      setOpenImport(false);
+    };
+
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const handleClickSnackbar = () => {
+      setOpenSnackbar(true);
+    };
+    const handleCloseSnackbar = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+      setOpenSnackbar(false);
+    };
+
+    const [file, setFile] = React.useState([]);
+    const [downloadUrl, setDownloadUrl] = React.useState("");
+    const [message, setMessage] = React.useState("");
+
+    React.useEffect(() => {
+      if (file.length > 0) {
+        onSubmit();
+      } else {
+        console.log("N");
+      }
+    }, [file]);
+
+
+    const onSubmit = () => {
+      if (file.length > 0) {
+        file.forEach((file) => {
+          const timeStamp = Date.now();
+          var uniquetwoKey = uuid4();
+          uniquetwoKey = uniquetwoKey + timeStamp;
+          const uploadTask = storage
+            .ref(`excel/${uniquetwoKey}/${file.name}`)
+            .put(file);
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const progress = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              setMessage(`Uploading ${progress} %`);
+            },
+            (error) => {
+              setMessage(error);
+            },
+            async () => {
+              // When the Storage gets Completed
+              const filePath = await uploadTask.snapshot.ref.getDownloadURL();
+              setMessage("File Uploaded");
+              setDownloadUrl(filePath);
+            }
+          );
+        });
+      } else {
+        setMessage("No File Selected Yet");
+      }
+    };
+
+    const handleDrop = async (acceptedFiles) => {
+      setFile(acceptedFiles.map((file) => file));
+    };
    
 
     return (
@@ -408,11 +483,45 @@ export default function TemplatePersonal({
               <h5>No Data Found</h5>
             )
           }
-          
-          
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseExport} color="primary" autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+      <Dialog
+        open={openImport}
+        onClose={handleCloseImport}
+        fullWidth
+        maxWidth="sm"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Import Data</DialogTitle>
+        <DialogContent>
+          <center style={{ marginBottom: '20px' }}>
+              {`${message}`}
+              <a style={{ marginTop: '20px', marginBottom: '20px' }} className="excelbutton" href="#!">
+                Download Sample Excel
+              </a>
+              <hr style={{ marginTop: '20px', marginBottom: '20px' }} />
+              <Dropzone onDrop={handleDrop}>
+                {({ getRootProps, getInputProps }) => (
+                  <div {...getRootProps({ className: "dropzone" })}>
+                    <input {...getInputProps()} />
+                    <Button size="large" startIcon={<UploadFile />} color="primary" variant="outlined">
+                      Upload Excel
+                    </Button>
+                  </div>
+                )}
+              </Dropzone>
+          </center>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseImport} color="primary" autoFocus>
             Close
           </Button>
         </DialogActions>
@@ -761,6 +870,7 @@ export default function TemplatePersonal({
 
       <Button
       style={{ margin: '10px' }}
+      onClick={handleClickOpenImport}
       >
         Import Data
       </Button>
