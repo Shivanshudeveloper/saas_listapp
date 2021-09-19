@@ -157,8 +157,8 @@ export default function Templates() {
   };
 
   const addSnippetTemplate = (descriptionadd) => {
-    console.log(descriptionadd);
-    setFormData({ ...formData, description: descriptionadd })
+    let newDescription = formData.description + descriptionadd;
+    setFormData({ ...formData, description: newDescription })
   }
 
 
