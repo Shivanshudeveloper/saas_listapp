@@ -530,7 +530,7 @@ export default function TemplatePersonal({
               <a
                 style={{ marginTop: "20px", marginBottom: "20px" }}
                 className="excelbutton"
-                href="../../assests/sample.csv"
+                href="https://res.cloudinary.com/dx9dnqzaj/raw/upload/v1632124257/saas_listapp/sample.csv"
                 download
               >
                 Download Sample CSV
