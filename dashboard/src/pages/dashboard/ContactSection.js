@@ -32,7 +32,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
-import Alert from '@material-ui/lab/Alert'
+import Alert from "@material-ui/lab/Alert";
 import { API_SERVICE } from "../../config";
 import axios from "axios";
 import EditIcon from "@material-ui/icons/Edit";
@@ -113,21 +113,30 @@ const ContactSection = () => {
       .catch((err) => console.log(err));
   };
 
+  const [isEdit, setIsEdit] = useState("");
+
+  const openEdit = (row) => {
+    setIsEdit(row._id);
+    setFormData(row);
+    handleClickOpenDialog();
+  };
+
+  const editContact = async (_id) => {
+    await axios
+      .patch(`${API_SERVICE}/editcontact`, formData)
+      .then((res) => {
+        console.log(res);
+        handleCloseDialog();
+        getContacts();
+      })
+      .catch((err) => console.log(err));
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
-  };
-
-  //
-  //
-  const [anchorEl, setAnchorEl] = useState(null);
-  const handleClickA = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseA = () => {
-    setAnchorEl(null);
   };
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -169,11 +178,17 @@ const ContactSection = () => {
 
   const addContact = async () => {
     setmessage("");
-    if (formData.fName === "" || formData.lName === ""|| formData.phone === "" || formData.company === "" || formData.email === "") {
+    if (
+      formData.fName === "" ||
+      formData.lName === "" ||
+      formData.phone === "" ||
+      formData.company === "" ||
+      formData.email === ""
+    ) {
       setmessage("Empty Fields Found");
     } else {
       await axios
-      .post(`${API_SERVICE}/addcontact`, formData)
+        .post(`${API_SERVICE}/addcontact`, formData)
         .then((res) => {
           setmessage("Contact Added");
           handleClickS();
@@ -184,7 +199,7 @@ const ContactSection = () => {
     }
   };
 
-  const GridContact = ({ label, name }) => {
+  const GridContact = ({ label, name, value }) => {
     return (
       <Grid item md={6}>
         <TextField
@@ -195,15 +210,11 @@ const ContactSection = () => {
           fullWidth
           name={name}
           onChange={handleChange}
-          value={formData.name}
+          value={value}
         />
       </Grid>
     );
   };
-
-  const editContact = (contact) => {
-    setFormData(contact);
-  }
 
   return (
     <>
@@ -238,24 +249,38 @@ const ContactSection = () => {
             fullWidth
           >
             <DialogTitle id="form-dialog-title">
-              <Container maxWidth="md">Add Contact</Container>
+              <Container maxWidth="md">
+                {isEdit !== "" ? "Edit" : "Add"} Contact
+              </Container>
             </DialogTitle>
             <DialogContent>
               <br />
               <Container maxWidth="md">
-                {
-                  message === "Empty Fields Found" ? (
-                    <Alert severity="error">Empty Fields Found</Alert>
-                  ) : null
-                }
-
+                {message === "Empty Fields Found" ? (
+                  <Alert severity="error">Empty Fields Found</Alert>
+                ) : null}
 
                 <Grid container spacing={2}>
-                  {/* <GridContact label="First Name" name="fName" /> */}
-                  {GridContact({ label: "First Name", name: "fName" })}
-                  {GridContact({ label: "Last Name", name: "lName" })}
-                  {GridContact({ label: "Company", name: "company" })}
-                  {GridContact({ label: "Email", name: "email" })}
+                  {GridContact({
+                    label: "First Name",
+                    name: "fName",
+                    value: formData.fName,
+                  })}
+                  {GridContact({
+                    label: "Last Name",
+                    name: "lName",
+                    value: formData.lName,
+                  })}
+                  {GridContact({
+                    label: "Company",
+                    name: "company",
+                    value: formData.company,
+                  })}
+                  {GridContact({
+                    label: "Email",
+                    name: "email",
+                    value: formData.email,
+                  })}
                   <Grid item md={6}>
                     <FormControl
                       fullWidth
@@ -276,8 +301,16 @@ const ContactSection = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  {GridContact({ label: "Title", name: "title" })}
-                  {GridContact({ label: "Phone", name: "phone" })}
+                  {GridContact({
+                    label: "Title",
+                    name: "title",
+                    value: formData.title,
+                  })}
+                  {GridContact({
+                    label: "Phone",
+                    name: "phone",
+                    value: formData.phone,
+                  })}
                   <Grid item md={6}>
                     <FormControl
                       fullWidth
@@ -299,7 +332,11 @@ const ContactSection = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  {GridContact({ label: "Extn", name: "extn" })}
+                  {GridContact({
+                    label: "Extn",
+                    name: "extn",
+                    value: formData.extn,
+                  })}
                   <Grid item md={6}>
                     <FormControl
                       fullWidth
@@ -332,18 +369,51 @@ const ContactSection = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  {GridContact({ label: "Street Address", name: "street" })}
-                  {GridContact({ label: "City", name: "city" })}
-                  {GridContact({ label: "State/Region", name: "state" })}
-                  {GridContact({ label: "Country", name: "country" })}
-                  {GridContact({ label: "Postal Code", name: "code" })}
-                  {GridContact({ label: "Linkedin", name: "linkedin" })}
-                  {GridContact({ label: "Facebook", name: "facebook" })}
+                  {GridContact({
+                    label: "Street Address",
+                    name: "street",
+                    value: formData.street,
+                  })}
+                  {GridContact({
+                    label: "City",
+                    name: "city",
+                    value: formData.city,
+                  })}
+                  {GridContact({
+                    label: "State/Region",
+                    name: "state",
+                    value: formData.state,
+                  })}
+                  {GridContact({
+                    label: "Country",
+                    name: "country",
+                    value: formData.country,
+                  })}
+                  {GridContact({
+                    label: "Postal Code",
+                    name: "code",
+                    value: formData.code,
+                  })}
+                  {GridContact({
+                    label: "Linkedin",
+                    name: "linkedin",
+                    value: formData.linkedin,
+                  })}
+                  {GridContact({
+                    label: "Facebook",
+                    name: "facebook",
+                    value: formData.facebook,
+                  })}
                   {GridContact({
                     label: "Contact Owner (Users from the System)",
                     name: "owner",
+                    value: formData.owner,
                   })}
-                  {GridContact({ label: "Tags", name: "tags" })}
+                  {GridContact({
+                    label: "Tags",
+                    name: "tags",
+                    value: formData.tags,
+                  })}
                 </Grid>
               </Container>
             </DialogContent>
@@ -351,8 +421,12 @@ const ContactSection = () => {
               <Button onClick={handleCloseDialog} color="primary">
                 Cancel
               </Button>
-              <Button onClick={addContact} color="primary" variant="contained">
-                Add
+              <Button
+                onClick={isEdit !== "" ? editContact : addContact}
+                color="primary"
+                variant="contained"
+              >
+                {isEdit !== "" ? "Edit" : "Add"}
               </Button>
             </DialogActions>
           </Dialog>
@@ -381,7 +455,13 @@ const ContactSection = () => {
                 Filter
               </Button>
             </div>
-            <Button variant="contained" onClick={handleClickOpenDialog}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                handleClickOpenDialog();
+                setIsEdit("");
+              }}
+            >
               Add Contact
             </Button>
           </div>
@@ -441,7 +521,10 @@ const ContactSection = () => {
                       </TableCell>
                       <TableCell style={tableCellStyle} align="center">
                         <IconButton>
-                          <EditIcon onClick={() => editContact(row)} fontSize="small" />
+                          <EditIcon
+                            onClick={() => openEdit(row)}
+                            fontSize="small"
+                          />
                         </IconButton>
                       </TableCell>
                     </TableRow>

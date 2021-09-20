@@ -43,7 +43,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import UploadFile from "@material-ui/icons/UploadFile";
@@ -54,10 +54,11 @@ import EditIcon from "@material-ui/icons/Edit";
 import { Editor } from "@tinymce/tinymce-react";
 import { API_SERVICE } from "../../config";
 import axios from "axios";
-import renderHTML from 'react-render-html';
+import renderHTML from "react-render-html";
 import Dropzone from "react-dropzone";
 import { storage } from "../../Firebase/index";
 import { v4 as uuid4 } from "uuid";
+import CSVReader from "react-csv-reader";
 
 let allfiltertags = [];
 
@@ -249,6 +250,7 @@ export default function TemplatePersonal({
         .post(`${API_SERVICE}/deletetemplate`, selected)
         .then((res) => {
           getTemplates();
+          setUseFilter(false);
         })
         .catch((err) => console.log(err));
     };
@@ -259,11 +261,12 @@ export default function TemplatePersonal({
       await axios
         .get(`${API_SERVICE}/getalltemplates/${type}`)
         .then((res) => {
+          allTemplates = res.data;
           setTemplates(res.data);
         })
         .catch((err) => console.log(err));
     };
-
+    const [useFilter, setUseFilter] = useState(false);
     const [openFilter, setOpenFilter] = useState(false);
 
     const handleClickOpenFilter = () => {
@@ -322,6 +325,7 @@ export default function TemplatePersonal({
       tag: "",
     });
     const filterTemplate = async () => {
+      setUseFilter(true);
       if (filterQuery.name !== "") {
         allfiltertags.push(filterQuery.name);
       }
@@ -347,15 +351,12 @@ export default function TemplatePersonal({
         });
     };
 
-
-    
-    
     const [alltags, setalltags] = useState([]);
 
     React.useEffect(() => {
       getallTags();
     }, []);
-  
+
     const getallTags = () => {
       axios
         .get(`${API_SERVICE}/getalltagstemplates`)
@@ -363,13 +364,13 @@ export default function TemplatePersonal({
           setalltags(res.data);
         })
         .catch((err) => console.log(err));
-    }
+    };
 
     const removeFilterTag = (tag) => {
       setTemplates(allTemplates);
       let index = allfiltertags.indexOf(tag);
       allfiltertags.splice(index, 1);
-    }
+    };
 
     const [openExport, setOpenExport] = React.useState(false);
 
@@ -414,7 +415,6 @@ export default function TemplatePersonal({
       }
     }, [file]);
 
-
     const onSubmit = () => {
       if (file.length > 0) {
         file.forEach((file) => {
@@ -451,26 +451,51 @@ export default function TemplatePersonal({
     const handleDrop = async (acceptedFiles) => {
       setFile(acceptedFiles.map((file) => file));
     };
-   
+
+    const papaparseOptions = {
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      transformHeader: (header) => header.toLowerCase().replace(/\W/g, "_"),
+    };
+
+    const handleForce = async (data, fileInfo) => {
+      setFile(data);
+      setMessage("CSV Uploaded");
+      var finalData = [];
+      var type = "personal";
+      type = value === 0 ? "personal" : value === 1 ? "team" : "library";
+      data.map((d) => finalData.push({ ...d, tag: d?.tag?.split(","), type }));
+      // setTemplates(finalData);
+
+      await axios
+        .post(`${API_SERVICE}/addtemplatefromexcel`, finalData)
+        .then((res) => {
+          setUseFilter(false);
+          getTemplates();
+        })
+        .catch((err) => console.log(err));
+    };
 
     return (
       <>
-
-      <Dialog
-        open={openExport}
-        onClose={handleCloseExport}
-        fullWidth
-        maxWidth="sm"
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Export Data</DialogTitle>
-        <DialogContent>
-          <center style={{ marginBottom: '20px' }}>
-            <img alt="Excel" src="https://img.icons8.com/color/68/000000/microsoft-excel-2019--v1.png"/>
-          </center>
-          {
-            templates && templates.length ? (
+        <Dialog
+          open={openExport}
+          onClose={handleCloseExport}
+          fullWidth
+          maxWidth="sm"
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Export Data</DialogTitle>
+          <DialogContent>
+            <center style={{ marginBottom: "20px" }}>
+              <img
+                alt="Excel"
+                src="https://img.icons8.com/color/68/000000/microsoft-excel-2019--v1.png"
+              />
+            </center>
+            {templates && templates.length ? (
               <ReactHTMLTableToExcel
                 id="test-table-xls-button"
                 className="excelbutton"
@@ -481,290 +506,282 @@ export default function TemplatePersonal({
               />
             ) : (
               <h5>No Data Found</h5>
-            )
-          }
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseExport} color="primary" autoFocus>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseExport} color="primary" autoFocus>
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-
-      <Dialog
-        open={openImport}
-        onClose={handleCloseImport}
-        fullWidth
-        maxWidth="sm"
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Import Data</DialogTitle>
-        <DialogContent>
-          <center style={{ marginBottom: '20px' }}>
+        <Dialog
+          open={openImport}
+          onClose={handleCloseImport}
+          fullWidth
+          maxWidth="sm"
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Import Data</DialogTitle>
+          <DialogContent>
+            <center style={{ marginBottom: "20px" }}>
               {`${message}`}
-              <a style={{ marginTop: '20px', marginBottom: '20px' }} className="excelbutton" href="#!">
-                Download Sample Excel
+              <a
+                style={{ marginTop: "20px", marginBottom: "20px" }}
+                className="excelbutton"
+                href="../../assests/sample.csv"
+                download
+              >
+                Download Sample CSV
               </a>
-              <hr style={{ marginTop: '20px', marginBottom: '20px' }} />
-              <Dropzone onDrop={handleDrop}>
+              <hr style={{ marginTop: "20px", marginBottom: "20px" }} />
+              {/* <Dropzone onDrop={handleDrop}>
                 {({ getRootProps, getInputProps }) => (
                   <div {...getRootProps({ className: "dropzone" })}>
                     <input {...getInputProps()} />
-                    <Button size="large" startIcon={<UploadFile />} color="primary" variant="outlined">
+                    <Button
+                      size="large"
+                      startIcon={<UploadFile />}
+                      color="primary"
+                      variant="outlined"
+                    >
                       Upload Excel
                     </Button>
                   </div>
                 )}
-              </Dropzone>
-          </center>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseImport} color="primary" autoFocus>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+              </Dropzone> */}
 
-      
-      <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
-        <Dialog
-          open={openFilter}
-          onClose={handleCloseFilter}
-          aria-labelledby="form-dialog-title"
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle id="form-dialog-title">Filter</DialogTitle>
-          <DialogContent>
-            <br />
-            <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Name</Typography>
-              <TextField
-                style={{ marginTop: "5px" }}
-                label="Sample"
-                variant="filled"
-                size="small"
-                fullWidth
-                value={filterQuery.name}
-                onChange={(e) =>
-                  setfilterQuery({ ...filterQuery, name: e.target.value })
-                }
+              <CSVReader
+                cssClass="react-csv-input"
+                onFileLoaded={handleForce}
+                parserOptions={papaparseOptions}
               />
-            </Box>
-            <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Description</Typography>
-              <TextField
-                style={{ marginTop: "5px" }}
-                label="Sample"
-                variant="filled"
-                size="small"
-                fullWidth
-                value={filterQuery.desc}
-                onChange={(e) =>
-                  setfilterQuery({ ...filterQuery, desc: e.target.value })
-                }
-              />
-            </Box>
-            <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Tags</Typography>
-              <Autocomplete
-                style={{ marginTop: "5px" }}
-                id="combo-box-demo"
-                options={alltags}
-                onChange={(event, newValue) => {
-                  setfilterQuery({ ...filterQuery, tag: newValue.t })
-                }}
-                getOptionLabel={(option) => option.t}
-                fullWidth
-                renderInput={(params) => <TextField {...params} label="Tags" variant="outlined" />}
-              />
-            </Box>
+            </center>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseFilter} color="primary">
-              Cancel
-            </Button>
-            <Button
-              onClick={filterTemplate}
-              color="primary"
-              variant="contained"
-            >
-              Search
+            <Button onClick={handleCloseImport} color="primary" autoFocus>
+              Close
             </Button>
           </DialogActions>
         </Dialog>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Typography className={classes.title} variant="h6" id="tableTitle">
-            All Templates
-          </Typography>
-          {numSelected > 0 ? (
-            <div style={{ display: "flex", marginLeft: "20px" }}>
-              {numSelected < 2 && (
-                <>
-                  <Tooltip title="Edit Template">
-                    <IconButton>
-                      <EditIcon onClick={editTemplate} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Clone">
-                    <IconButton
-                      onClick={() => {
-                        const data = allTemplates.filter(
-                          (temp) => temp._id === selected[0]
-                        );
-                        console.log({ ...data[0], tag: data[0].tag.join() });
-                        setFormDataPrev({
-                          name: data[0].name,
-                          subject: data[0].subject,
-                          description: data[0].description,
-                          type: data[0].type,
-                          tag: data[0].tag.join(),
-                        });
-                        handleClickOpenPrev();
-                      }}
-                    >
-                      <FileCopyIcon />
-                    </IconButton>
-                  </Tooltip>
-                </>
-              )}
-              <Dialog
-                open={openEdit}
-                onClose={handleCloseEdit}
-                aria-labelledby="form-dialog-title"
-                maxWidth="sm"
-                fullWidth
-              >
-                <DialogTitle id="form-dialog-title">Edit Template</DialogTitle>
-                <DialogContent>
-                  <Grid container spacing={2}>
-                    <Grid md={12}>
-                      <TextField
-                        label="Name"
-                        variant="outlined"
-                        style={{ margin: "10px 0" }}
-                        fullWidth
-                        value={formData.name}
-                        onChange={(e) =>
-                          setFormData({ ...formData, name: e.target.value })
-                        }
-                      />
-                      <TextField
-                        label="Subject"
-                        variant="outlined"
-                        style={{ margin: "10px 0" }}
-                        fullWidth
-                        value={formData.subject}
-                        onChange={(e) =>
-                          setFormData({ ...formData, subject: e.target.value })
-                        }
-                      />
 
-                      <Editor
-                        apiKey="azhogyuiz16q8om0wns0u816tu8k6517f6oqgs5mfl36hptu"
-                        plugins="wordcount"
-                        value={formData.description}
-                        init={{
-                          height: 600,
-                          menubar: false,
-                          plugins: [
-                            "advlist autolink lists link image charmap print preview anchor",
-                            "searchreplace visualblocks code fullscreen",
-                            "insertdatetime media table paste code help wordcount",
-                          ],
-                          toolbar:
-                            "undo redo | formatselect | " +
-                            "bold italic backcolor | alignleft aligncenter " +
-                            "alignright alignjustify | bullist numlist outdent indent | " +
-                            "removeformat | help",
-                          content_style:
-                            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                        }}
-                        onEditorChange={handleChangeEditor}
-                      />
-                      <div style={{ margin: "10px 0" }}>
-                        <TextField
-                          label="Add New Tag"
-                          variant="outlined"
-                          fullWidth
-                          style={{ margin: "10px 0" }}
-                          value={formData.tag}
-                          onChange={(e) =>
-                            setFormData({ ...formData, tag: e.target.value })
-                          }
-                        />
-                      </div>
-                    </Grid>
-                  </Grid>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseEdit} color="primary">
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={saveEdit}
-                    color="primary"
-                    variant="contained"
-                  >
-                    Save
-                  </Button>
-                </DialogActions>
-              </Dialog>
-              <Tooltip title="Add/Remove Tags">
-                <IconButton>
-                  <LocalOfferIcon onClick={handleClick} />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
+        <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
+          <Dialog
+            open={openFilter}
+            onClose={handleCloseFilter}
+            aria-labelledby="form-dialog-title"
+            maxWidth="sm"
+            fullWidth
+          >
+            <DialogTitle id="form-dialog-title">Filter</DialogTitle>
+            <DialogContent>
+              <br />
+              <Box style={{ margin: "10px 0" }}>
+                <Typography variant="subtitle2">Name</Typography>
+                <TextField
+                  style={{ marginTop: "5px" }}
+                  label="Sample"
+                  variant="filled"
+                  size="small"
+                  fullWidth
+                  value={filterQuery.name}
+                  onChange={(e) =>
+                    setfilterQuery({ ...filterQuery, name: e.target.value })
+                  }
+                />
+              </Box>
+              <Box style={{ margin: "10px 0" }}>
+                <Typography variant="subtitle2">Description</Typography>
+                <TextField
+                  style={{ marginTop: "5px" }}
+                  label="Sample"
+                  variant="filled"
+                  size="small"
+                  fullWidth
+                  value={filterQuery.desc}
+                  onChange={(e) =>
+                    setfilterQuery({ ...filterQuery, desc: e.target.value })
+                  }
+                />
+              </Box>
+              <Box style={{ margin: "10px 0" }}>
+                <Typography variant="subtitle2">Tags</Typography>
+                <Autocomplete
+                  style={{ marginTop: "5px" }}
+                  id="combo-box-demo"
+                  options={alltags}
+                  onChange={(event, newValue) => {
+                    setfilterQuery({ ...filterQuery, tag: newValue.t });
+                  }}
+                  getOptionLabel={(option) => option.t}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField {...params} label="Tags" variant="outlined" />
+                  )}
+                />
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseFilter} color="primary">
+                Cancel
+              </Button>
+              <Button
+                onClick={filterTemplate}
+                color="primary"
+                variant="contained"
               >
-                <MenuItem onClick={handleClickOpen}>Add</MenuItem>
+                Search
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Typography className={classes.title} variant="h6" id="tableTitle">
+              All Templates
+            </Typography>
+            {numSelected > 0 ? (
+              <div style={{ display: "flex", marginLeft: "20px" }}>
+                {numSelected < 2 && (
+                  <>
+                    <Tooltip title="Edit Template">
+                      <IconButton>
+                        <EditIcon onClick={editTemplate} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Clone">
+                      <IconButton
+                        onClick={() => {
+                          const data = allTemplates.filter(
+                            (temp) => temp._id === selected[0]
+                          );
+                          console.log({ ...data[0], tag: data[0].tag.join() });
+                          setFormDataPrev({
+                            name: data[0].name,
+                            subject: data[0].subject,
+                            description: data[0].description,
+                            type: data[0].type,
+                            tag: data[0].tag.join(),
+                          });
+                          handleClickOpenPrev();
+                        }}
+                      >
+                        <FileCopyIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </>
+                )}
                 <Dialog
-                  open={open}
-                  onClose={handleCloseDialog}
+                  open={openEdit}
+                  onClose={handleCloseEdit}
                   aria-labelledby="form-dialog-title"
+                  maxWidth="sm"
+                  fullWidth
                 >
-                  <DialogTitle
-                    id="form-dialog-title"
-                    style={{ width: "500px" }}
-                  >
-                    {isAdd ? "Add Tag" : "Remove Tag"}
+                  <DialogTitle id="form-dialog-title">
+                    Edit Template
                   </DialogTitle>
                   <DialogContent>
-                    {isAdd ? (
-                      <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Tag"
-                        type="text"
-                        fullWidth
-                        value={tag}
-                        onChange={(e) => setTag(e.target.value)}
-                      />
-                    ) : (
-                      <div>
-                        {tagDisplay.map((tag) => (
-                          <Chip
-                            label={tag}
-                            style={{
-                              marginLeft: "10px",
-                              background: "lightblue",
-                            }}
-                          />
-                        ))}
-                        <hr style={{ margin: "15px 0" }} />
-                        <Typography
-                          variant="body1"
+                    <Grid container spacing={2}>
+                      <Grid md={12}>
+                        <TextField
+                          label="Name"
+                          variant="outlined"
                           style={{ margin: "10px 0" }}
-                        >
-                          Enter Tag Name
-                        </Typography>
+                          fullWidth
+                          value={formData.name}
+                          onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                          }
+                        />
+                        <TextField
+                          label="Subject"
+                          variant="outlined"
+                          style={{ margin: "10px 0" }}
+                          fullWidth
+                          value={formData.subject}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              subject: e.target.value,
+                            })
+                          }
+                        />
+
+                        <Editor
+                          apiKey="azhogyuiz16q8om0wns0u816tu8k6517f6oqgs5mfl36hptu"
+                          plugins="wordcount"
+                          value={formData.description}
+                          init={{
+                            height: 600,
+                            menubar: false,
+                            plugins: [
+                              "advlist autolink lists link image charmap print preview anchor",
+                              "searchreplace visualblocks code fullscreen",
+                              "insertdatetime media table paste code help wordcount",
+                            ],
+                            toolbar:
+                              "undo redo | formatselect | " +
+                              "bold italic backcolor | alignleft aligncenter " +
+                              "alignright alignjustify | bullist numlist outdent indent | " +
+                              "removeformat | help",
+                            content_style:
+                              "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                          }}
+                          onEditorChange={handleChangeEditor}
+                        />
+                        <div style={{ margin: "10px 0" }}>
+                          <TextField
+                            label="Add New Tag"
+                            variant="outlined"
+                            fullWidth
+                            style={{ margin: "10px 0" }}
+                            value={formData.tag}
+                            onChange={(e) =>
+                              setFormData({ ...formData, tag: e.target.value })
+                            }
+                          />
+                        </div>
+                      </Grid>
+                    </Grid>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseEdit} color="primary">
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={saveEdit}
+                      color="primary"
+                      variant="contained"
+                    >
+                      Save
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                <Tooltip title="Add/Remove Tags">
+                  <IconButton>
+                    <LocalOfferIcon onClick={handleClick} />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClickOpen}>Add</MenuItem>
+                  <Dialog
+                    open={open}
+                    onClose={handleCloseDialog}
+                    aria-labelledby="form-dialog-title"
+                  >
+                    <DialogTitle
+                      id="form-dialog-title"
+                      style={{ width: "500px" }}
+                    >
+                      {isAdd ? "Add Tag" : "Remove Tag"}
+                    </DialogTitle>
+                    <DialogContent>
+                      {isAdd ? (
                         <TextField
                           autoFocus
                           margin="dense"
@@ -775,106 +792,122 @@ export default function TemplatePersonal({
                           value={tag}
                           onChange={(e) => setTag(e.target.value)}
                         />
-                      </div>
-                    )}
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary">
-                      Cancel
-                    </Button>
-                    <Button onClick={handleSubmitTag} color="primary">
-                      {isAdd ? "Add" : "Remove "}
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                <MenuItem onClick={handleClickOpen}>Remove</MenuItem>
-              </Menu>
-              <Tooltip title="Archive">
-                <IconButton>
-                  <ArchiveIcon />
+                      ) : (
+                        <div>
+                          {tagDisplay.map((tag) => (
+                            <Chip
+                              label={tag}
+                              style={{
+                                marginLeft: "10px",
+                                background: "lightblue",
+                              }}
+                            />
+                          ))}
+                          <hr style={{ margin: "15px 0" }} />
+                          <Typography
+                            variant="body1"
+                            style={{ margin: "10px 0" }}
+                          >
+                            Enter Tag Name
+                          </Typography>
+                          <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Tag"
+                            type="text"
+                            fullWidth
+                            value={tag}
+                            onChange={(e) => setTag(e.target.value)}
+                          />
+                        </div>
+                      )}
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseDialog} color="primary">
+                        Cancel
+                      </Button>
+                      <Button onClick={handleSubmitTag} color="primary">
+                        {isAdd ? "Add" : "Remove "}
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                  <MenuItem onClick={handleClickOpen}>Remove</MenuItem>
+                </Menu>
+                <Tooltip title="Delete">
+                  <IconButton onClick={deleteRow}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            ) : (
+              <Paper
+                style={{
+                  background: "#F4F6F8",
+                  marginLeft: "18px",
+                  paddingLeft: "5px",
+                }}
+              >
+                <InputBase
+                  placeholder="Search Templates"
+                  style={{ width: "250px" }}
+                  value={searchQuery}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      search();
+                    }
+                  }}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                  }}
+                />
+                <IconButton sx={{ p: 1 }} onClick={search}>
+                  <SearchIcon />
                 </IconButton>
-              </Tooltip>
-
-              <Tooltip title="Delete">
-                <IconButton onClick={deleteRow}>
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            </div>
+                {allTemplates.length !== templates.length && useFilter && (
+                  <Button onClick={() => setTemplates(allTemplates)}>
+                    Reset
+                  </Button>
+                )}
+              </Paper>
+            )}
+          </div>
+          <Button
+            variant="outlined"
+            onClick={handleClickOpenFilter}
+            startIcon={<FilterListIcon />}
+            style={{ marginLeft: "20px" }}
+          >
+            Filter
+          </Button>
+        </Toolbar>
+        <section style={{ margin: "10px" }}>
+          {allfiltertags.length === 0 ? (
+            <></>
           ) : (
-            <Paper
-              style={{
-                background: "#F4F6F8",
-                marginLeft: "18px",
-                paddingLeft: "5px",
-              }}
-            >
-              <InputBase
-                placeholder="Search Templates"
-                style={{ width: "250px" }}
-                value={searchQuery}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") {
-                    search();
-                  }
-                }}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                }}
-              />
-              <IconButton sx={{ p: 1 }} onClick={search}>
-                <SearchIcon />
-              </IconButton>
-              {allTemplates.length !== templates.length && (
-                <Button onClick={() => setTemplates(allTemplates)}>
-                  Reset
-                </Button>
-              )}
-            </Paper>
+            <>
+              {allfiltertags.map((tag) => {
+                return (
+                  <>
+                    <Chip
+                      onDelete={() => removeFilterTag(tag)}
+                      style={{ marginRight: "10px", marginTop: "10px" }}
+                      label={tag}
+                    />
+                  </>
+                );
+              })}
+            </>
           )}
-        </div>
-        <Button
-          variant="outlined"
-          onClick={handleClickOpenFilter}
-          startIcon={<FilterListIcon />}
-          style={{ marginLeft: "20px" }}
-        >
-          Filter
+        </section>
+        <Button style={{ margin: "10px" }} onClick={handleClickOpenExport}>
+          Export Data
         </Button>
-      </Toolbar>
-      <section style={{ margin: '10px' }}>
-        {
-          allfiltertags.length === 0 ? (
-            <>
-              
-            </>
-          ) : (
-            <>
-            {allfiltertags.map((tag) => {
-              return (
-                <>
-                  <Chip onDelete={() => removeFilterTag(tag)} style={{ marginRight: '10px', marginTop: '10px' }} label={tag} />
-                </>
-              )
-            })}
-            </>
-          )
-        }
-      </section>
-      <Button
-      style={{ margin: '10px' }}
-      onClick={handleClickOpenExport}
-      >
-        Export Data
-      </Button>
 
-      <Button
-      style={{ margin: '10px' }}
-      onClick={handleClickOpenImport}
-      >
-        Import Data
-      </Button>
-    </>
+        <Button style={{ margin: "10px" }} onClick={handleClickOpenImport}>
+          Import Data
+        </Button>
+      </>
     );
   };
 
@@ -930,7 +963,7 @@ export default function TemplatePersonal({
         <th>{template?.name}</th>
         <th>{template?.subject}</th>
         <th>{renderHTML(template?.description)}</th>
-        <th>{template?.date.split("T")[0]}</th>
+        <th>{template?.date?.split("T")[0]}</th>
       </tr>
     );
   };
@@ -1011,7 +1044,7 @@ export default function TemplatePersonal({
             />
             <TableBody>
               {stableSort(templates, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
@@ -1088,7 +1121,7 @@ export default function TemplatePersonal({
                         </div>
                       </TableCell>
                       <TableCell style={tableCellStyle} align="center">
-                        Aug 22
+                        {row.date.split("T")[0]}
                       </TableCell>
                     </TableRow>
                   );
@@ -1101,7 +1134,7 @@ export default function TemplatePersonal({
             </TableBody>
           </Table>
         </TableContainer>
-        
+
         <table hidden id="table-to-xls">
           <tr>
             <th>Name</th>
@@ -1112,7 +1145,7 @@ export default function TemplatePersonal({
           <ShowList2 />
         </table>
 
-        <TablePagination
+        {/* <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={templates.length}
@@ -1120,7 +1153,7 @@ export default function TemplatePersonal({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        /> */}
       </Paper>
     </div>
   );
