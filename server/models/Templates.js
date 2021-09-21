@@ -21,6 +21,11 @@ const templateSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  archive: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
   date: {
     type: Date,
     default: Date.now

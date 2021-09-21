@@ -362,7 +362,7 @@ router.patch("/removetagfromtemplate", async (req, res) => {
 router.get("/getalltemplates/:type", async (req, res) => {
   const { type: type } = req.params;
   try {
-    const allTemplates = await Template_Model.find({ type: type });
+    const allTemplates = await Template_Model.find({ type: type, archive: false });
     res.status(201).json(allTemplates);
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -711,5 +711,44 @@ router.get("/getallsnippetsarchive/:type", async (req, res) => {
     res.status(409).json({ message: error.message });
   }
 });
+
+
+router.get("/getalltemplatesarchive/:type", async (req, res) => {
+  const { type: type } = req.params;
+  try {
+    const allCompanies = await Template_Model.find({
+      type: type,
+      archive: true,
+    });
+    res.status(201).json(allCompanies);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+
+router.post("/archivetemplates", async (req, res) => {
+  const selected = req.body;
+  res.setHeader("Content-Type", "application/json");
+
+  selected.map((s) => {
+    Template_Model.findOne({ _id: s })
+      .then((data) => {
+        let a = data.archive;
+        Template_Model.findOneAndUpdate(
+          { _id: s },
+          { archive: !a },
+          { useFindAndModify: false }
+        )
+          .then(() => {
+            res.status(200).json("Added Archive");
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  });
+});
+
+
 
 module.exports = router;

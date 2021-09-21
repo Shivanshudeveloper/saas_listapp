@@ -71,6 +71,9 @@ export default function TemplatePersonal({
   type,
   value,
   handleClickOpenPrev,
+  setarchivestatus,
+  showArchive,
+  archivestatus,
   setFormDataPrev,
 }) {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
@@ -256,11 +259,13 @@ export default function TemplatePersonal({
     };
 
     const getTemplates = async () => {
+      setarchivestatus(false);
       var type = "personal";
       type = value === 0 ? "personal" : value === 1 ? "team" : "library";
       await axios
         .get(`${API_SERVICE}/getalltemplates/${type}`)
         .then((res) => {
+          console.log(res.data);
           allTemplates = res.data;
           setTemplates(res.data);
         })
@@ -476,6 +481,15 @@ export default function TemplatePersonal({
         })
         .catch((err) => console.log(err));
     };
+
+    const archiveRow = () => {
+      axios
+        .post(`${API_SERVICE}/archivetemplates`, selected)
+        .then((res) => {
+          getTemplates();
+        })
+        .catch((err) => console.log(err));
+    }
 
     return (
       <>
@@ -757,6 +771,7 @@ export default function TemplatePersonal({
                     </Button>
                   </DialogActions>
                 </Dialog>
+                
                 <Tooltip title="Add/Remove Tags">
                   <IconButton>
                     <LocalOfferIcon onClick={handleClick} />
@@ -834,6 +849,11 @@ export default function TemplatePersonal({
                   </Dialog>
                   <MenuItem onClick={handleClickOpen}>Remove</MenuItem>
                 </Menu>
+                <Tooltip title="Archive/Unarchive">
+                  <IconButton onClick={archiveRow}>
+                    <ArchiveIcon />
+                  </IconButton>
+                </Tooltip>
                 <Tooltip title="Delete">
                   <IconButton onClick={deleteRow}>
                     <DeleteIcon />
@@ -907,6 +927,24 @@ export default function TemplatePersonal({
         <Button style={{ margin: "10px" }} onClick={handleClickOpenImport}>
           Import Data
         </Button>
+
+        {
+        archivestatus ? (
+          <Button
+              onClick={getTemplates}
+              style={{ margin: "10px" }}
+            >
+              Show Templates
+          </Button>
+          ) : (
+          <Button
+              onClick={showArchive}
+              style={{ margin: "10px" }}
+            >
+              Show Archive Templates
+          </Button>
+          )
+        }
       </>
     );
   };

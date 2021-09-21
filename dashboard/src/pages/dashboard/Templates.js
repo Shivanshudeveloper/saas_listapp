@@ -108,6 +108,7 @@ export default function Templates() {
     description: "",
     tag: "",
     type: "personal",
+    archive: false
   };
 
   const [formData, setFormData] = useState(initialState);
@@ -146,6 +147,7 @@ export default function Templates() {
   const [allTemplates, setAllTemplates] = useState([]);
 
   const getTemplates = async () => {
+    setarchivestatus(false);
     var type = "personal";
     type = value === 0 ? "personal" : value === 1 ? "team" : "library";
     await axios
@@ -178,6 +180,19 @@ export default function Templates() {
       })
       .catch((err) => console.log(err));
   }
+
+  const [archivestatus, setarchivestatus] = useState(false);
+  const showArchive = async () => {
+    setarchivestatus(true);
+    var type = "personal";
+    type = value === 0 ? "personal" : value === 1 ? "team" : "library";
+    await axios
+      .get(`${API_SERVICE}/getalltemplatesarchive/${type}`)
+      .then((res) => {
+        setAllTemplates(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
 
 
   return (
@@ -270,6 +285,9 @@ export default function Templates() {
             <TemplatePersonal
               handleClickOpenPrev={handleClickOpen}
               allTemplates={allTemplates}
+              showArchive={showArchive}
+              archivestatus={archivestatus}
+              setarchivestatus={setarchivestatus}
               type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
               setFormDataPrev={setFormData}
               value={value}
@@ -284,6 +302,9 @@ export default function Templates() {
             <TemplatePersonal
               handleClickOpenPrev={handleClickOpen}
               allTemplates={allTemplates}
+              showArchive={showArchive}
+              archivestatus={archivestatus}
+              setarchivestatus={setarchivestatus}
               type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
               setFormDataPrev={setFormData}
               value={value}
@@ -298,6 +319,9 @@ export default function Templates() {
             <TemplatePersonal
               allTemplates={allTemplates}
               value={value}
+              showArchive={showArchive}
+              archivestatus={archivestatus}
+              setarchivestatus={setarchivestatus}
               handleClickOpenPrev={handleClickOpen}
               type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
               setFormDataPrev={setFormData}
