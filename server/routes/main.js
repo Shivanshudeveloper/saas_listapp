@@ -362,7 +362,10 @@ router.patch("/removetagfromtemplate", async (req, res) => {
 router.get("/getalltemplates/:type", async (req, res) => {
   const { type: type } = req.params;
   try {
-    const allTemplates = await Template_Model.find({ type: type, archive: false });
+    const allTemplates = await Template_Model.find({
+      type: type,
+      archive: false,
+    });
     res.status(201).json(allTemplates);
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -712,7 +715,6 @@ router.get("/getallsnippetsarchive/:type", async (req, res) => {
   }
 });
 
-
 router.get("/getalltemplatesarchive/:type", async (req, res) => {
   const { type: type } = req.params;
   try {
@@ -725,7 +727,6 @@ router.get("/getalltemplatesarchive/:type", async (req, res) => {
     res.status(409).json({ message: error.message });
   }
 });
-
 
 router.post("/archivetemplates", async (req, res) => {
   const selected = req.body;
@@ -748,7 +749,5 @@ router.post("/archivetemplates", async (req, res) => {
       .catch((err) => console.log(err));
   });
 });
-
-
 
 module.exports = router;

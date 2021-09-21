@@ -73,6 +73,7 @@ export default function TemplatePersonal({
   handleClickOpenPrev,
   setarchivestatus,
   showArchive,
+  getMainTemp,
   archivestatus,
   setFormDataPrev,
 }) {
@@ -265,8 +266,8 @@ export default function TemplatePersonal({
       await axios
         .get(`${API_SERVICE}/getalltemplates/${type}`)
         .then((res) => {
-          console.log(res.data);
-          allTemplates = res.data;
+          // console.log(res.data);
+          // allTemplates = res.data;
           setTemplates(res.data);
         })
         .catch((err) => console.log(err));
@@ -415,8 +416,6 @@ export default function TemplatePersonal({
     React.useEffect(() => {
       if (file.length > 0) {
         onSubmit();
-      } else {
-        console.log("N");
       }
     }, [file]);
 
@@ -489,7 +488,7 @@ export default function TemplatePersonal({
           getTemplates();
         })
         .catch((err) => console.log(err));
-    }
+    };
 
     return (
       <>
@@ -771,7 +770,7 @@ export default function TemplatePersonal({
                     </Button>
                   </DialogActions>
                 </Dialog>
-                
+
                 <Tooltip title="Add/Remove Tags">
                   <IconButton>
                     <LocalOfferIcon onClick={handleClick} />
@@ -928,23 +927,15 @@ export default function TemplatePersonal({
           Import Data
         </Button>
 
-        {
-        archivestatus ? (
-          <Button
-              onClick={getTemplates}
-              style={{ margin: "10px" }}
-            >
-              Show Templates
+        {archivestatus ? (
+          <Button onClick={getMainTemp} style={{ margin: "10px" }}>
+            Show Templates
           </Button>
-          ) : (
-          <Button
-              onClick={showArchive}
-              style={{ margin: "10px" }}
-            >
-              Show Archive Templates
+        ) : (
+          <Button onClick={showArchive} style={{ margin: "10px" }}>
+            Show Archive Templates
           </Button>
-          )
-        }
+        )}
       </>
     );
   };

@@ -28,7 +28,7 @@ import renderHTML from "react-render-html";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import { Editor } from "@tinymce/tinymce-react";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import { API_SERVICE } from "../../config";
 import axios from "axios";
@@ -108,7 +108,7 @@ export default function Templates() {
     description: "",
     tag: "",
     type: "personal",
-    archive: false
+    archive: false,
   };
 
   const [formData, setFormData] = useState(initialState);
@@ -129,7 +129,7 @@ export default function Templates() {
         setallSnippest(res.data);
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   const addTemplate = async () => {
     await axios
@@ -160,12 +160,10 @@ export default function Templates() {
 
   const addSnippetTemplate = (descriptionadd) => {
     let newDescription = formData.description + descriptionadd;
-    setFormData({ ...formData, description: newDescription })
-  }
-
+    setFormData({ ...formData, description: newDescription });
+  };
 
   const [alltags, setalltags] = useState([]);
-
 
   useEffect(() => {
     getallTags();
@@ -179,7 +177,7 @@ export default function Templates() {
         console.log(res.data);
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   const [archivestatus, setarchivestatus] = useState(false);
   const showArchive = async () => {
@@ -193,7 +191,6 @@ export default function Templates() {
       })
       .catch((err) => console.log(err));
   };
-
 
   return (
     <Page title="Templates | List App">
@@ -291,6 +288,7 @@ export default function Templates() {
               type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
               setFormDataPrev={setFormData}
               value={value}
+              getMainTemp={getTemplates}
             />
           </TabPanel>
           <TabPanel
@@ -307,6 +305,7 @@ export default function Templates() {
               setarchivestatus={setarchivestatus}
               type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
               setFormDataPrev={setFormData}
+              getMainTemp={getTemplates}
               value={value}
             />
           </TabPanel>
@@ -324,6 +323,7 @@ export default function Templates() {
               setarchivestatus={setarchivestatus}
               handleClickOpenPrev={handleClickOpen}
               type={value === 0 ? "personal" : value === 1 ? "team" : "library"}
+              getMainTemp={getTemplates}
               setFormDataPrev={setFormData}
             />
           </TabPanel>
@@ -361,26 +361,28 @@ export default function Templates() {
                 />
 
                 <div style={{ margin: "10px 0" }}>
-                  {
-                    allSnippest.length === 0 ? (
-                      <>
-                        No Snippets Found
-                      </>
-                    ) : (
-                      <>
+                  {allSnippest.length === 0 ? (
+                    <>No Snippets Found</>
+                  ) : (
+                    <>
                       <Autocomplete
                         id="combo-box-demo"
                         options={allSnippest}
                         onChange={(event, newValue) => {
-                          addSnippetTemplate(newValue.description)
+                          addSnippetTemplate(newValue.description);
                         }}
                         getOptionLabel={(option) => option.name}
                         fullWidth
-                        renderInput={(params) => <TextField {...params} label="Add Snippets" variant="outlined" />}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Add Snippets"
+                            variant="outlined"
+                          />
+                        )}
                       />
-                      </>
-                    )
-                  }
+                    </>
+                  )}
                 </div>
 
                 <Editor
@@ -388,7 +390,7 @@ export default function Templates() {
                   plugins="wordcount"
                   value={formData.description}
                   init={{
-                    height: '400px',
+                    height: "400px",
                     menubar: false,
                     plugins: [
                       "advlist autolink lists link image charmap print preview anchor",
@@ -405,7 +407,7 @@ export default function Templates() {
                   }}
                   onEditorChange={handleChangeEditor}
                 />
-                
+
                 <div style={{ margin: "10px 0" }}>
                   <TextField
                     label="Add New Tag"
@@ -418,29 +420,30 @@ export default function Templates() {
                     }
                   />
                 </div>
-                
+
                 <div style={{ margin: "10px 0" }}>
-                  {
-                    alltags.length === 0 ? (
-                      <>
-                        No Available Tags Found
-                      </>
-                    ) : (
-                      <>
+                  {alltags.length === 0 ? (
+                    <>No Available Tags Found</>
+                  ) : (
+                    <>
                       <h5>Available Tags</h5>
                       {alltags.map((tag) => {
                         return (
                           <>
-                            <Chip clickable onClick={() => setFormData({ ...formData, tag: tag.t })} style={{ marginRight: '10px', marginTop: '10px' }} label={tag.t} />
+                            <Chip
+                              clickable
+                              onClick={() =>
+                                setFormData({ ...formData, tag: tag.t })
+                              }
+                              style={{ marginRight: "10px", marginTop: "10px" }}
+                              label={tag.t}
+                            />
                           </>
-                        )
+                        );
                       })}
-                      </>
-                    )
-                  }
+                    </>
+                  )}
                 </div>
-
-
               </Grid>
             </Grid>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
