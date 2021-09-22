@@ -409,38 +409,30 @@ export default function Templates() {
                 />
 
                 <div style={{ margin: "10px 0" }}>
-                  <TextField
-                    label="Add New Tag"
-                    variant="outlined"
-                    fullWidth
-                    style={{ margin: "10px 0" }}
-                    value={formData.tag}
-                    onChange={(e) =>
-                      setFormData({ ...formData, tag: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div style={{ margin: "10px 0" }}>
                   {alltags.length === 0 ? (
                     <>No Available Tags Found</>
                   ) : (
                     <>
-                      <h5>Available Tags</h5>
-                      {alltags.map((tag) => {
-                        return (
-                          <>
-                            <Chip
-                              clickable
-                              onClick={() =>
-                                setFormData({ ...formData, tag: tag.t })
-                              }
-                              style={{ marginRight: "10px", marginTop: "10px" }}
-                              label={tag.t}
-                            />
-                          </>
-                        );
-                      })}
+                      <Autocomplete
+                        id="combo-box-demo"
+                        options={alltags}
+                        onChange={(event, newValue) => {
+                          // addSnippetTemplate(newValue.description);
+                          setFormData({
+                            ...formData,
+                            tag: newValue.t,
+                          });
+                        }}
+                        getOptionLabel={(option) => option.t}
+                        fullWidth
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Add New Tag"
+                            variant="outlined"
+                          />
+                        )}
+                      />
                     </>
                   )}
                 </div>

@@ -476,6 +476,7 @@ const ContactSection = () => {
                     <TableCell align="center">Phone</TableCell>
                     <TableCell align="center">Location</TableCell>
                     <TableCell />
+                    <TableCell />
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -526,6 +527,9 @@ const ContactSection = () => {
                             fontSize="small"
                           />
                         </IconButton>
+                      </TableCell>
+                      <TableCell style={tableCellStyle} align="center">
+                        <Button variant="contained">View</Button>
                       </TableCell>
                     </TableRow>
                   ))}

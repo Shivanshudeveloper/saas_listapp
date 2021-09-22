@@ -39,14 +39,14 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import EditIcon from "@material-ui/icons/Edit";
 import clsx from "clsx";
-import Chip from '@material-ui/core/Chip';
+import Chip from "@material-ui/core/Chip";
 import LockIcon from "@material-ui/icons/Lock";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
 import { Editor } from "@tinymce/tinymce-react";
 import InputBase from "@material-ui/core/InputBase";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { API_SERVICE } from "../../config";
 import axios from "axios";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -199,7 +199,7 @@ export default function SnippetPersonal({
           getSnippets();
         })
         .catch((err) => console.log(err));
-    }
+    };
 
     const initialState = {
       name: "",
@@ -276,7 +276,7 @@ export default function SnippetPersonal({
     };
 
     const handleDelete = () => {
-      console.info('You clicked the delete icon.');
+      console.info("You clicked the delete icon.");
     };
 
     const [alltags, setalltags] = useState([]);
@@ -284,7 +284,7 @@ export default function SnippetPersonal({
     React.useEffect(() => {
       getallTags();
     }, []);
-  
+
     const getallTags = () => {
       axios
         .get(`${API_SERVICE}/getalltags`)
@@ -292,14 +292,13 @@ export default function SnippetPersonal({
           setalltags(res.data);
         })
         .catch((err) => console.log(err));
-    }
-
+    };
 
     const removeFilterTag = (tag) => {
       setSnippets(allSnippets);
       let index = allfiltertags.indexOf(tag);
       allfiltertags.splice(index, 1);
-    }
+    };
 
     const [openS, setOpenS] = React.useState(false);
 
@@ -316,292 +315,299 @@ export default function SnippetPersonal({
 
     return (
       <>
-      <Snackbar
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        open={openS}
-        autoHideDuration={6000}
-        onClose={handleCloseS}
-        message="Snippet Added to Archive"
-        action={
-          <React.Fragment>
-            <IconButton
-              size="small"
-              aria-label="close"
-              color="inherit"
-              onClick={handleCloseS}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
-
-      <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
-        <Dialog
-          open={openFilter}
-          onClose={handleCloseFilter}
-          aria-labelledby="form-dialog-title"
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle id="form-dialog-title">Filter</DialogTitle>
-          <DialogContent>
-            <br />
-            <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Name</Typography>
-              <TextField
-                style={{ marginTop: "5px" }}
-                label="Sample"
-                variant="filled"
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          open={openS}
+          autoHideDuration={6000}
+          onClose={handleCloseS}
+          message="Snippet Added to Archive"
+          action={
+            <React.Fragment>
+              <IconButton
                 size="small"
-                fullWidth
-                value={filterQuery.name}
-                onChange={(e) =>
-                  setfilterQuery({ ...filterQuery, name: e.target.value })
-                }
-              />
-            </Box>
-            <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Description</Typography>
-              <TextField
-                style={{ marginTop: "5px" }}
-                label="Sample"
-                variant="filled"
-                size="small"
-                fullWidth
-                value={filterQuery.desc}
-                onChange={(e) =>
-                  setfilterQuery({ ...filterQuery, desc: e.target.value })
-                }
-              />
-            </Box>
-            <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Tags</Typography>
-              <Autocomplete
-                style={{ marginTop: "5px" }}
-                id="combo-box-demo"
-                options={alltags}
-                onChange={(event, newValue) => {
-                  setfilterQuery({ ...filterQuery, tag: newValue.t })
-                }}
-                getOptionLabel={(option) => option.t}
-                fullWidth
-                renderInput={(params) => <TextField {...params} label="Tags" variant="outlined" />}
-              />
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseFilter} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={filterSnippet} color="primary" variant="contained">
-              Search
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Typography className={classes.title} variant="h6" id="tableTitle">
-            All Snippets
-          </Typography>
-          
-          {numSelected > 0 ? (
-            <div style={{ display: "flex", marginLeft: "20px" }}>
-              {numSelected < 2 && (
-                <>
-                  <Tooltip title="Edit Template">
-                    <IconButton>
-                      <EditIcon onClick={editTemplate} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Clone">
-                    <IconButton
-                      onClick={() => {
-                        const data = allSnippets.filter(
-                          (temp) => temp._id === selected[0]
-                        );
-                        console.log({ ...data[0], tag: data[0].tag.join() });
-                        setFormDataPrev({
-                          name: data[0].name,
-                          subject: data[0].subject,
-                          description: data[0].description,
-                          type: data[0].type,
-                          tag: data[0].tag.join(),
-                        });
-                        handleClickOpenPrev();
-                      }}
-                    >
-                      <FileCopyIcon />
-                    </IconButton>
-                  </Tooltip>
-                </>
-              )}
-              <Dialog
-                open={openEdit}
-                onClose={handleCloseEdit}
-                aria-labelledby="form-dialog-title"
-                maxWidth="sm"
-                fullWidth
+                aria-label="close"
+                color="inherit"
+                onClick={handleCloseS}
               >
-                <DialogTitle id="form-dialog-title">Edit Template</DialogTitle>
-                <DialogContent>
-                  <Grid container spacing={2}>
-                    <Grid md={12}>
-                      <TextField
-                        label="Name"
-                        variant="outlined"
-                        style={{ margin: "10px 0" }}
-                        fullWidth
-                        value={formData.name}
-                        onChange={(e) =>
-                          setFormData({ ...formData, name: e.target.value })
-                        }
-                      />
-                      <TextField
-                        label="Subject"
-                        variant="outlined"
-                        style={{ margin: "10px 0" }}
-                        fullWidth
-                        value={formData.subject}
-                        onChange={(e) =>
-                          setFormData({ ...formData, subject: e.target.value })
-                        }
-                      />
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
 
-                      <Editor
-                        apiKey="azhogyuiz16q8om0wns0u816tu8k6517f6oqgs5mfl36hptu"
-                        plugins="wordcount"
-                        value={formData.description}
-                        init={{
-                          height: '400px',
-                          menubar: false,
-                          plugins: [
-                            "advlist autolink lists link image charmap print preview anchor",
-                            "searchreplace visualblocks code fullscreen",
-                            "insertdatetime media table paste code help wordcount",
-                          ],
-                          toolbar:
-                            "undo redo | formatselect | " +
-                            "bold italic backcolor | alignleft aligncenter " +
-                            "alignright alignjustify | bullist numlist outdent indent | " +
-                            "removeformat | help",
-                          content_style:
-                            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+        <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
+          <Dialog
+            open={openFilter}
+            onClose={handleCloseFilter}
+            aria-labelledby="form-dialog-title"
+            maxWidth="sm"
+            fullWidth
+          >
+            <DialogTitle id="form-dialog-title">Filter</DialogTitle>
+            <DialogContent>
+              <br />
+              <Box style={{ margin: "10px 0" }}>
+                <Typography variant="subtitle2">Name</Typography>
+                <TextField
+                  style={{ marginTop: "5px" }}
+                  label="Sample"
+                  variant="filled"
+                  size="small"
+                  fullWidth
+                  value={filterQuery.name}
+                  onChange={(e) =>
+                    setfilterQuery({ ...filterQuery, name: e.target.value })
+                  }
+                />
+              </Box>
+              <Box style={{ margin: "10px 0" }}>
+                <Typography variant="subtitle2">Description</Typography>
+                <TextField
+                  style={{ marginTop: "5px" }}
+                  label="Sample"
+                  variant="filled"
+                  size="small"
+                  fullWidth
+                  value={filterQuery.desc}
+                  onChange={(e) =>
+                    setfilterQuery({ ...filterQuery, desc: e.target.value })
+                  }
+                />
+              </Box>
+              <Box style={{ margin: "10px 0" }}>
+                <Typography variant="subtitle2">Tags</Typography>
+                <Autocomplete
+                  style={{ marginTop: "5px" }}
+                  id="combo-box-demo"
+                  options={alltags}
+                  onChange={(event, newValue) => {
+                    setfilterQuery({ ...filterQuery, tag: newValue.t });
+                  }}
+                  getOptionLabel={(option) => option.t}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField {...params} label="Tags" variant="outlined" />
+                  )}
+                />
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseFilter} color="primary">
+                Cancel
+              </Button>
+              <Button
+                onClick={filterSnippet}
+                color="primary"
+                variant="contained"
+              >
+                Search
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Typography className={classes.title} variant="h6" id="tableTitle">
+              All Snippets
+            </Typography>
+
+            {numSelected > 0 ? (
+              <div style={{ display: "flex", marginLeft: "20px" }}>
+                {numSelected < 2 && (
+                  <>
+                    <Tooltip title="Edit Template">
+                      <IconButton>
+                        <EditIcon onClick={editTemplate} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Clone">
+                      <IconButton
+                        onClick={() => {
+                          const data = allSnippets.filter(
+                            (temp) => temp._id === selected[0]
+                          );
+                          console.log({ ...data[0], tag: data[0].tag.join() });
+                          setFormDataPrev({
+                            name: data[0].name,
+                            subject: data[0].subject,
+                            description: data[0].description,
+                            type: data[0].type,
+                            tag: data[0].tag.join(),
+                          });
+                          handleClickOpenPrev();
                         }}
-                        onEditorChange={handleChangeEditor}
-                      />
-                      <div style={{ margin: "10px 0" }}>
+                      >
+                        <FileCopyIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </>
+                )}
+                <Dialog
+                  open={openEdit}
+                  onClose={handleCloseEdit}
+                  aria-labelledby="form-dialog-title"
+                  maxWidth="sm"
+                  fullWidth
+                >
+                  <DialogTitle id="form-dialog-title">
+                    Edit Template
+                  </DialogTitle>
+                  <DialogContent>
+                    <Grid container spacing={2}>
+                      <Grid md={12}>
                         <TextField
-                          label="Add New Tag"
+                          label="Name"
                           variant="outlined"
-                          fullWidth
                           style={{ margin: "10px 0" }}
-                          value={formData.tag}
+                          fullWidth
+                          value={formData.name}
                           onChange={(e) =>
-                            setFormData({ ...formData, tag: e.target.value })
+                            setFormData({ ...formData, name: e.target.value })
                           }
                         />
-                      </div>
+                        <TextField
+                          label="Subject"
+                          variant="outlined"
+                          style={{ margin: "10px 0" }}
+                          fullWidth
+                          value={formData.subject}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              subject: e.target.value,
+                            })
+                          }
+                        />
+
+                        <Editor
+                          apiKey="azhogyuiz16q8om0wns0u816tu8k6517f6oqgs5mfl36hptu"
+                          plugins="wordcount"
+                          value={formData.description}
+                          init={{
+                            height: "400px",
+                            menubar: false,
+                            plugins: [
+                              "advlist autolink lists link image charmap print preview anchor",
+                              "searchreplace visualblocks code fullscreen",
+                              "insertdatetime media table paste code help wordcount",
+                            ],
+                            toolbar:
+                              "undo redo | formatselect | " +
+                              "bold italic backcolor | alignleft aligncenter " +
+                              "alignright alignjustify | bullist numlist outdent indent | " +
+                              "removeformat | help",
+                            content_style:
+                              "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                          }}
+                          onEditorChange={handleChangeEditor}
+                        />
+                        <div style={{ margin: "10px 0" }}>
+                          <TextField
+                            label="Add New Tag"
+                            variant="outlined"
+                            fullWidth
+                            style={{ margin: "10px 0" }}
+                            value={formData.tag}
+                            onChange={(e) =>
+                              setFormData({ ...formData, tag: e.target.value })
+                            }
+                          />
+                        </div>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseEdit} color="primary">
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={saveEdit}
-                    color="primary"
-                    variant="contained"
-                  >
-                    Save
-                  </Button>
-                </DialogActions>
-              </Dialog>
-              <Tooltip title="Archive/Unarchive">
-                <IconButton onClick={archiveRow}>
-                  <ArchiveIcon />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseEdit} color="primary">
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={saveEdit}
+                      color="primary"
+                      variant="contained"
+                    >
+                      Save
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                <Tooltip title="Archive/Unarchive">
+                  <IconButton onClick={archiveRow}>
+                    <ArchiveIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete">
+                  <IconButton onClick={deleteRow}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            ) : (
+              <Paper
+                style={{
+                  background: "#F4F6F8",
+                  marginLeft: "18px",
+                  paddingLeft: "5px",
+                }}
+              >
+                <InputBase
+                  placeholder="Search Templates"
+                  style={{ width: "250px" }}
+                  value={searchQuery}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      search();
+                    }
+                  }}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <IconButton sx={{ p: 1 }} onClick={search}>
+                  <SearchIcon />
                 </IconButton>
-              </Tooltip>
-              <Tooltip title="Delete">
-                <IconButton onClick={deleteRow}>
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            </div>
+                {allSnippets.length !== snippets.length && (
+                  <Button onClick={() => setSnippets(allSnippets)}>
+                    Reset
+                  </Button>
+                )}
+              </Paper>
+            )}
+          </div>
+          <Button
+            variant="outlined"
+            onClick={handleClickOpenFilter}
+            startIcon={<FilterListIcon />}
+            style={{ marginLeft: "20px" }}
+          >
+            Filter
+          </Button>
+        </Toolbar>
+        <section style={{ margin: "10px" }}>
+          {allfiltertags.length === 0 ? (
+            <></>
           ) : (
-            <Paper
-              style={{
-                background: "#F4F6F8",
-                marginLeft: "18px",
-                paddingLeft: "5px",
-              }}
-            >
-              <InputBase
-                placeholder="Search Templates"
-                style={{ width: "250px" }}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <IconButton sx={{ p: 1 }} onClick={search}>
-                <SearchIcon />
-              </IconButton>
-              {allSnippets.length !== snippets.length && (
-                <Button onClick={() => setSnippets(allSnippets)}>Reset</Button>
-              )}
-            </Paper>
+            <>
+              {allfiltertags.map((tag) => {
+                return (
+                  <>
+                    <Chip
+                      onDelete={() => removeFilterTag(tag)}
+                      style={{ marginRight: "10px", marginTop: "10px" }}
+                      label={tag}
+                    />
+                  </>
+                );
+              })}
+            </>
           )}
-        </div>
-        <Button
-          variant="outlined"
-          onClick={handleClickOpenFilter}
-          startIcon={<FilterListIcon />}
-          style={{ marginLeft: "20px" }}
-        >
-          Filter
-        </Button>
-      </Toolbar>
-      <section style={{ margin: '10px' }}>
-        {
-          allfiltertags.length === 0 ? (
-            <>
-              
-            </>
-          ) : (
-            <>
-            {allfiltertags.map((tag) => {
-              return (
-                <>
-                  <Chip onDelete={() => removeFilterTag(tag)} style={{ marginRight: '10px', marginTop: '10px' }} label={tag} />
-                </>
-              )
-            })}
-            </>
-          )
-        }
-      </section>
-      {
-        archivestatus ? (
-        <Button
-            onClick={getSnippets}
-            style={{ margin: "10px" }}
-          >
+        </section>
+        {archivestatus ? (
+          <Button onClick={getSnippets} style={{ margin: "10px" }}>
             Show Snippets
-        </Button>
+          </Button>
         ) : (
-        <Button
-            onClick={showArchive}
-            style={{ margin: "10px" }}
-          >
+          <Button onClick={showArchive} style={{ margin: "10px" }}>
             Show Archive Snippets
-        </Button>
-        )
-      }
-      
-      
-      
+          </Button>
+        )}
       </>
     );
   };

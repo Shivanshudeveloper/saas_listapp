@@ -374,14 +374,10 @@ router.get("/getalltemplates/:type", async (req, res) => {
 
 router.post("/searchtemplate", async (req, res) => {
   try {
-    const { searchQuery: name, type } = req.body;
+    const { searchQuery: name, type, archivestatus } = req.body;
+    const s1 = new RegExp(name, "i");
     const allTemplates = await Template_Model.find({
-      $or: [
-        {
-          name,
-          type,
-        },
-      ],
+      $or: [{ name: s1, type, archive: archivestatus }],
     });
     res.status(201).json(allTemplates);
   } catch (error) {

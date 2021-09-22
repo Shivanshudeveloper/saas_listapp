@@ -241,6 +241,7 @@ export default function TemplatePersonal({
           .post(`${API_SERVICE}/searchtemplate`, {
             searchQuery,
             type,
+            archivestatus,
           })
           .then((res) => {
             setTemplates(res.data);
@@ -330,6 +331,7 @@ export default function TemplatePersonal({
       desc: "",
       tag: "",
     });
+
     const filterTemplate = async () => {
       setUseFilter(true);
       if (filterQuery.name !== "") {
