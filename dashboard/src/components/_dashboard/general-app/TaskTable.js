@@ -40,7 +40,7 @@ import Tab from "@material-ui/core/Tab";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Editor } from "@tinymce/tinymce-react";
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import { API_SERVICE } from "../../../config";
 import axios from "axios";
 
@@ -524,8 +524,8 @@ export default function TaskTable() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      label="Date"
-                      type="date"
+                      label="Due Date and Time"
+                      type="datetime-local"
                       fullWidth
                       InputLabelProps={{
                         shrink: true,
@@ -629,7 +629,7 @@ export default function TaskTable() {
               <TableRow>
                 {/* <TableCell /> */}
                 <TableCell>Action</TableCell>
-                <TableCell>Tasks</TableCell>
+                <TableCell>Contact Name</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell>Date & Time</TableCell>
@@ -639,11 +639,6 @@ export default function TaskTable() {
             <TableBody>
               {allTasks.map((row) => (
                 <TableRow key={row.id}>
-                  {/* <TableCell padding="checkbox">
-                    <Checkbox
-                      inputProps={{ "aria-label": "select all desserts" }}
-                    />
-                  </TableCell> */}
                   <TableCell style={tableCellStyle} align="left">
                     <IconButton onClick={() => startEdit(row)}>
                       <EditIcon fontSize="small" />
@@ -664,9 +659,7 @@ export default function TaskTable() {
                       <CallIcon fontSize="small" />
                     </IconButton> */}
                   </TableCell>
-                  <TableCell style={tableCellStyle}>
-                    {row.contact}
-                    </TableCell>
+                  <TableCell style={tableCellStyle}>{row.contact}</TableCell>
                   <TableCell style={tableCellStyle}>
                     {row.description != "" && row.description}
                     {row.notes != "" && row.notes}
@@ -692,7 +685,6 @@ export default function TaskTable() {
                       />
                     )}
                   </TableCell>
-                  
                 </TableRow>
               ))}
             </TableBody>

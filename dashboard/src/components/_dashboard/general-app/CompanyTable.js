@@ -239,7 +239,7 @@ export default function CompanyTable({ handleClickOpen }) {
 
   const editContact = (contact) => {
     setFormData(contact);
-  }
+  };
 
   return (
     <Card>
@@ -340,7 +340,7 @@ export default function CompanyTable({ handleClickOpen }) {
           padding: "13px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          // justifyContent: "space-between",
         }}
       >
         <div
@@ -376,9 +376,7 @@ export default function CompanyTable({ handleClickOpen }) {
                 <TableCell>Location</TableCell>
                 <TableCell>Technologies</TableCell>
                 {/* <TableCell align="center">Intel</TableCell> */}
-                <TableCell align="center">
-                  
-                </TableCell>
+                <TableCell align="center"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -393,13 +391,16 @@ export default function CompanyTable({ handleClickOpen }) {
                     {row.city} {row.country}
                   </TableCell>
                   <TableCell style={tableCellStyle}>{row.about}</TableCell>
-                  {/* <TableCell align="center" style={tableCellStyle}>
-                    <LockIcon />
-                  </TableCell> */}
                   <TableCell align="center" style={tableCellStyle}>
                     <IconButton>
-                      <EditIcon onClick={() => editContact(row)} fontSize="small" />
+                      <EditIcon
+                        onClick={() => editContact(row)}
+                        fontSize="small"
+                      />
                     </IconButton>
+                    <Button variant="contained" style={{ marginRight: "10px" }}>
+                      View
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

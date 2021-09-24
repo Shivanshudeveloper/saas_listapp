@@ -445,6 +445,8 @@ router.post("/addsnippet", async (req, res) => {
     tag: formData.tag.split(","),
   });
 
+  console.log(newSnippet);
+
   try {
     await newSnippet.save();
     res.status(201).json(newSnippet);

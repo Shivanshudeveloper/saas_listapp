@@ -993,7 +993,7 @@ export default function TemplatePersonal({
       <tr>
         <th>{template?.name}</th>
         <th>{template?.subject}</th>
-        <th>{renderHTML(template?.description)}</th>
+        <th>{template?.description}</th>
         <th>{template?.date?.split("T")[0]}</th>
       </tr>
     );

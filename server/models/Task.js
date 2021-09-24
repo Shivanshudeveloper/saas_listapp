@@ -19,7 +19,7 @@ const taskchema = new mongoose.Schema({
   },
   date: {
     type: String,
-    required: false,
+    required: true,
   },
   callResult: {
     type: String,
