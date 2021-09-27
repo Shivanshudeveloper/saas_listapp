@@ -60,8 +60,6 @@ import { storage } from "../../Firebase/index";
 import { v4 as uuid4 } from "uuid";
 import CSVReader from "react-csv-reader";
 
-let allfiltertags = [];
-
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
@@ -203,8 +201,7 @@ export default function TemplatePersonal({
         axios
           .patch(`${API_SERVICE}/addtagtotemplate`, { tag, selected, type })
           .then((res) => {
-            console.log(res);
-            setTemplates(res.data);
+            getTemplates();
             setOpen(false);
             handleClose();
             setTag("");
@@ -218,8 +215,7 @@ export default function TemplatePersonal({
             type,
           })
           .then((res) => {
-            console.log(res);
-            setTemplates(res.data);
+            getTemplates();
             setOpen(false);
             handleClose();
             setTag("");
@@ -231,6 +227,7 @@ export default function TemplatePersonal({
     const handleCloseDialog = () => {
       setOpen(false);
     };
+    const [allfiltertags, setAllfiltertags] = useState([]);
 
     const [searchQuery, setSearchQuery] = useState("");
     // const [hasDeleted, setHasDeleted] = useState(false);
@@ -335,13 +332,16 @@ export default function TemplatePersonal({
     const filterTemplate = async () => {
       setUseFilter(true);
       if (filterQuery.name !== "") {
-        allfiltertags.push(filterQuery.name);
+        // allfiltertags.push(filterQuery.name);
+        setAllfiltertags((prev) => [...prev, filterQuery.name]);
       }
       if (filterQuery.desc !== "") {
-        allfiltertags.push(filterQuery.desc);
+        // allfiltertags.push(filterQuery.desc);
+        setAllfiltertags((prev) => [...prev, filterQuery.desc]);
       }
       if (filterQuery.tag !== "") {
-        allfiltertags.push(filterQuery.tag);
+        // allfiltertags.push(filterQuery.tag);
+        setAllfiltertags((prev) => [...prev, filterQuery.tag]);
       }
       await axios
         .post(`${API_SERVICE}/filtertemplate`, {
@@ -635,6 +635,17 @@ export default function TemplatePersonal({
                     <TextField {...params} label="Tags" variant="outlined" />
                   )}
                 />
+                {/* <TextField
+                  style={{ marginTop: "5px" }}
+                  label="Sample"
+                  variant="filled"
+                  size="small"
+                  fullWidth
+                  value={filterQuery.desc}
+                  onChange={(e) =>
+                    setfilterQuery({ ...filterQuery, desc: e.target.value })
+                  }
+                /> */}
               </Box>
             </DialogContent>
             <DialogActions>

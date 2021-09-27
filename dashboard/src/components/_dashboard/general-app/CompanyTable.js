@@ -19,6 +19,8 @@ import {
   Typography,
   TableContainer,
   Grid,
+  Paper,
+  InputBase,
 } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -33,56 +35,13 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { v4 as uuid4 } from "uuid";
 import EditIcon from "@material-ui/icons/Edit";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import SearchIcon from "@material-ui/icons/Search";
 
 // ----------------------------------------------------------------------
 
 import { API_SERVICE } from "../../../config";
 import axios from "axios";
-
-const INVOICES = [
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Google",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-];
 
 // ----------------------------------------------------------------------
 
@@ -241,6 +200,36 @@ export default function CompanyTable({ handleClickOpen }) {
     setFormData(contact);
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const search = () => {
+    if (searchQuery !== "") {
+      axios
+        .post(`${API_SERVICE}/searchcompany`, {
+          searchQuery,
+        })
+        .then((res) => {
+          setAllCompanies(res.data);
+        })
+        .catch((err) => console.log(err));
+    } else getCompanies();
+  };
+
+  const initialFilter = { contact: "", company: "", location: "" };
+  const [filterQuery, setFilterQuery] = useState(initialFilter);
+
+  const filter = () => {
+    axios
+      .post(`${API_SERVICE}/filtercompany`, {
+        filterQuery,
+      })
+      .then((res) => {
+        setAllCompanies(res.data);
+        handleClose();
+        setFilterQuery(initialFilter);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <Card>
       <Dialog fullScreen open={open} onClose={handleCloseDialog} fullWidth>
@@ -340,7 +329,7 @@ export default function CompanyTable({ handleClickOpen }) {
           padding: "13px",
           display: "flex",
           alignItems: "center",
-          // justifyContent: "space-between",
+          justifyContent: "space-between",
         }}
       >
         <div
@@ -353,16 +342,65 @@ export default function CompanyTable({ handleClickOpen }) {
           <Typography variant="h6">All Companies</Typography>
           <Button
             variant="outlined"
+            onClick={() => {
+              getCompanies();
+              setSearchQuery("");
+              setFilterQuery(initialFilter);
+            }}
+            startIcon={<RefreshIcon />}
+            style={{ marginLeft: "15px" }}
+          >
+            Refresh
+          </Button>
+          <Button
+            variant="outlined"
             onClick={handleClickOpen}
             startIcon={<FilterListIcon />}
-            style={{ marginLeft: "20px" }}
+            style={{ marginLeft: "15px" }}
           >
             Filter
           </Button>
+          <Button
+            variant="contained"
+            style={{ marginLeft: "15px" }}
+            onClick={handleClickOpenDialog}
+          >
+            Add Company
+          </Button>
         </div>
-        <Button variant="contained" onClick={handleClickOpenDialog}>
-          Add Company
-        </Button>
+        <Paper
+          style={{
+            background: "#F4F6F8",
+            marginLeft: "18px",
+            paddingLeft: "5px",
+          }}
+        >
+          <InputBase
+            placeholder="Search Contacts"
+            style={{ width: "250px" }}
+            value={searchQuery}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                search();
+              }
+            }}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+            }}
+          />
+          <IconButton sx={{ p: 1 }} onClick={search}>
+            <SearchIcon />
+          </IconButton>
+          <IconButton
+            sx={{ p: 1 }}
+            onClick={() => {
+              getCompanies();
+              setSearchQuery("");
+            }}
+          >
+            <RefreshIcon />
+          </IconButton>
+        </Paper>
       </div>
 
       <Scrollbar>

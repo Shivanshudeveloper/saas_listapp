@@ -20,6 +20,8 @@ import {
   FormControl,
   Select,
   Container,
+  Paper,
+  InputBase,
 } from "@material-ui/core";
 import faker from "faker";
 import LockIcon from "@material-ui/icons/Lock";
@@ -30,57 +32,14 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import RefreshIcon from "@material-ui/icons/Refresh";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
+import SearchIcon from "@material-ui/icons/Search";
 import Alert from "@material-ui/lab/Alert";
 import { API_SERVICE } from "../../config";
 import axios from "axios";
 import EditIcon from "@material-ui/icons/Edit";
-
-const INVOICES = [
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Google",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-  {
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    company: "Microsoft",
-    keyword: "Marketing",
-  },
-];
 
 const ContactSection = () => {
   const [open, setOpen] = useState(false);
@@ -214,6 +173,36 @@ const ContactSection = () => {
         />
       </Grid>
     );
+  };
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const search = () => {
+    if (searchQuery !== "") {
+      axios
+        .post(`${API_SERVICE}/searchcontact`, {
+          searchQuery,
+        })
+        .then((res) => {
+          setAllContacts(res.data);
+        })
+        .catch((err) => console.log(err));
+    } else getContacts();
+  };
+
+  const initialFilter = { contact: "", company: "", location: "" };
+  const [filterQuery, setFilterQuery] = useState(initialFilter);
+
+  const filter = () => {
+    axios
+      .post(`${API_SERVICE}/filtercontact`, {
+        filterQuery,
+      })
+      .then((res) => {
+        setAllContacts(res.data);
+        handleClose();
+        setFilterQuery(initialFilter);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -435,7 +424,7 @@ const ContactSection = () => {
               padding: "13px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "flex-start",
+              justifyContent: "space-between",
             }}
           >
             <div
@@ -448,22 +437,68 @@ const ContactSection = () => {
               <Typography variant="h6">All Contacts</Typography>
               <Button
                 variant="outlined"
+                onClick={() => {
+                  getContacts();
+                  setSearchQuery("");
+                  setFilterQuery(initialFilter);
+                }}
+                startIcon={<RefreshIcon />}
+                style={{ marginLeft: "15px" }}
+              >
+                Refresh
+              </Button>
+              <Button
+                variant="outlined"
                 onClick={handleClickOpen}
                 startIcon={<FilterListIcon />}
-                style={{ marginLeft: "20px" }}
+                style={{ marginLeft: "15px" }}
               >
                 Filter
               </Button>
+              <Button
+                variant="contained"
+                style={{ marginLeft: "15px" }}
+                onClick={() => {
+                  handleClickOpenDialog();
+                  setIsEdit("");
+                }}
+              >
+                Add Contact
+              </Button>
             </div>
-            <Button
-              variant="contained"
-              onClick={() => {
-                handleClickOpenDialog();
-                setIsEdit("");
+            <Paper
+              style={{
+                background: "#F4F6F8",
+                marginLeft: "18px",
+                paddingLeft: "5px",
               }}
             >
-              Add Contact
-            </Button>
+              <InputBase
+                placeholder="Search Contacts"
+                style={{ width: "250px" }}
+                value={searchQuery}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    search();
+                  }
+                }}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                }}
+              />
+              <IconButton sx={{ p: 1 }} onClick={search}>
+                <SearchIcon />
+              </IconButton>
+              <IconButton
+                sx={{ p: 1 }}
+                onClick={() => {
+                  getContacts();
+                  setSearchQuery("");
+                }}
+              >
+                <RefreshIcon />
+              </IconButton>
+            </Paper>
           </div>
           <Scrollbar sx={{ minHeight: "55vh" }}>
             <TableContainer sx={{ minWidth: 720 }}>
@@ -550,43 +585,45 @@ const ContactSection = () => {
           <DialogContent>
             <br />
             <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Titles</Typography>
+              {/* <Typography variant="subtitle2">Contact</Typography> */}
               <TextField
                 style={{ marginTop: "5px" }}
-                label="Marketing Manager"
+                label="Contact"
                 variant="filled"
                 size="small"
                 fullWidth
+                value={filterQuery.contact}
+                onChange={(e) =>
+                  setFilterQuery({ ...filterQuery, contact: e.target.value })
+                }
               />
             </Box>
             <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Companies or Website</Typography>
+              {/* <Typography variant="subtitle2">Company</Typography> */}
               <TextField
                 style={{ marginTop: "5px" }}
-                label="Nike or nike.com"
+                label="Company"
                 variant="filled"
                 size="small"
                 fullWidth
+                value={filterQuery.company}
+                onChange={(e) =>
+                  setFilterQuery({ ...filterQuery, company: e.target.value })
+                }
               />
             </Box>
             <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Keywords</Typography>
+              {/* <Typography variant="subtitle2">Location</Typography> */}
               <TextField
                 style={{ marginTop: "5px" }}
-                label="Healthcare"
+                label="Location"
                 variant="filled"
                 size="small"
                 fullWidth
-              />
-            </Box>
-            <Box style={{ margin: "10px 0" }}>
-              <Typography variant="subtitle2">Names</Typography>
-              <TextField
-                style={{ marginTop: "5px" }}
-                label="John Wick"
-                variant="filled"
-                size="small"
-                fullWidth
+                value={filterQuery.location}
+                onChange={(e) =>
+                  setFilterQuery({ ...filterQuery, location: e.target.value })
+                }
               />
             </Box>
           </DialogContent>
@@ -594,7 +631,7 @@ const ContactSection = () => {
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleClose} color="primary" variant="contained">
+            <Button onClick={filter} color="primary" variant="contained">
               Search
             </Button>
           </DialogActions>

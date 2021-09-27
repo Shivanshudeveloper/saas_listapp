@@ -61,6 +61,83 @@ router.get("/getallcontact", async (req, res) => {
   }
 });
 
+router.post("/searchcontact", async (req, res) => {
+  try {
+    const { searchQuery } = req.body;
+    const s1 = new RegExp(searchQuery, "i");
+    const allContacts = await Contact_Model.find({
+      $or: [{ fName: s1 }, { lName: s1 }],
+    });
+    res.status(201).json(allContacts);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+router.post("/filtercontact", async (req, res) => {
+  try {
+    const { filterQuery } = req.body;
+    const s1 = new RegExp(
+      filterQuery.contact === "" ? "none" : filterQuery.contact,
+      "i"
+    );
+    const s2 = new RegExp(
+      filterQuery.company === "" ? "none" : filterQuery.company,
+      "i"
+    );
+    const s3 = new RegExp(
+      filterQuery.location === "" ? "none" : filterQuery.location,
+      "i"
+    );
+    const allContacts = await Contact_Model.find({
+      $or: [{ fName: s1 }, { lName: s1 }, { company: s2 }, { state: s3 }],
+    });
+    res.status(201).json(allContacts);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+router.post("/filtercompany", async (req, res) => {
+  try {
+    const { filterQuery } = req.body;
+    console.log(filterQuery);
+    const s1 = new RegExp(
+      filterQuery.company === "" ? "none" : filterQuery.company,
+      "i"
+    );
+    const s2 = new RegExp(
+      filterQuery.industry === "" ? "none" : filterQuery.industry,
+      "i"
+    );
+    const s3 = new RegExp(
+      filterQuery.location === "" ? "none" : filterQuery.location,
+      "i"
+    );
+    const s4 = new RegExp(
+      filterQuery.technologies === "" ? "none" : filterQuery.technologies,
+      "i"
+    );
+    const allCompanies = await Company_Model.find({
+      $or: [{ fullName: s1 }, { industry: s2 }, { state: s3 }, { about: s4 }],
+    });
+    res.status(201).json(allCompanies);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.post("/searchcompany", async (req, res) => {
+  try {
+    const { searchQuery } = req.body;
+    const s1 = new RegExp(searchQuery, "i");
+    const allCompany = await Company_Model.find({
+      $or: [{ fullName: s1 }],
+    });
+    res.status(201).json(allCompany);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
 router.post("/addcompany", async (req, res) => {
   const formData = req.body;
   const newCompany = new Company_Model({
@@ -234,7 +311,7 @@ router.patch("/edittask", async (req, res) => {
 
 router.get("/getalltasks", async (req, res) => {
   try {
-    const allTasks = await Task_Model.find();
+    const allTasks = await Task_Model.find().sort({ date: -1 });
     res.status(201).json(allTasks);
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -443,6 +520,7 @@ router.post("/addsnippet", async (req, res) => {
   const newSnippet = new Snippet_Model({
     ...formData,
     tag: formData.tag.split(","),
+    archive: false,
   });
 
   console.log(newSnippet);

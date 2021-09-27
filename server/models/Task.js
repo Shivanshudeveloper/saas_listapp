@@ -37,6 +37,7 @@ const taskchema = new mongoose.Schema({
     type: Boolean,
     required: false,
   },
+  assignTo: {},
 });
 const task = mongoose.model("task", taskchema);
 module.exports = task;

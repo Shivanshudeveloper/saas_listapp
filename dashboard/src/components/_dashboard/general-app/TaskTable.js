@@ -48,13 +48,7 @@ export default function TaskTable() {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
   const [openTask, setOpenTask] = useState(false);
   const [openCall, setOpenCall] = useState(false);
-  const [tasks, setTasks] = useState([
-    {
-      id: faker.datatype.uuid(),
-      name: "ToDo is Due for John Doe",
-      company: "This is a simple task!",
-    },
-  ]);
+  const userId = localStorage.getItem("userId");
 
   const handleClickAdd = () => {
     setValue(0);
@@ -102,6 +96,7 @@ export default function TaskTable() {
     date3: "",
     action3: "",
     desc3: "",
+    assignTo: userId,
   };
 
   const [formData, setFormData] = useState(initialState);
@@ -229,6 +224,15 @@ export default function TaskTable() {
   });
 
   const searchTask = async () => {
+    if (searchQuery.contact !== "")
+      setAllfiltertags((prev) => [...prev, searchQuery.contact]);
+
+    if (searchQuery.type !== "")
+      setAllfiltertags((prev) => [...prev, searchQuery.type]);
+
+    if (searchQuery.status !== "")
+      setAllfiltertags((prev) => [...prev, searchQuery.status]);
+
     await axios
       .post(`${API_SERVICE}/searchtask?`, {
         contact: searchQuery.contact || "none",
@@ -249,6 +253,22 @@ export default function TaskTable() {
       });
   };
 
+  const types = [
+    { name: "Note" },
+    { name: "Call Log" },
+    { name: "Email" },
+    { name: "Linkedin" },
+  ];
+
+  const [allfiltertags, setAllfiltertags] = useState([]);
+  const removeFilterTag = (tag) => {
+    getTasks();
+    let index = allfiltertags.indexOf(tag);
+    allfiltertags.splice(index, 1);
+  };
+
+  const completedTypes = [{ name: "Completed" }, { name: "Not Completed" }];
+
   return (
     <>
       <Dialog
@@ -262,10 +282,9 @@ export default function TaskTable() {
         <DialogContent>
           <br />
           <Box style={{ margin: "10px 0" }}>
-            <Typography variant="subtitle2">Contact</Typography>
             <TextField
               style={{ marginTop: "5px" }}
-              label="John Due"
+              label="Contact"
               variant="filled"
               size="small"
               fullWidth
@@ -277,33 +296,29 @@ export default function TaskTable() {
             />
           </Box>
           <Box style={{ margin: "10px 0" }}>
-            <Typography variant="subtitle2">Type</Typography>
-            <TextField
-              style={{ marginTop: "5px" }}
-              label="LinkedIn"
-              variant="filled"
-              size="small"
-              fullWidth
-              name="type"
-              value={searchQuery.type}
-              onChange={(e) =>
-                setSearchQuery({ ...searchQuery, type: e.target.value })
-              }
+            <Autocomplete
+              inputValue={searchQuery.status}
+              onInputChange={(event, newValue) => {
+                setSearchQuery({ ...searchQuery, status: newValue });
+              }}
+              options={completedTypes}
+              getOptionLabel={(option) => `${option.name}`}
+              renderInput={(params) => (
+                <TextField {...params} label="Status" variant="outlined" />
+              )}
             />
           </Box>
           <Box style={{ margin: "10px 0" }}>
-            <Typography variant="subtitle2">Status</Typography>
-            <TextField
-              style={{ marginTop: "5px" }}
-              label="Completed"
-              variant="filled"
-              size="small"
-              fullWidth
-              name="status"
-              value={searchQuery.status}
-              onChange={(e) =>
-                setSearchQuery({ ...searchQuery, status: e.target.value })
-              }
+            <Autocomplete
+              inputValue={searchQuery.type}
+              onInputChange={(event, newValue) => {
+                setSearchQuery({ ...searchQuery, type: newValue });
+              }}
+              options={types}
+              getOptionLabel={(option) => `${option.name}`}
+              renderInput={(params) => (
+                <TextField {...params} label="Type" variant="outlined" />
+              )}
             />
           </Box>
         </DialogContent>
@@ -565,6 +580,15 @@ export default function TaskTable() {
               </DialogContent>
             </>
           )}
+          <TextField
+            label="Assign To"
+            variant="outlined"
+            fullWidth
+            value={formData.assignTo}
+            onChange={(e) =>
+              setFormData({ ...formData, desassignToc3: e.target.value })
+            }
+          />
         </Container>
         <Box sx={{ flexGrow: 1 }} />
         <DialogActions>
@@ -622,6 +646,26 @@ export default function TaskTable() {
           </Button>
         </div>
       </div>
+      <section style={{ margin: "10px" }}>
+        {allfiltertags.length === 0 ? (
+          <></>
+        ) : (
+          <>
+            {allfiltertags.map((tag) => {
+              return (
+                <>
+                  <Chip
+                    onDelete={() => removeFilterTag(tag)}
+                    style={{ marginRight: "10px", marginTop: "10px" }}
+                    label={tag}
+                  />
+                </>
+              );
+            })}
+          </>
+        )}
+      </section>
+
       <Scrollbar>
         <TableContainer sx={{ minWidth: 720 }}>
           <Table>

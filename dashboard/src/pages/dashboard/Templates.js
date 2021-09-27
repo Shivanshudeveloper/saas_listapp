@@ -192,6 +192,8 @@ export default function Templates() {
       .catch((err) => console.log(err));
   };
 
+  const templatetypes = [{ name: "personal" }, { name: "team" }];
+
   return (
     <Page title="Templates | List App">
       <Snackbar
@@ -339,6 +341,20 @@ export default function Templates() {
           <DialogContent>
             <Grid container spacing={2}>
               <Grid md={12}>
+                <Autocomplete
+                  style={{ marginTop: "5px" }}
+                  id="combo-box-demo"
+                  options={templatetypes}
+                  onChange={(event, newValue) => {
+                    setFormData({ ...formData, type: newValue.name });
+                  }}
+                  getOptionLabel={(option) => option.name}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField {...params} label="Type" variant="outlined" />
+                  )}
+                />
+
                 <TextField
                   label="Name"
                   variant="outlined"
@@ -413,7 +429,7 @@ export default function Templates() {
                     <>No Available Tags Found</>
                   ) : (
                     <>
-                      <Autocomplete
+                      {/* <Autocomplete
                         id="combo-box-demo"
                         options={alltags}
                         onChange={(event, newValue) => {
@@ -432,6 +448,16 @@ export default function Templates() {
                             variant="outlined"
                           />
                         )}
+                      /> */}
+                      <TextField
+                        label="Add New Tag"
+                        variant="outlined"
+                        fullWidth
+                        style={{ margin: "10px 0" }}
+                        value={formData.tag}
+                        onChange={(e) =>
+                          setFormData({ ...formData, tag: e.target.value })
+                        }
                       />
                     </>
                   )}
