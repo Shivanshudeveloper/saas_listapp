@@ -34,6 +34,8 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import SearchIcon from "@material-ui/icons/Search";
+import { useNavigate } from "react-router";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const CompanySection = () => {
   const [open, setOpen] = useState(false);
@@ -222,6 +224,17 @@ const CompanySection = () => {
         setAllCompanies(res.data);
         handleClose();
         setFilterQuery(initialFilter);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const navigate = useNavigate();
+
+  const deleteRow = (row) => {
+    axios
+      .delete(`${API_SERVICE}/deletecompany/${row._id}`)
+      .then((res) => {
+        getCompanies();
       })
       .catch((err) => console.log(err));
   };
@@ -445,9 +458,20 @@ const CompanySection = () => {
                             fontSize="small"
                           />
                         </IconButton>
+                        <IconButton>
+                          <DeleteIcon
+                            onClick={() => deleteRow(row)}
+                            fontSize="small"
+                          />
+                        </IconButton>
                         <Button
                           variant="contained"
                           style={{ marginRight: "10px" }}
+                          onClick={() =>
+                            navigate(`/dashboard/viewcompany/${row._id}`, {
+                              replace: true,
+                            })
+                          }
                         >
                           View
                         </Button>

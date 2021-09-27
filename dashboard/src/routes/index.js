@@ -79,6 +79,8 @@ export default function Router() {
       children: [
         { path: "/", element: <Navigate to="/dashboard/search" replace /> },
         { path: "search", element: <GeneralApp /> },
+        { path: "viewcontact/:id", element: <ViewContact /> },
+        { path: "viewcompany/:id", element: <ViewCompany /> },
         { path: "company", element: <GeneralEcommerce /> },
         { path: "tasks", element: <Tasks /> },
         { path: "templates", element: <Templates /> },
@@ -263,6 +265,12 @@ const VerifyCode = Loadable(
 // Dashboard
 const GeneralApp = Loadable(
   lazy(() => import("../pages/dashboard/GeneralApp"))
+);
+const ViewContact = Loadable(
+  lazy(() => import("../pages/dashboard/ViewContact"))
+);
+const ViewCompany = Loadable(
+  lazy(() => import("../pages/dashboard/ViewCompany"))
 );
 const Tasks = Loadable(lazy(() => import("../pages/dashboard/Tasks")));
 const Templates = Loadable(lazy(() => import("../pages/dashboard/Templates")));

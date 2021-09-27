@@ -40,6 +40,8 @@ import Alert from "@material-ui/lab/Alert";
 import { API_SERVICE } from "../../config";
 import axios from "axios";
 import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { Navigate, useNavigate } from "react-router";
 
 const ContactSection = () => {
   const [open, setOpen] = useState(false);
@@ -201,6 +203,18 @@ const ContactSection = () => {
         setAllContacts(res.data);
         handleClose();
         setFilterQuery(initialFilter);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const navigate = useNavigate();
+
+  const deleteRow = (row) => {
+    axios
+      .delete(`${API_SERVICE}/deletecontact/${row._id}`)
+      .then((res) => {
+        console.log(res.data);
+        getContacts();
       })
       .catch((err) => console.log(err));
   };
@@ -562,9 +576,24 @@ const ContactSection = () => {
                             fontSize="small"
                           />
                         </IconButton>
+                        <IconButton>
+                          <DeleteIcon
+                            onClick={() => deleteRow(row)}
+                            fontSize="small"
+                          />
+                        </IconButton>
                       </TableCell>
                       <TableCell style={tableCellStyle} align="center">
-                        <Button variant="contained">View</Button>
+                        <Button
+                          variant="contained"
+                          onClick={() =>
+                            navigate(`/dashboard/viewcontact/${row._id}`, {
+                              replace: true,
+                            })
+                          }
+                        >
+                          View
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

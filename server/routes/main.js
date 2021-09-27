@@ -73,6 +73,45 @@ router.post("/searchcontact", async (req, res) => {
     res.status(409).json({ message: error.message });
   }
 });
+
+router.get("/getcontact/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const contact = await Contact_Model.find({ _id: id });
+    res.status(201).json(contact);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+router.delete("/deletecontact/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Contact_Model.findByIdAndDelete(id);
+    res.status(201).json({ message: "Deleted" });
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.get("/getcompany/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const company = await Company_Model.find({ _id: id });
+    res.status(201).json(company);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+router.delete("/deletecompany/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Company_Model.findByIdAndDelete(id);
+    res.status(201).json({ message: "Deleted" });
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
 router.post("/filtercontact", async (req, res) => {
   try {
     const { filterQuery } = req.body;
