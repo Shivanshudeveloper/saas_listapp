@@ -340,7 +340,7 @@ export default function Templates() {
               <>No Available Tags Found</>
             ) : (
               <>
-                {/* <Autocomplete
+                <Autocomplete
                   id="combo-box-demo"
                   options={alltags}
                   onChange={(event, newValue) => {
@@ -348,6 +348,13 @@ export default function Templates() {
                     setFormData({
                       ...formData,
                       tag: newValue.t,
+                    });
+                  }}
+                  freeSolo
+                  onInputChange={(event, newValue) => {
+                    setFormData({
+                      ...formData,
+                      tag: newValue,
                     });
                   }}
                   getOptionLabel={(option) => option.t}
@@ -359,8 +366,8 @@ export default function Templates() {
                       variant="outlined"
                     />
                   )}
-                /> */}
-                <TextField
+                />
+                {/* <TextField
                   label="Add New Tag"
                   variant="outlined"
                   fullWidth
@@ -369,7 +376,7 @@ export default function Templates() {
                   onChange={(e) =>
                     setFormData({ ...formData, tag: e.target.value })
                   }
-                />
+                /> */}
               </>
             )}
           </div>

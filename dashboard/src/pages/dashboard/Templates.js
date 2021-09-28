@@ -194,6 +194,8 @@ export default function Templates() {
 
   const templatetypes = [{ name: "personal" }, { name: "team" }];
 
+  console.log(formData);
+
   return (
     <Page title="Templates | List App">
       <Snackbar
@@ -429,14 +431,20 @@ export default function Templates() {
                     <>No Available Tags Found</>
                   ) : (
                     <>
-                      {/* <Autocomplete
+                      <Autocomplete
                         id="combo-box-demo"
                         options={alltags}
+                        freeSolo
                         onChange={(event, newValue) => {
-                          // addSnippetTemplate(newValue.description);
                           setFormData({
                             ...formData,
-                            tag: newValue.t,
+                            tag: newValue?.t,
+                          });
+                        }}
+                        onInputChange={(event, newValue) => {
+                          setFormData({
+                            ...formData,
+                            tag: newValue,
                           });
                         }}
                         getOptionLabel={(option) => option.t}
@@ -448,8 +456,8 @@ export default function Templates() {
                             variant="outlined"
                           />
                         )}
-                      /> */}
-                      <TextField
+                      />
+                      {/* <TextField
                         label="Add New Tag"
                         variant="outlined"
                         fullWidth
@@ -458,7 +466,7 @@ export default function Templates() {
                         onChange={(e) =>
                           setFormData({ ...formData, tag: e.target.value })
                         }
-                      />
+                      /> */}
                     </>
                   )}
                 </div>
