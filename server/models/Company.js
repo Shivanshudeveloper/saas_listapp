@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const companySchema = new mongoose.Schema({
   fullName: {
     type: String,
-    required: false,
+    required: true,
   },
   phone: {
     type: String,
@@ -43,7 +43,7 @@ const companySchema = new mongoose.Schema({
   },
   website: {
     type: String,
-    required: false,
+    required: true,
   },
   industry: {
     type: String,

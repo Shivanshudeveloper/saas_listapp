@@ -17,6 +17,8 @@ import {
   Snackbar,
   Paper,
   InputBase,
+  Alert,
+  Chip,
 } from "@material-ui/core";
 import { firestore, storage } from "../../Firebase/index";
 import FilterListIcon from "@material-ui/icons/FilterList";
@@ -36,11 +38,13 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import SearchIcon from "@material-ui/icons/Search";
 import { useNavigate } from "react-router";
 import DeleteIcon from "@material-ui/icons/Delete";
-
+let allfiltertags = [];
 const CompanySection = () => {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
+    allfiltertags = [];
+    getCompanies();
     setOpen(true);
   };
 
@@ -175,18 +179,26 @@ const CompanySection = () => {
   };
 
   const addCompany = async () => {
-    await axios
-      .post(`${API_SERVICE}/addcompany`, formData)
-      .then((res) => {
-        handleClickSnack();
-        setMessage("Company Added");
-        handleCloseDialog();
-        getCompanies();
-        setFile([]);
-        setFilePath("");
-        setFormData(initialState);
-      })
-      .catch((err) => console.log(err));
+    if (formData.fullName === "") {
+      setMessage("Company Name should be filled");
+    } else if (formData.website === "") {
+      setMessage("Website Name should be filled");
+    } else if (formData.numOfEmps === "") {
+      setMessage("Number of employees should be filled");
+    } else {
+      await axios
+        .post(`${API_SERVICE}/addcompany`, formData)
+        .then((res) => {
+          handleClickSnack();
+          setMessage("Company Added");
+          handleCloseDialog();
+          getCompanies();
+          setFile([]);
+          setFilePath("");
+          setFormData(initialState);
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const editContact = (contact) => {
@@ -215,7 +227,29 @@ const CompanySection = () => {
   };
   const [filterQuery, setFilterQuery] = useState(initialFilter);
 
+  const removeFilterTag = (tag) => {
+    getCompanies();
+    let index = allfiltertags.indexOf(tag);
+    allfiltertags.splice(index, 1);
+  };
+
   const filter = () => {
+    if (filterQuery.company !== "") {
+      allfiltertags.push(filterQuery.company);
+      // setAllfiltertags((prev) => [...prev, filterQuery.name]);
+    }
+    if (filterQuery.industry !== "") {
+      allfiltertags.push(filterQuery.industry);
+      // setAllfiltertags((prev) => [...prev, filterQuery.desc]);
+    }
+    if (filterQuery.location !== "") {
+      allfiltertags.push(filterQuery.location);
+      // setAllfiltertags((prev) => [...prev, filterQuery.tag]);
+    }
+    if (filterQuery.technologies !== "") {
+      allfiltertags.push(filterQuery.technologies);
+      // setAllfiltertags((prev) => [...prev, filterQuery.tag]);
+    }
     axios
       .post(`${API_SERVICE}/filtercompany`, {
         filterQuery,
@@ -254,7 +288,10 @@ const CompanySection = () => {
             <DialogContent>
               <br />
               <Container maxWidth="md">
-                <Snackbar
+                {message.includes("should be filled") ? (
+                  <Alert severity="error">{message}</Alert>
+                ) : null}
+                {/* <Snackbar
                   anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "left",
@@ -275,7 +312,7 @@ const CompanySection = () => {
                       </IconButton>
                     </React.Fragment>
                   }
-                />
+                /> */}
                 <Grid container spacing={2}>
                   {GridCompany({ label: "Website", name: "website" })}
                   {GridCompany({ label: "Name", name: "fullName" })}
@@ -386,6 +423,7 @@ const CompanySection = () => {
                 Add Company
               </Button>
             </div>
+
             <Paper
               style={{
                 background: "#F4F6F8",
@@ -420,6 +458,26 @@ const CompanySection = () => {
               </IconButton>
             </Paper>
           </div>
+
+          <section style={{ margin: "10px" }}>
+            {allfiltertags.length === 0 ? (
+              <></>
+            ) : (
+              <>
+                {allfiltertags.map((tag) => {
+                  return (
+                    <>
+                      <Chip
+                        onDelete={() => removeFilterTag(tag)}
+                        style={{ marginRight: "10px", marginTop: "10px" }}
+                        label={tag}
+                      />
+                    </>
+                  );
+                })}
+              </>
+            )}
+          </section>
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 720 }}>

@@ -18,6 +18,8 @@ import {
   Container,
   Autocomplete,
   Chip,
+  Paper,
+  InputBase,
 } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -43,12 +45,15 @@ import { Editor } from "@tinymce/tinymce-react";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import { API_SERVICE } from "../../../config";
 import axios from "axios";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import SearchIcon from "@material-ui/icons/Search";
+import ClearIcon from "@material-ui/icons/Clear";
 
 export default function TaskTable() {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
   const [openTask, setOpenTask] = useState(false);
   const [openCall, setOpenCall] = useState(false);
-  const userId = localStorage.getItem("userId");
+  const userName = localStorage.getItem("userName");
 
   const handleClickAdd = () => {
     setValue(0);
@@ -90,13 +95,15 @@ export default function TaskTable() {
     call1: "",
     notes1: "",
     contact2: "",
+    date0: "",
+    date1: "",
     date2: "",
     desc2: "",
     contact3: "",
     date3: "",
     action3: "",
     desc3: "",
-    assignTo: userId,
+    assignTo: userName,
   };
 
   const [formData, setFormData] = useState(initialState);
@@ -160,6 +167,15 @@ export default function TaskTable() {
       })
       .catch((err) => console.log(err));
   };
+  const notCompleteTask = async (id) => {
+    await axios
+      .patch(`${API_SERVICE}/notcompletetask/${id}`)
+      .then((res) => {
+        console.log(res.data);
+        getTasks();
+      })
+      .catch((err) => console.log(err));
+  };
 
   const [isEdit, setIsEdit] = useState(false);
 
@@ -172,6 +188,8 @@ export default function TaskTable() {
       call1: row.call,
       notes1: row.notes,
       contact2: row.contact,
+      date0: row.date,
+      date1: row.date,
       date2: row.date,
       desc2: row.description,
       contact3: row.contact,
@@ -210,6 +228,8 @@ export default function TaskTable() {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
+    setAllfiltertags([]);
+    getTasks();
     setOpen(true);
   };
 
@@ -268,6 +288,20 @@ export default function TaskTable() {
   };
 
   const completedTypes = [{ name: "Completed" }, { name: "Not Completed" }];
+
+  const [searchField, setSearchField] = useState("");
+  const search = () => {
+    if (searchField !== "") {
+      axios
+        .post(`${API_SERVICE}/searchtasks`, {
+          searchField,
+        })
+        .then((res) => {
+          setAllTasks(res.data);
+        })
+        .catch((err) => console.log(err));
+    } else getContacts();
+  };
 
   return (
     <>
@@ -384,6 +418,22 @@ export default function TaskTable() {
                       )}
                     />
                   </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Due Date and Time"
+                      type="datetime-local"
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      value={value === 0 ? formData.date0 : formData.date1}
+                      onChange={(e) =>
+                        value === 0
+                          ? setFormData({ ...formData, date0: e.target.value })
+                          : setFormData({ ...formData, date1: e.target.value })
+                      }
+                    />
+                  </Grid>
                   {value === 1 && (
                     <Grid item xs={12}>
                       <Autocomplete
@@ -431,6 +481,20 @@ export default function TaskTable() {
                               });
                         }
                       }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Assign To"
+                      variant="outlined"
+                      fullWidth
+                      value={formData.assignTo}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          desassignToc3: e.target.value,
+                        })
+                      }
                     />
                   </Grid>
                 </Grid>
@@ -509,6 +573,20 @@ export default function TaskTable() {
                       }
                     />
                   </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Assign To"
+                      variant="outlined"
+                      fullWidth
+                      value={formData.assignTo}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          desassignToc3: e.target.value,
+                        })
+                      }
+                    />
+                  </Grid>
                 </Grid>
               </DialogContent>
             </>
@@ -576,19 +654,24 @@ export default function TaskTable() {
                       value={formData.desc2}
                     />
                   </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Assign To"
+                      variant="outlined"
+                      fullWidth
+                      value={formData.assignTo}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          desassignToc3: e.target.value,
+                        })
+                      }
+                    />
+                  </Grid>
                 </Grid>
               </DialogContent>
             </>
           )}
-          <TextField
-            label="Assign To"
-            variant="outlined"
-            fullWidth
-            value={formData.assignTo}
-            onChange={(e) =>
-              setFormData({ ...formData, desassignToc3: e.target.value })
-            }
-          />
         </Container>
         <Box sx={{ flexGrow: 1 }} />
         <DialogActions>
@@ -636,7 +719,7 @@ export default function TaskTable() {
             Refresh
           </Button>
         </div>
-        <div>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <Button
             variant="contained"
             style={{ marginLeft: "20px" }}
@@ -644,6 +727,39 @@ export default function TaskTable() {
           >
             Add
           </Button>
+          <Paper
+            style={{
+              background: "#F4F6F8",
+              marginLeft: "18px",
+              paddingLeft: "5px",
+            }}
+          >
+            <InputBase
+              placeholder="Search Tasks"
+              style={{ width: "250px" }}
+              value={searchField}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  search();
+                }
+              }}
+              onChange={(e) => {
+                setSearchField(e.target.value);
+              }}
+            />
+            <IconButton sx={{ p: 1 }} onClick={search}>
+              <SearchIcon />
+            </IconButton>
+            <IconButton
+              sx={{ p: 1 }}
+              onClick={() => {
+                getTasks();
+                setSearchField("");
+              }}
+            >
+              <RefreshIcon />
+            </IconButton>
+          </Paper>
         </div>
       </div>
       <section style={{ margin: "10px" }}>
@@ -687,9 +803,15 @@ export default function TaskTable() {
                     <IconButton onClick={() => startEdit(row)}>
                       <EditIcon fontSize="small" />
                     </IconButton>
-                    <IconButton onClick={() => completeTask(row._id)}>
-                      <CheckIcon fontSize="small" />
-                    </IconButton>
+                    {row.completed === true ? (
+                      <IconButton onClick={() => notCompleteTask(row._id)}>
+                        <ClearIcon fontSize="small" />
+                      </IconButton>
+                    ) : (
+                      <IconButton onClick={() => completeTask(row._id)}>
+                        <CheckIcon fontSize="small" />
+                      </IconButton>
+                    )}
                     <IconButton onClick={() => deleteRow(row._id)}>
                       <DeleteIcon fontSize="small" />
                     </IconButton>

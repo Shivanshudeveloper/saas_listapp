@@ -22,6 +22,7 @@ import {
   Container,
   Paper,
   InputBase,
+  Chip,
 } from "@material-ui/core";
 import faker from "faker";
 import LockIcon from "@material-ui/icons/Lock";
@@ -42,7 +43,7 @@ import axios from "axios";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Navigate, useNavigate } from "react-router";
-
+let allfiltertags = [];
 const ContactSection = () => {
   const [open, setOpen] = useState(false);
   const [allContacts, setAllContacts] = useState([]);
@@ -94,6 +95,8 @@ const ContactSection = () => {
   };
 
   const handleClickOpen = () => {
+    allfiltertags = [];
+    getContacts();
     setOpen(true);
   };
   const handleClose = () => {
@@ -139,14 +142,16 @@ const ContactSection = () => {
 
   const addContact = async () => {
     setmessage("");
-    if (
-      formData.fName === "" ||
-      formData.lName === "" ||
-      formData.phone === "" ||
-      formData.company === "" ||
-      formData.email === ""
-    ) {
-      setmessage("Empty Fields Found");
+    if (formData.fName === "") {
+      setmessage("First Name should be filled");
+    } else if (formData.lName === "") {
+      setmessage("Last Name should be filled");
+    } else if (formData.phone === "") {
+      setmessage("Phone Number should be filled");
+    } else if (formData.company === "") {
+      setmessage("Company Name should be filled");
+    } else if (formData.email === "") {
+      setmessage("Email should be filled");
     } else {
       await axios
         .post(`${API_SERVICE}/addcontact`, formData)
@@ -194,7 +199,25 @@ const ContactSection = () => {
   const initialFilter = { contact: "", company: "", location: "" };
   const [filterQuery, setFilterQuery] = useState(initialFilter);
 
+  const removeFilterTag = (tag) => {
+    getContacts();
+    let index = allfiltertags.indexOf(tag);
+    allfiltertags.splice(index, 1);
+  };
+
   const filter = () => {
+    if (filterQuery.contact !== "") {
+      allfiltertags.push(filterQuery.contact);
+      // setAllfiltertags((prev) => [...prev, filterQuery.name]);
+    }
+    if (filterQuery.company !== "") {
+      allfiltertags.push(filterQuery.company);
+      // setAllfiltertags((prev) => [...prev, filterQuery.desc]);
+    }
+    if (filterQuery.location !== "") {
+      allfiltertags.push(filterQuery.location);
+      // setAllfiltertags((prev) => [...prev, filterQuery.tag]);
+    }
     axios
       .post(`${API_SERVICE}/filtercontact`, {
         filterQuery,
@@ -259,8 +282,8 @@ const ContactSection = () => {
             <DialogContent>
               <br />
               <Container maxWidth="md">
-                {message === "Empty Fields Found" ? (
-                  <Alert severity="error">Empty Fields Found</Alert>
+                {message.includes("should be filled") ? (
+                  <Alert severity="error">{message}</Alert>
                 ) : null}
 
                 <Grid container spacing={2}>
@@ -480,6 +503,7 @@ const ContactSection = () => {
                 Add Contact
               </Button>
             </div>
+
             <Paper
               style={{
                 background: "#F4F6F8",
@@ -514,6 +538,25 @@ const ContactSection = () => {
               </IconButton>
             </Paper>
           </div>
+          <section style={{ margin: "10px" }}>
+            {allfiltertags.length === 0 ? (
+              <></>
+            ) : (
+              <>
+                {allfiltertags.map((tag) => {
+                  return (
+                    <>
+                      <Chip
+                        onDelete={() => removeFilterTag(tag)}
+                        style={{ marginRight: "10px", marginTop: "10px" }}
+                        label={tag}
+                      />
+                    </>
+                  );
+                })}
+              </>
+            )}
+          </section>
           <Scrollbar sx={{ minHeight: "55vh" }}>
             <TableContainer sx={{ minWidth: 720 }}>
               <Table>

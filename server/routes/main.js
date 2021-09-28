@@ -200,6 +200,19 @@ router.get("/getallcompanies", async (req, res) => {
   }
 });
 
+router.post("/searchtasks", async (req, res) => {
+  try {
+    const { searchField } = req.body;
+    const contact = new RegExp(searchField, "i");
+    const allTasks = await Task_Model.find({
+      $or: [{ contact }],
+    });
+    res.status(201).json(allTasks);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
 router.post("/savetask", async (req, res) => {
   const { formData, option, value } = req.body;
   switch (value) {
@@ -207,6 +220,7 @@ router.post("/savetask", async (req, res) => {
       const newTask0 = new Task_Model({
         contact: formData.contact0,
         notes: formData.notes0,
+        date: formData.date0,
         type: option,
         completed: false,
         value,
@@ -223,6 +237,7 @@ router.post("/savetask", async (req, res) => {
         contact: formData.contact1,
         notes: formData.notes1,
         result: formData.result1,
+        date: formData.date1,
         type: option,
         completed: false,
         value,
@@ -369,6 +384,22 @@ router.patch("/completetask/:id", async (req, res) => {
     const updatedTask = await Task_Model.findOneAndUpdate(
       { _id: id },
       { completed: true },
+      {
+        new: true,
+        useFindAndModify: false,
+      }
+    );
+    res.json(updatedTask);
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.patch("/notcompletetask/:id", async (req, res) => {
+  try {
+    const { id: id } = req.params;
+    const updatedTask = await Task_Model.findOneAndUpdate(
+      { _id: id },
+      { completed: false },
       {
         new: true,
         useFindAndModify: false,

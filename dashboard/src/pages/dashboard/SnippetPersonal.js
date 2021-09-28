@@ -162,6 +162,8 @@ export default function SnippetPersonal({
     const [openFilter, setOpenFilter] = useState(false);
 
     const handleClickOpenFilter = () => {
+      allfiltertags = [];
+      setSnippets(allSnippets);
       setOpenFilter(true);
     };
     const handleCloseFilter = () => {
@@ -250,6 +252,7 @@ export default function SnippetPersonal({
     });
 
     const filterSnippet = async () => {
+      // allfiltertags = [];
       if (filterQuery.name !== "") {
         allfiltertags.push(filterQuery.name);
       }

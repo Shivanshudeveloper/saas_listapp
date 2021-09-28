@@ -61,7 +61,7 @@ import { v4 as uuid4 } from "uuid";
 import CSVReader from "react-csv-reader";
 
 // ----------------------------------------------------------------------
-
+let allfiltertags = [];
 // ----------------------------------------------------------------------
 
 export default function TemplatePersonal({
@@ -227,7 +227,7 @@ export default function TemplatePersonal({
     const handleCloseDialog = () => {
       setOpen(false);
     };
-    const [allfiltertags, setAllfiltertags] = useState([]);
+    // const [allfiltertags, setAllfiltertags] = useState([]);
 
     const [searchQuery, setSearchQuery] = useState("");
     // const [hasDeleted, setHasDeleted] = useState(false);
@@ -274,6 +274,8 @@ export default function TemplatePersonal({
     const [openFilter, setOpenFilter] = useState(false);
 
     const handleClickOpenFilter = () => {
+      allfiltertags = [];
+      setTemplates(allTemplates);
       setOpenFilter(true);
     };
     const handleCloseFilter = () => {
@@ -332,16 +334,16 @@ export default function TemplatePersonal({
     const filterTemplate = async () => {
       setUseFilter(true);
       if (filterQuery.name !== "") {
-        // allfiltertags.push(filterQuery.name);
-        setAllfiltertags((prev) => [...prev, filterQuery.name]);
+        allfiltertags.push(filterQuery.name);
+        // setAllfiltertags((prev) => [...prev, filterQuery.name]);
       }
       if (filterQuery.desc !== "") {
-        // allfiltertags.push(filterQuery.desc);
-        setAllfiltertags((prev) => [...prev, filterQuery.desc]);
+        allfiltertags.push(filterQuery.desc);
+        // setAllfiltertags((prev) => [...prev, filterQuery.desc]);
       }
       if (filterQuery.tag !== "") {
-        // allfiltertags.push(filterQuery.tag);
-        setAllfiltertags((prev) => [...prev, filterQuery.tag]);
+        allfiltertags.push(filterQuery.tag);
+        // setAllfiltertags((prev) => [...prev, filterQuery.tag]);
       }
       await axios
         .post(`${API_SERVICE}/filtertemplate`, {
