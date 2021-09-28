@@ -266,6 +266,7 @@ router.post("/savetask", async (req, res) => {
       }
       break;
     case 3:
+      console.log(formData.date3);
       const newTask3 = new Task_Model({
         contact: formData.contact3,
         description: formData.desc3,
@@ -287,58 +288,60 @@ router.post("/savetask", async (req, res) => {
 
 router.patch("/edittask", async (req, res) => {
   const { formData, option, value } = req.body;
-  if (value === 0) {
-    await Task_Model.findByIdAndUpdate(
-      formData.id,
-      {
-        contact: formData.contact0,
-        notes: formData.notes0,
-        type: option,
-        completed: false,
-        value,
-      },
-      {
-        new: true,
-        useFindAndModify: false,
-      }
-    );
-  }
-  if (value === 1) {
-    await Task_Model.findByIdAndUpdate(
-      formData.id,
-      {
-        contact: formData.contact1,
-        notes: formData.notes1,
-        result: formData.result1,
-        type: option,
-        completed: false,
-        value,
-      },
-      {
-        new: true,
-        useFindAndModify: false,
-      }
-    );
-  }
-  if (value === 2) {
-    await Task_Model.findByIdAndUpdate(
-      formData.id,
-      {
-        contact: formData.contact2,
-        description: formData.desc2,
-        date: formData.date2,
-        type: option,
-        completed: false,
-        value,
-      },
-      {
-        new: true,
-        useFindAndModify: false,
-      }
-    );
-  }
-  if (value === 3) {
-    try {
+  try {
+    if (value === 0) {
+      await Task_Model.findByIdAndUpdate(
+        formData.id,
+        {
+          contact: formData.contact0,
+          notes: formData.notes0,
+          date: formData.date0,
+          type: option,
+          completed: false,
+          value,
+        },
+        {
+          new: true,
+          useFindAndModify: false,
+        }
+      );
+    }
+    if (value === 1) {
+      await Task_Model.findByIdAndUpdate(
+        formData.id,
+        {
+          contact: formData.contact1,
+          notes: formData.notes1,
+          result: formData.result1,
+          date: formData.date1,
+          type: option,
+          completed: false,
+          value,
+        },
+        {
+          new: true,
+          useFindAndModify: false,
+        }
+      );
+    }
+    if (value === 2) {
+      await Task_Model.findByIdAndUpdate(
+        formData.id,
+        {
+          contact: formData.contact2,
+          description: formData.desc2,
+          date: formData.date2,
+          type: option,
+          completed: false,
+          value,
+        },
+        {
+          new: true,
+          useFindAndModify: false,
+        }
+      );
+    }
+    if (value === 3) {
       await Task_Model.findByIdAndUpdate(
         formData.id,
         {
@@ -355,17 +358,37 @@ router.patch("/edittask", async (req, res) => {
           useFindAndModify: false,
         }
       );
-    } catch (error) {
-      console.log(error);
     }
+    res.status(201).json({ message: "Updated" });
+  } catch (error) {
+    console.log(error);
   }
-
-  res.status(201).json({ message: "Updated" });
 });
 
 router.get("/getalltasks", async (req, res) => {
   try {
     const allTasks = await Task_Model.find().sort({ date: -1 });
+    res.status(201).json(allTasks);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+router.get("/getcomingtasks", async (req, res) => {
+  newDate = new Date();
+  try {
+    const allTasks = await Task_Model.find({ completed: false }).sort({
+      date: -1,
+    });
+    res.status(201).json(allTasks);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+router.get("/getcompletedtasks", async (req, res) => {
+  try {
+    const allTasks = await Task_Model.find({ completed: true }).sort({
+      date: -1,
+    });
     res.status(201).json(allTasks);
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -592,8 +615,6 @@ router.post("/addsnippet", async (req, res) => {
     tag: formData.tag.split(","),
     archive: false,
   });
-
-  console.log(newSnippet);
 
   try {
     await newSnippet.save();

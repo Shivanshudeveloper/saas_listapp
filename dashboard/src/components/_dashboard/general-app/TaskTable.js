@@ -140,6 +140,24 @@ export default function TaskTable() {
     getTasks();
   }, []);
 
+  const getcompletedtasks = async () => {
+    await axios
+      .get(`${API_SERVICE}/getcompletedtasks`)
+      .then((res) => {
+        setAllTasks(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const getcomingtasks = async () => {
+    await axios
+      .get(`${API_SERVICE}/getcomingtasks`)
+      .then((res) => {
+        setAllTasks(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   const getTasks = async () => {
     await axios
       .get(`${API_SERVICE}/getalltasks`)
@@ -711,6 +729,7 @@ export default function TaskTable() {
           >
             Filter
           </Button>
+
           <Button
             variant="outlined"
             onClick={() => getTasks()}
@@ -782,6 +801,17 @@ export default function TaskTable() {
         )}
       </section>
 
+      <div style={{ marginBottom: "10px" }}>
+        <Button onClick={() => getcomingtasks()} style={{ marginLeft: "20px" }}>
+          Show Due
+        </Button>
+        <Button
+          onClick={() => getcompletedtasks()}
+          style={{ marginLeft: "20px" }}
+        >
+          Show Completed
+        </Button>
+      </div>
       <Scrollbar>
         <TableContainer sx={{ minWidth: 720 }}>
           <Table>
