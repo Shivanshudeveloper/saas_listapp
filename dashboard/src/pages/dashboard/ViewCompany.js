@@ -4,8 +4,9 @@ import { API_SERVICE } from "../../config";
 import axios from "axios";
 import { Typography, Avatar } from "@material-ui/core";
 
-const ViewCompany = () => {
-  const { id } = useParams();
+const ViewCompany = ({ id }) => {
+  // const { id } = useParams();
+
   const [company, setCompany] = useState({});
 
   useEffect(async () => {
@@ -15,9 +16,7 @@ const ViewCompany = () => {
         setCompany(res.data[0]);
       })
       .catch((err) => console.log(err));
-  }, []);
-
-  console.log(company);
+  }, [id]);
 
   return (
     <div

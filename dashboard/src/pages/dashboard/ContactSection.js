@@ -23,6 +23,7 @@ import {
   Paper,
   InputBase,
   Chip,
+  TablePagination,
 } from "@material-ui/core";
 import faker from "faker";
 import LockIcon from "@material-ui/icons/Lock";
@@ -51,7 +52,7 @@ import TabList from "@material-ui/lab/TabList";
 import TabPanel from "@material-ui/lab/TabPanel";
 import Cancel from "@material-ui/icons/Cancel";
 import ViewContact from "./ViewContact";
-
+import { Link } from "react-scroll";
 let allfiltertags = [];
 
 const ContactSection = () => {
@@ -170,6 +171,7 @@ const ContactSection = () => {
           handleClickS();
           handleCloseDialog();
           getContacts();
+          setFormData(initialState);
         })
         .catch((err) => console.log(err));
     }
@@ -288,6 +290,19 @@ const ContactSection = () => {
   const handleChangeTab = (event, newValue) => {
     setValueTab(newValue);
   };
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <>
       <Snackbar
@@ -313,7 +328,7 @@ const ContactSection = () => {
         }
       />
       <div style={{ height: "100%" }}>
-        <Card sx={{ height: "100%" }}>
+        <div sx={{ height: "100%" }}>
           <Dialog
             fullScreen
             open={openDialog}
@@ -550,11 +565,12 @@ const ContactSection = () => {
               </Button>
             </div>
 
-            <Paper
+            <div
               style={{
                 background: "#F4F6F8",
                 marginLeft: "18px",
                 paddingLeft: "5px",
+                boxShadow: "none",
               }}
             >
               <InputBase
@@ -582,7 +598,7 @@ const ContactSection = () => {
               >
                 <RefreshIcon />
               </IconButton>
-            </Paper>
+            </div>
           </div>
           <section style={{ margin: "10px" }}>
             {allfiltertags.length === 0 ? (
@@ -603,7 +619,7 @@ const ContactSection = () => {
               </>
             )}
           </section>
-          <Scrollbar sx={{ minHeight: "55vh" }}>
+          <Scrollbar>
             <TableContainer sx={{ minWidth: 720 }}>
               <Table>
                 <TableHead>
@@ -618,87 +634,103 @@ const ContactSection = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {allContacts.map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          padding: "5px",
-                          paddingLeft: "20px",
-                        }}
-                      >
-                        <Avatar
+                  {allContacts
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell
                           style={{
-                            width: "42px",
-                            height: "42px",
-                            marginRight: "10px",
-                            textTransform: "uppercase",
+                            display: "flex",
+                            alignItems: "center",
+                            padding: "5px",
+                            paddingLeft: "20px",
                           }}
                         >
-                          {row.fName.slice(0, 1)}
-                          {row.lName.slice(0, 1)}
-                        </Avatar>
-                        <div>
-                          <p style={{ fontWeight: "bold" }}>
-                            {row.fName} {row.lName}
-                          </p>
-                        </div>
-                      </TableCell>
-                      <TableCell style={tableCellStyle}>
-                        {row.company}
-                      </TableCell>
-                      <TableCell align="center" style={tableCellStyle}>
-                        {row.email}
-                      </TableCell>
-                      <TableCell align="center" style={tableCellStyle}>
-                        {row.phone}
-                      </TableCell>
-                      <TableCell align="center" style={tableCellStyle}>
-                        {/* <LockIcon /> */}
-                        {row.state}
-                      </TableCell>
-                      <TableCell style={tableCellStyle} align="center">
-                        <IconButton>
-                          <EditIcon
-                            onClick={() => openEdit(row)}
-                            fontSize="small"
-                          />
-                        </IconButton>
-                        <IconButton>
-                          <DeleteIcon
-                            onClick={() => deleteRow(row)}
-                            fontSize="small"
-                          />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell style={tableCellStyle} align="center">
-                        <Button
-                          variant="contained"
-                          // onClick={() =>
-                          //   navigate(`/dashboard/viewcontact/${row._id}`, {
-                          //     replace: true,
-                          //   })
-                          onClick={() =>
-                            dispatch({
-                              type: ACTIONS.NEW_TAB,
-                              payload: {
-                                id: row._id,
-                                name: `${row.fName} ${row.lName}`,
-                              },
-                            })
-                          }
-                        >
-                          View
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                          <Avatar
+                            style={{
+                              width: "42px",
+                              height: "42px",
+                              marginRight: "10px",
+                              textTransform: "uppercase",
+                            }}
+                          >
+                            {row.fName.slice(0, 1)}
+                            {row.lName.slice(0, 1)}
+                          </Avatar>
+                          <div>
+                            <p style={{ fontWeight: "bold" }}>
+                              {row.fName} {row.lName}
+                            </p>
+                          </div>
+                        </TableCell>
+                        <TableCell style={tableCellStyle}>
+                          {row.company}
+                        </TableCell>
+                        <TableCell align="center" style={tableCellStyle}>
+                          {row.email}
+                        </TableCell>
+                        <TableCell align="center" style={tableCellStyle}>
+                          {row.phone}
+                        </TableCell>
+                        <TableCell align="center" style={tableCellStyle}>
+                          {/* <LockIcon /> */}
+                          {row.state}
+                        </TableCell>
+                        <TableCell style={tableCellStyle} align="center">
+                          <IconButton>
+                            <EditIcon
+                              onClick={() => openEdit(row)}
+                              fontSize="small"
+                            />
+                          </IconButton>
+                          <IconButton>
+                            <DeleteIcon
+                              onClick={() => deleteRow(row)}
+                              fontSize="small"
+                            />
+                          </IconButton>
+                        </TableCell>
+                        <TableCell style={tableCellStyle} align="center">
+                          <Link
+                            to="test1"
+                            spy={true}
+                            smooth={true}
+                            offset={50}
+                            duration={500}
+                          >
+                            <Button
+                              variant="contained"
+                              onClick={() =>
+                                dispatch({
+                                  type: ACTIONS.NEW_TAB,
+                                  payload: {
+                                    id: row._id,
+                                    name: `${row.fName} ${row.lName}`,
+                                  },
+                                })
+                              }
+                            >
+                              View
+                            </Button>
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>
           </Scrollbar>
-        </Card>
+          <TablePagination
+            style={{ boxShadow: "none" }}
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={allContacts.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </div>
 
         <Dialog
           open={open}
@@ -763,9 +795,9 @@ const ContactSection = () => {
           </DialogActions>
         </Dialog>
       </div>
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: "20px" }} name="test1" className="element">
         <TabContext value={valueTab}>
-          <Paper elevation={2}>
+          <div style={{ boxShadow: "none" }}>
             <TabList
               onChange={handleChangeTab}
               variant="scrollable"
@@ -795,7 +827,7 @@ const ContactSection = () => {
                 />
               ))}
             </TabList>
-          </Paper>
+          </div>
           ​
           {tabs.length > 0 && (
             <TabPanel value={valueTab}>
