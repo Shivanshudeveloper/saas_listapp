@@ -79,7 +79,7 @@ export default function Router() {
       children: [
         { path: "/", element: <Navigate to="/dashboard/search" replace /> },
         { path: "search", element: <GeneralApp /> },
-        { path: "viewcontact/:id", element: <ViewContact /> },
+        // { path: "viewcontact/:id", element: <ViewContact /> },
         { path: "viewcompany/:id", element: <ViewCompany /> },
         { path: "company", element: <GeneralEcommerce /> },
         { path: "tasks", element: <Tasks /> },

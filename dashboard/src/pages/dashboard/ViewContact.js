@@ -17,8 +17,8 @@ import {
 import SwipeableViews from "react-swipeable-views";
 import { useTheme } from "@material-ui/core/styles";
 
-const ViewContact = () => {
-  const { id } = useParams();
+const ViewContact = ({ id }) => {
+  // const { id } = useParams();
   const [contact, setContact] = useState({});
   useEffect(async () => {
     await axios
@@ -27,7 +27,7 @@ const ViewContact = () => {
         setContact(res.data[0]);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [id]);
 
   const [value, setValue] = useState(0);
   const theme = useTheme();

@@ -77,6 +77,7 @@ router.post("/searchcontact", async (req, res) => {
 router.get("/getcontact/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const contact = await Contact_Model.find({ _id: id });
     res.status(201).json(contact);
   } catch (error) {

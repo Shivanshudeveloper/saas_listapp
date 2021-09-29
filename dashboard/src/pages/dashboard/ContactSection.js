@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import {
   Box,
   Card,
@@ -43,7 +43,17 @@ import axios from "axios";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Navigate, useNavigate } from "react-router";
+// import TabView from "./TabView";
+import Tab from "@material-ui/core/Tab";
+import NoteAddIcon from "@material-ui/icons/NoteAdd";
+import TabContext from "@material-ui/lab/TabContext";
+import TabList from "@material-ui/lab/TabList";
+import TabPanel from "@material-ui/lab/TabPanel";
+import Cancel from "@material-ui/icons/Cancel";
+import ViewContact from "./ViewContact";
+
 let allfiltertags = [];
+
 const ContactSection = () => {
   const [open, setOpen] = useState(false);
   const [allContacts, setAllContacts] = useState([]);
@@ -242,6 +252,42 @@ const ContactSection = () => {
       .catch((err) => console.log(err));
   };
 
+  function tabManagement(tabs, action) {
+    switch (action.type) {
+      case ACTIONS.NEW_TAB:
+        const addNote = {
+          id: tabs.length + 1,
+          valueTab: valueTab + 1,
+          details: {
+            title: action.payload.name,
+            content: action.payload.id,
+          },
+        };
+        return [...tabs, addNote];
+      case ACTIONS.CLOSE_TAB:
+        return tabs.filter((tab) => tab.id != action.payload.id);
+      case ACTIONS.SET_ACTIVE_TAB:
+        return setValueTab(action.payload.newValue);
+      default:
+        return tabs;
+    }
+  }
+
+  const ACTIONS = {
+    NEW_TAB: "newTab",
+    CLOSE_TAB: "closeTab",
+    SET_ACTIVE_TAB: "setActiveTab",
+  };
+
+  const [valueTab, setValueTab] = useState(1);
+  let initialTabs = [];
+  const [tabs, dispatch] = useReducer(tabManagement, initialTabs);
+  useEffect(() => {
+    tabs.length > 0 ? setValueTab(tabs[tabs.length - 1].id) : setValueTab(0);
+  }, [tabs]);
+  const handleChangeTab = (event, newValue) => {
+    setValueTab(newValue);
+  };
   return (
     <>
       <Snackbar
@@ -629,9 +675,17 @@ const ContactSection = () => {
                       <TableCell style={tableCellStyle} align="center">
                         <Button
                           variant="contained"
+                          // onClick={() =>
+                          //   navigate(`/dashboard/viewcontact/${row._id}`, {
+                          //     replace: true,
+                          //   })
                           onClick={() =>
-                            navigate(`/dashboard/viewcontact/${row._id}`, {
-                              replace: true,
+                            dispatch({
+                              type: ACTIONS.NEW_TAB,
+                              payload: {
+                                id: row._id,
+                                name: `${row.fName} ${row.lName}`,
+                              },
                             })
                           }
                         >
@@ -708,6 +762,52 @@ const ContactSection = () => {
             </Button>
           </DialogActions>
         </Dialog>
+      </div>
+      <div style={{ marginTop: "20px" }}>
+        <TabContext value={valueTab}>
+          <Paper elevation={2}>
+            <TabList
+              onChange={handleChangeTab}
+              variant="scrollable"
+              scrollButtons="auto"
+              aria-label="scrollable auto tabs example"
+            >
+              {tabs.map((tab) => (
+                <Tab
+                  component="div"
+                  key={tab.id}
+                  label={
+                    <span>
+                      {tab.details.title}
+                      <IconButton
+                        onClick={() =>
+                          dispatch({
+                            type: ACTIONS.CLOSE_TAB,
+                            payload: { id: tab.id },
+                          })
+                        }
+                      >
+                        <Cancel />
+                      </IconButton>
+                    </span>
+                  }
+                  value={tab.id}
+                />
+              ))}
+            </TabList>
+          </Paper>
+          ​
+          {tabs.length > 0 && (
+            <TabPanel value={valueTab}>
+              <ViewContact
+                id={
+                  tabs.filter((t) => t.valueTab === valueTab)[0]?.details
+                    ?.content
+                }
+              />
+            </TabPanel>
+          )}
+        </TabContext>
       </div>
     </>
   );
