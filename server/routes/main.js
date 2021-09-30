@@ -113,6 +113,19 @@ router.delete("/deletecompany/:id", async (req, res) => {
   }
 });
 
+router.patch("/editcompany", async (req, res) => {
+  const formData = req.body;
+  try {
+    await Company_Model.findByIdAndUpdate(formData._id, formData, {
+      new: true,
+      useFindAndModify: false,
+    });
+    res.status(201).json({ message: "Updated" });
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
 router.post("/filtercontact", async (req, res) => {
   try {
     const { filterQuery } = req.body;

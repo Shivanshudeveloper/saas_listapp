@@ -129,7 +129,7 @@ export default function TaskTable() {
       .then((res) => {
         console.log(res.data);
         handleCloseAdd();
-        getTasks();
+        getcomingtasks();
         setFormData(initialState);
       })
       .catch((err) => console.log(err));
@@ -137,7 +137,7 @@ export default function TaskTable() {
   const [allTasks, setAllTasks] = useState([]);
 
   useEffect(() => {
-    getTasks();
+    getcomingtasks();
   }, []);
 
   const getcompletedtasks = async () => {
@@ -171,7 +171,7 @@ export default function TaskTable() {
     await axios
       .delete(`${API_SERVICE}/deletetask/${id}`)
       .then(() => {
-        getTasks();
+        getcomingtasks();
       })
       .catch((err) => console.log(err));
   };
@@ -181,7 +181,7 @@ export default function TaskTable() {
       .patch(`${API_SERVICE}/completetask/${id}`)
       .then((res) => {
         console.log(res.data);
-        getTasks();
+        getcomingtasks();
       })
       .catch((err) => console.log(err));
   };
@@ -190,7 +190,7 @@ export default function TaskTable() {
       .patch(`${API_SERVICE}/notcompletetask/${id}`)
       .then((res) => {
         console.log(res.data);
-        getTasks();
+        getcomingtasks();
       })
       .catch((err) => console.log(err));
   };
@@ -237,7 +237,7 @@ export default function TaskTable() {
       })
       .then((res) => {
         handleCloseAdd();
-        getTasks();
+        getcomingtasks();
         setFormData(initialState);
       })
       .catch((err) => console.log(err));
@@ -247,7 +247,7 @@ export default function TaskTable() {
 
   const handleClickOpen = () => {
     setAllfiltertags([]);
-    getTasks();
+    getcomingtasks();
     setOpen(true);
   };
 
@@ -300,16 +300,19 @@ export default function TaskTable() {
 
   const [allfiltertags, setAllfiltertags] = useState([]);
   const removeFilterTag = (tag) => {
-    getTasks();
+    getcomingtasks();
     let index = allfiltertags.indexOf(tag);
     allfiltertags.splice(index, 1);
   };
+  console.log(allfiltertags);
 
   const completedTypes = [{ name: "Completed" }, { name: "Not Completed" }];
 
   const [searchField, setSearchField] = useState("");
   const search = () => {
+    setSearchField("");
     if (searchField !== "") {
+      setAllfiltertags((prev) => [...prev, searchField]);
       axios
         .post(`${API_SERVICE}/searchtasks`, {
           searchField,
@@ -732,7 +735,10 @@ export default function TaskTable() {
 
           <Button
             variant="outlined"
-            onClick={() => getTasks()}
+            onClick={() => {
+              getcomingtasks();
+              setAllfiltertags([]);
+            }}
             style={{ marginLeft: "20px" }}
           >
             Refresh
@@ -772,8 +778,9 @@ export default function TaskTable() {
             <IconButton
               sx={{ p: 1 }}
               onClick={() => {
-                getTasks();
+                getcomingtasks();
                 setSearchField("");
+                setAllfiltertags([]);
               }}
             >
               <RefreshIcon />

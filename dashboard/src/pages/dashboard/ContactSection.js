@@ -196,7 +196,9 @@ const ContactSection = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const search = () => {
+    setSearchQuery("");
     if (searchQuery !== "") {
+      allfiltertags.push(searchQuery);
       axios
         .post(`${API_SERVICE}/searchcontact`, {
           searchQuery,
@@ -594,6 +596,7 @@ const ContactSection = () => {
                 onClick={() => {
                   getContacts();
                   setSearchQuery("");
+                  allfiltertags = [];
                 }}
               >
                 <RefreshIcon />

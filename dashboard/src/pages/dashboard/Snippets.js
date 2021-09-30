@@ -112,19 +112,32 @@ export default function Templates() {
   }, [value]);
 
   const addSnippet = async () => {
-    await axios
-      .post(`${API_SERVICE}/addsnippet`, formData)
-      .then((res) => {
-        console.log(res);
-        handleClickS();
-        setFormData(initialState);
-        handleClose();
-        getSnippets();
-      })
-      .catch((err) => console.log(err));
+    if (
+      formData.name === "" ||
+      formData.subject === "" ||
+      formData.description === "" ||
+      formData.tag === ""
+    ) {
+      handleClickS();
+      setMessage("Some Fields are empty");
+    } else {
+      await axios
+        .post(`${API_SERVICE}/addsnippet`, formData)
+        .then((res) => {
+          console.log(res);
+          handleClickS();
+          setMessage("Snippet Added");
+          setFormData(initialState);
+          handleClose();
+          getSnippets();
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const [allSnippets, setAllSnippets] = useState([]);
+
+  const [message, setMessage] = useState("");
 
   const getSnippets = async () => {
     setarchivestatus(false);
@@ -180,7 +193,7 @@ export default function Templates() {
         open={openS}
         autoHideDuration={6000}
         onClose={handleCloseS}
-        message="Snippet Added"
+        message={message}
         action={
           <React.Fragment>
             <IconButton

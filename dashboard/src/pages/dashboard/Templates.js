@@ -131,17 +131,30 @@ export default function Templates() {
       .catch((err) => console.log(err));
   };
 
+  const [message, setMessage] = useState("");
+
   const addTemplate = async () => {
-    await axios
-      .post(`${API_SERVICE}/addtemplate`, formData)
-      .then((res) => {
-        console.log(res);
-        setFormData(initialState);
-        handleClose();
-        handleClickS();
-        getTemplates();
-      })
-      .catch((err) => console.log(err));
+    if (
+      formData.name === "" ||
+      formData.subject === "" ||
+      formData.description === "" ||
+      formData.tag === ""
+    ) {
+      handleClickS();
+      setMessage("Some Fields are empty");
+    } else {
+      await axios
+        .post(`${API_SERVICE}/addtemplate`, formData)
+        .then((res) => {
+          console.log(res);
+          setFormData(initialState);
+          handleClose();
+          handleClickS();
+          setMessage("Template Added");
+          getTemplates();
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const [allTemplates, setAllTemplates] = useState([]);
@@ -206,7 +219,7 @@ export default function Templates() {
         open={openS}
         autoHideDuration={6000}
         onClose={handleCloseS}
-        message="Template Added"
+        message={message}
         action={
           <React.Fragment>
             <IconButton

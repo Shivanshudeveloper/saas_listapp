@@ -233,7 +233,9 @@ export default function TemplatePersonal({
     // const [hasDeleted, setHasDeleted] = useState(false);
 
     const search = () => {
+      setSearchQuery("");
       if (searchQuery !== "") {
+        allfiltertags.push(searchQuery);
         axios
           .post(`${API_SERVICE}/searchtemplate`, {
             searchQuery,
@@ -468,21 +470,27 @@ export default function TemplatePersonal({
     };
 
     const handleForce = async (data, fileInfo) => {
-      setFile(data);
-      setMessage("CSV Uploaded");
-      var finalData = [];
-      var type = "personal";
-      type = value === 0 ? "personal" : value === 1 ? "team" : "library";
-      data.map((d) => finalData.push({ ...d, tag: d?.tag?.split(","), type }));
-      // setTemplates(finalData);
+      if (fileInfo.type === "application/vnd.ms-excel") {
+        setFile(data);
+        setMessage("CSV Uploaded");
+        var finalData = [];
+        var type = "personal";
+        type = value === 0 ? "personal" : value === 1 ? "team" : "library";
+        data.map((d) =>
+          finalData.push({ ...d, tag: d?.tag?.split(","), type })
+        );
+        // setTemplates(finalData);
 
-      await axios
-        .post(`${API_SERVICE}/addtemplatefromexcel`, finalData)
-        .then((res) => {
-          setUseFilter(false);
-          getTemplates();
-        })
-        .catch((err) => console.log(err));
+        await axios
+          .post(`${API_SERVICE}/addtemplatefromexcel`, finalData)
+          .then((res) => {
+            setUseFilter(false);
+            getTemplates();
+          })
+          .catch((err) => console.log(err));
+      } else {
+        setMessage("Please upload a CSV file!!");
+      }
     };
 
     const archiveRow = () => {

@@ -173,7 +173,9 @@ export default function SnippetPersonal({
     const [searchQuery, setSearchQuery] = useState("");
 
     const search = () => {
+      setSearchQuery("");
       if (searchQuery !== "") {
+        allfiltertags.push(searchQuery);
         axios
           .post(`${API_SERVICE}/searchsnippet`, {
             searchQuery,
@@ -567,7 +569,12 @@ export default function SnippetPersonal({
                   <SearchIcon />
                 </IconButton>
                 {allSnippets.length !== snippets.length && (
-                  <Button onClick={() => setSnippets(allSnippets)}>
+                  <Button
+                    onClick={() => {
+                      setSnippets(allSnippets);
+                      allfiltertags = [];
+                    }}
+                  >
                     Reset
                   </Button>
                 )}

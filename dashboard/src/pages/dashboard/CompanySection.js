@@ -147,7 +147,7 @@ const CompanySection = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const GridCompany = ({ label, name }) => {
+  const GridCompany = ({ label, name, value }) => {
     return (
       <Grid item md={6}>
         <TextField
@@ -158,7 +158,7 @@ const CompanySection = () => {
           fullWidth
           name={name}
           onChange={handleChange}
-          value={formData.name}
+          value={value}
         />
       </Grid>
     );
@@ -210,13 +210,30 @@ const CompanySection = () => {
     }
   };
 
-  const editContact = (contact) => {
-    setFormData(contact);
+  const [isEdit, setIsEdit] = useState("");
+
+  const openEdit = (row) => {
+    setIsEdit(row._id);
+    setFormData(row);
+    handleClickOpenDialog();
+  };
+
+  const editCompany = async (_id) => {
+    await axios
+      .patch(`${API_SERVICE}/editcompany`, formData)
+      .then((res) => {
+        console.log(res);
+        handleCloseDialog();
+        getCompanies();
+      })
+      .catch((err) => console.log(err));
   };
 
   const [searchQuery, setSearchQuery] = useState("");
   const search = () => {
+    setSearchQuery("");
     if (searchQuery !== "") {
+      allfiltertags.push(searchQuery);
       axios
         .post(`${API_SERVICE}/searchcompany`, {
           searchQuery,
@@ -373,22 +390,75 @@ const CompanySection = () => {
                   }
                 /> */}
                   <Grid container spacing={2}>
-                    {GridCompany({ label: "Website", name: "website" })}
-                    {GridCompany({ label: "Name", name: "fullName" })}
-                    {GridCompany({ label: "Facebook", name: "facebook" })}
-                    {GridCompany({ label: "Twitter", name: "twitter" })}
-                    {GridCompany({ label: "Phone", name: "phone" })}
-                    {GridCompany({ label: "Industry", name: "industry" })}
-                    {GridCompany({ label: "About", name: "about" })}
-                    {GridCompany({ label: "Street Address", name: "address" })}
-                    {GridCompany({ label: "City", name: "city" })}
-                    {GridCompany({ label: "State", name: "state" })}
-                    {GridCompany({ label: "Country", name: "country" })}
-                    {GridCompany({ label: "Code", name: "code" })}
-                    {GridCompany({ label: "Linkedin", name: "linkedin" })}
+                    {GridCompany({
+                      label: "Website",
+                      name: "website",
+                      value: formData.website,
+                    })}
+                    {GridCompany({
+                      label: "Name",
+                      name: "fullName",
+                      value: formData.fullName,
+                    })}
+                    {GridCompany({
+                      label: "Facebook",
+                      name: "facebook",
+                      value: formData.facebook,
+                    })}
+                    {GridCompany({
+                      label: "Twitter",
+                      name: "twitter",
+                      value: formData.twitter,
+                    })}
+                    {GridCompany({
+                      label: "Phone",
+                      name: "phone",
+                      value: formData.phone,
+                    })}
+                    {GridCompany({
+                      label: "Industry",
+                      name: "industry",
+                      value: formData.industry,
+                    })}
+                    {GridCompany({
+                      label: "About",
+                      name: "about",
+                      value: formData.about,
+                    })}
+                    {GridCompany({
+                      label: "Street Address",
+                      name: "address",
+                      value: formData.address,
+                    })}
+                    {GridCompany({
+                      label: "City",
+                      name: "city",
+                      value: formData.city,
+                    })}
+                    {GridCompany({
+                      label: "State",
+                      name: "state",
+                      value: formData.state,
+                    })}
+                    {GridCompany({
+                      label: "Country",
+                      name: "country",
+                      value: formData.country,
+                    })}
+                    {GridCompany({
+                      label: "Code",
+                      name: "code",
+                      value: formData.code,
+                    })}
+                    {GridCompany({
+                      label: "Linkedin",
+                      name: "linkedin",
+                      value: formData.linkedin,
+                    })}
                     {GridCompany({
                       label: "Number of Employees",
                       name: "numOfEmps",
+                      value: formData.numOfEmps,
                     })}
                     <Grid item md={12}>
                       <center>
@@ -433,12 +503,13 @@ const CompanySection = () => {
                 <Button onClick={handleCloseDialog} color="primary">
                   Cancel
                 </Button>
+
                 <Button
-                  onClick={addCompany}
+                  onClick={isEdit !== "" ? editCompany : addCompany}
                   color="primary"
                   variant="contained"
                 >
-                  Add
+                  {isEdit !== "" ? "Edit" : "Add"}
                 </Button>
               </DialogActions>
             </Dialog>
@@ -496,7 +567,7 @@ const CompanySection = () => {
                 }}
               >
                 <InputBase
-                  placeholder="Search Contacts"
+                  placeholder="Search Companies"
                   style={{ width: "250px" }}
                   value={searchQuery}
                   onKeyPress={(e) => {
@@ -516,6 +587,7 @@ const CompanySection = () => {
                   onClick={() => {
                     getCompanies();
                     setSearchQuery("");
+                    allfiltertags = [];
                   }}
                 >
                   <RefreshIcon />
@@ -583,7 +655,7 @@ const CompanySection = () => {
                           <TableCell align="center" style={tableCellStyle}>
                             <IconButton>
                               <EditIcon
-                                onClick={() => editContact(row)}
+                                onClick={() => openEdit(row)}
                                 fontSize="small"
                               />
                             </IconButton>
