@@ -42,6 +42,7 @@ export const PATH_DASHBOARD = {
     viewCompany: path(ROOTS_DASHBOARD, "/viewcompany/:id"),
     contacts: path(ROOTS_DASHBOARD, "/contacts"),
     tasks: path(ROOTS_DASHBOARD, "/tasks"),
+    sequences: path(ROOTS_DASHBOARD, "/sequences"),
     templates: path(ROOTS_DASHBOARD, "/templates"),
     snippets: path(ROOTS_DASHBOARD, "/snippets"),
   },

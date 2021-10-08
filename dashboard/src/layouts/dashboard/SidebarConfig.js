@@ -66,6 +66,11 @@ const sidebarConfig = [
         path: PATH_DASHBOARD.general?.snippets,
         icon: ICONS.kanban,
       },
+      {
+        title: "Sequences",
+        path: PATH_DASHBOARD.general?.sequences,
+        icon: ICONS.company,
+      },
     ],
   },
 
