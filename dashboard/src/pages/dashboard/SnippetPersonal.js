@@ -158,7 +158,15 @@ export default function SnippetPersonal({
   const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
     const { numSelected } = props;
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
     const [openFilter, setOpenFilter] = useState(false);
 
     const handleClickOpenFilter = () => {
@@ -318,6 +326,56 @@ export default function SnippetPersonal({
       setOpenS(false);
     };
 
+    const [open, setOpen] = React.useState(false);
+    const [isAdd, setIsAdd] = React.useState(false);
+    const [tag, setTag] = React.useState("");
+    const [tagDisplay, setTagDisplay] = React.useState([]);
+
+    const handleClickOpen = (e) => {
+      if (e.target.innerText === "Add") setIsAdd(true);
+      if (e.target.innerText === "Remove") {
+        setIsAdd(false);
+        selected.map((each) => {
+          const index = allSnippets.find((temp, index) => {
+            if (temp._id == each) return true;
+          });
+          setTagDisplay(index.tag);
+        });
+      }
+      setOpen(true);
+    };
+    const handleSubmitTag = () => {
+      if (isAdd === true) {
+        axios
+          .patch(`${API_SERVICE}/addtagtosnippet`, { tag, selected, type })
+          .then((res) => {
+            getSnippets();
+            setOpen(false);
+            handleClose();
+            setTag("");
+          })
+          .catch((err) => console.log(err));
+      } else {
+        axios
+          .patch(`${API_SERVICE}/removetagfromsnippet`, {
+            tag,
+            selected,
+            type,
+          })
+          .then((res) => {
+            getSnippets();
+            setOpen(false);
+            handleClose();
+            setTag("");
+          })
+          .catch((err) => console.log(err));
+      }
+    };
+
+    const handleCloseDialog = () => {
+      setOpen(false);
+    };
+
     return (
       <>
         <Snackbar
@@ -448,6 +506,89 @@ export default function SnippetPersonal({
                     </Tooltip>
                   </>
                 )}
+
+                {/* TAGS */}
+
+                <Tooltip title="Add/Remove Tags">
+                  <IconButton>
+                    <LocalOfferIcon onClick={handleClick} />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClickOpen}>Add</MenuItem>
+                  <Dialog
+                    open={open}
+                    onClose={handleCloseDialog}
+                    aria-labelledby="form-dialog-title"
+                  >
+                    <DialogTitle
+                      id="form-dialog-title"
+                      style={{ width: "500px" }}
+                    >
+                      {isAdd ? "Add Tag" : "Remove Tag"}
+                    </DialogTitle>
+                    <DialogContent>
+                      {isAdd ? (
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          id="name"
+                          label="Tag"
+                          type="text"
+                          fullWidth
+                          value={tag}
+                          onChange={(e) => setTag(e.target.value)}
+                        />
+                      ) : (
+                        <div>
+                          {tagDisplay.map((tag) => (
+                            <Chip
+                              label={tag}
+                              style={{
+                                marginLeft: "10px",
+                                background: "lightblue",
+                              }}
+                            />
+                          ))}
+                          <hr style={{ margin: "15px 0" }} />
+                          <Typography
+                            variant="body1"
+                            style={{ margin: "10px 0" }}
+                          >
+                            Enter Tag Name
+                          </Typography>
+                          <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Tag"
+                            type="text"
+                            fullWidth
+                            value={tag}
+                            onChange={(e) => setTag(e.target.value)}
+                          />
+                        </div>
+                      )}
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseDialog} color="primary">
+                        Cancel
+                      </Button>
+                      <Button onClick={handleSubmitTag} color="primary">
+                        {isAdd ? "Add" : "Remove "}
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                  <MenuItem onClick={handleClickOpen}>Remove</MenuItem>
+                </Menu>
+
+                {/* TAGS */}
+
                 <Dialog
                   open={openEdit}
                   onClose={handleCloseEdit}

@@ -542,6 +542,52 @@ router.patch("/removetagfromtemplate", async (req, res) => {
     }
   });
 });
+router.patch("/addtagtosnippet", async (req, res) => {
+  const { tag, selected, type } = req.body;
+
+  const promiseArray = selected.map(async (each) => {
+    return new Promise(async (resolve, reject) => {
+      const template = await Snippet_Model.find({ _id: each });
+      await template[0].tag.push(tag);
+      await Snippet_Model.findByIdAndUpdate(each, template[0], {
+        new: true,
+        useFindAndModify: false,
+      });
+      return resolve();
+    });
+  });
+  Promise.all(promiseArray).then(async () => {
+    try {
+      const allTemplates = await Snippet_Model.find({ type: type });
+      res.status(201).json(allTemplates);
+    } catch (error) {
+      res.status(409).json({ message: error.message });
+    }
+  });
+});
+
+router.patch("/removetagfromsnippet", async (req, res) => {
+  const { tag, selected, type } = req.body;
+  const promiseArray = selected.map(async (each) => {
+    return new Promise(async (resolve, reject) => {
+      const template = await Snippet_Model.find({ _id: each });
+      template[0].tag = template[0].tag.filter((t) => t !== String(tag));
+      await Snippet_Model.findByIdAndUpdate(each, template[0], {
+        new: true,
+        useFindAndModify: false,
+      });
+      return resolve();
+    });
+  });
+  Promise.all(promiseArray).then(async () => {
+    try {
+      const allTemplates = await Snippet_Model.find({ type: type });
+      res.status(201).json(allTemplates);
+    } catch (error) {
+      res.status(409).json({ message: error.message });
+    }
+  });
+});
 
 router.get("/getalltemplates/:type", async (req, res) => {
   const { type: type } = req.params;
