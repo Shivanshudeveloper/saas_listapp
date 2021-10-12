@@ -41,3 +41,16 @@
   cursor: pointer;
   width: 100%;
 }
+
+.MuiStep-vertical {
+  margin-top: 15px !important;
+}
+.MuiStepLabel-root {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.MuiStepLabel-alternativeLabel {
+  margin-top: 0 !important;
+  margin-left: 10px;
+}

@@ -14,6 +14,7 @@ const Company_Model = require("../models/Company");
 const Template_Model = require("../models/Templates");
 const Snippet_Model = require("../models/Snippet");
 const Task_Model = require("../models/Task");
+const Sequence_Model = require("../models/Sequences");
 
 function isNumeric(str) {
   if (typeof str != "string") return false; // we only process strings!
@@ -975,6 +976,153 @@ router.post("/archivetemplates", async (req, res) => {
       })
       .catch((err) => console.log(err));
   });
+});
+
+//SEQUENCES
+
+router.post("/newsequence", async (req, res) => {
+  const newSequence = new Sequence_Model();
+  try {
+    await newSequence.save();
+    res.status(201).json({ id: newSequence._id });
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
+router.post("/addtasksequence", async (req, res) => {
+  const { formData, option, value, sequenceId } = req.body;
+  const sequence = await Sequence_Model.findById(sequenceId);
+  console.log(sequence);
+  switch (value) {
+    case 0:
+      const newTask0 = {
+        type: formData.type0,
+        run: formData.run0,
+        checked: formData.checked0,
+        time: formData.time0,
+        templateName: formData.templateName0,
+        templateDesc: formData.templateDesc0,
+        option: option,
+        value,
+        stepNo: sequence.steps.length + 1,
+      };
+      try {
+        sequence.steps.push(newTask0);
+        await sequence.save();
+        console.log(sequence);
+        res.status(201).json(sequence);
+      } catch (error) {
+        res.status(409).json({ message: error.message });
+      }
+      break;
+    case 1:
+      const newTask1 = {
+        instruction: formData.instruction1,
+        run: formData.run1,
+        priority: formData.priority1,
+        option: option,
+        value,
+        stepNo: sequence.steps.length + 1,
+      };
+      try {
+        sequence.steps.push(newTask1);
+        await sequence.save();
+        console.log(sequence);
+        res.status(201).json(sequence);
+      } catch (error) {
+        res.status(409).json({ message: error.message });
+      }
+      break;
+    case 2:
+      const newTask2 = {
+        type: formData.type2,
+        notes: formData.notes2,
+        run: formData.run2,
+        priority: formData.priority2,
+        option: option,
+        value,
+        stepNo: sequence.steps.length + 1,
+      };
+      try {
+        sequence.steps.push(newTask2);
+        await sequence.save();
+        console.log(sequence);
+        res.status(201).json(sequence);
+      } catch (error) {
+        res.status(409).json({ message: error.message });
+      }
+      break;
+    case 3:
+      const newTask3 = {
+        type: formData.type3,
+        notes: formData.notes3,
+        run: formData.run3,
+        priority: formData.priority3,
+        option: option,
+        value,
+        stepNo: sequence.steps.length + 1,
+      };
+      try {
+        sequence.steps.push(newTask3);
+        await sequence.save();
+        console.log(sequence);
+        res.status(201).json(sequence);
+      } catch (error) {
+        res.status(409).json({ message: error.message });
+      }
+      break;
+    case 4:
+      const newTask4 = {
+        type: formData.type4,
+        message: formData.message4,
+        run: formData.run4,
+        checked: formData.checked4,
+        time: formData.time4,
+        option: option,
+        value,
+        stepNo: sequence.steps.length + 1,
+      };
+      try {
+        sequence.steps.push(newTask4);
+        await sequence.save();
+        console.log(sequence);
+        res.status(201).json(sequence);
+      } catch (error) {
+        res.status(409).json({ message: error.message });
+      }
+      break;
+  }
+});
+router.get("/gettasksequence/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log("id", id);
+  if (id !== undefined)
+    try {
+      const sequence = await Sequence_Model.findById(id);
+      res.status(201).json(sequence);
+    } catch (err) {
+      console.log(err);
+    }
+  else {
+    res.status(404);
+  }
+});
+router.delete("/deletesequence/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await Sequence_Model.findByIdAndDelete(id);
+    res.status(201).json({ message: "Deleted" });
+  } catch (err) {
+    res.status(404).json({ error: "Error" });
+    // console.log(err);
+  }
+});
+
+router.get("/getallsequence", async (req, res) => {
+  const sequence = await Sequence_Model.find();
+  res.status(201).json(sequence);
 });
 
 module.exports = router;

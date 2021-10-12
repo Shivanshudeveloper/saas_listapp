@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import faker from "faker";
-import renderHTML from "react-render-html";
 import {
   Checkbox,
   Table,
@@ -19,7 +18,12 @@ import {
   Autocomplete,
   Chip,
   Paper,
+  Card,
   InputBase,
+  StepLabel,
+  Step,
+  Stepper,
+  Switch,
 } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -49,6 +53,7 @@ import axios from "axios";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
+import renderHTML from "react-render-html";
 
 export default function SequencesTable() {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
@@ -94,6 +99,8 @@ export default function SequencesTable() {
     run0: "",
     checked0: false,
     time0: "",
+    templateName0: "",
+    templateDesc0: "",
     instruction1: "",
     run1: "",
     priority1: "",
@@ -113,51 +120,15 @@ export default function SequencesTable() {
   };
 
   const [formData, setFormData] = useState(initialState);
-  const handleChangeEditor = (content, editor) => {
+  const Desc = (content, editor) => {
     setFormData({ ...formData, desc2: content });
   };
 
-  const saveTask = async () => {
-    const option =
-      value === 0
-        ? "Note"
-        : value === 1
-        ? "Call Log"
-        : value === 2
-        ? "Email"
-        : "LinkedIn";
-    await axios
-      .post(`${API_SERVICE}/savetask`, {
-        formData,
-        option,
-        value,
-      })
-      .then((res) => {
-        console.log(res.data);
-        handleCloseAdd();
-        getcomingtasks();
-        setFormData(initialState);
-      })
-      .catch((err) => console.log(err));
-  };
   const [allTasks, setAllTasks] = useState([]);
-
-  useEffect(() => {
-    getcomingtasks();
-  }, []);
 
   const getcompletedtasks = async () => {
     // await axios
     //   .get(`${API_SERVICE}/getcompletedtasks`)
-    //   .then((res) => {
-    //     setAllTasks(res.data);
-    //   })
-    //   .catch((err) => console.log(err));
-  };
-
-  const getcomingtasks = async () => {
-    // await axios
-    //   .get(`${API_SERVICE}/getcomingtasks`)
     //   .then((res) => {
     //     setAllTasks(res.data);
     //   })
@@ -171,34 +142,6 @@ export default function SequencesTable() {
     //     setAllTasks(res.data);
     //   })
     //   .catch((err) => console.log(err));
-  };
-
-  const deleteRow = async (id) => {
-    await axios
-      .delete(`${API_SERVICE}/deletetask/${id}`)
-      .then(() => {
-        getcomingtasks();
-      })
-      .catch((err) => console.log(err));
-  };
-
-  const completeTask = async (id) => {
-    await axios
-      .patch(`${API_SERVICE}/completetask/${id}`)
-      .then((res) => {
-        console.log(res.data);
-        getcomingtasks();
-      })
-      .catch((err) => console.log(err));
-  };
-  const notCompleteTask = async (id) => {
-    await axios
-      .patch(`${API_SERVICE}/notcompletetask/${id}`)
-      .then((res) => {
-        console.log(res.data);
-        getcomingtasks();
-      })
-      .catch((err) => console.log(err));
   };
 
   const [isEdit, setIsEdit] = useState(false);
@@ -245,7 +188,7 @@ export default function SequencesTable() {
       })
       .then((res) => {
         handleCloseAdd();
-        getcomingtasks();
+        // getStepsSeq();
         setFormData(initialState);
       })
       .catch((err) => console.log(err));
@@ -253,11 +196,11 @@ export default function SequencesTable() {
 
   const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
-    setAllfiltertags([]);
-    getcomingtasks();
-    setOpen(true);
-  };
+  // const handleClickOpen = () => {
+  //   setAllfiltertags([]);
+  //   // getStepsSeq();
+  //   setOpen(true);
+  // };
 
   const handleClose = () => {
     setOpen(false);
@@ -308,11 +251,10 @@ export default function SequencesTable() {
 
   const [allfiltertags, setAllfiltertags] = useState([]);
   const removeFilterTag = (tag) => {
-    getcomingtasks();
+    // getStepsSeq();
     let index = allfiltertags.indexOf(tag);
     allfiltertags.splice(index, 1);
   };
-  console.log(allfiltertags);
 
   const completedTypes = [{ name: "Completed" }, { name: "Not Completed" }];
 
@@ -331,6 +273,99 @@ export default function SequencesTable() {
         .catch((err) => console.log(err));
     } else getContacts();
   };
+
+  const [addSeq, setAddSeq] = useState(false);
+  const [sequenceId, setSequenceId] = useState("");
+  const [sequence, setSequence] = useState([]);
+  const [allSequence, setAllSequence] = useState([]);
+  const [templates, setTemplates] = useState([]);
+
+  const addTaskSequence = async () => {
+    const option =
+      value === 0
+        ? "Email"
+        : value === 1
+        ? "Call"
+        : value === 2
+        ? "LinkedIn"
+        : value === 3
+        ? "Twitter"
+        : "SMS";
+    await axios
+      .post(`${API_SERVICE}/addtasksequence`, {
+        formData,
+        option,
+        value,
+        sequenceId,
+      })
+      .then((res) => {
+        console.log(res.data);
+        handleCloseAdd();
+        setFormData(initialState);
+        getStepsSeq(sequenceId);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const newSequence = async () => {
+    await axios
+      .post(`${API_SERVICE}/newsequence`)
+      .then((res) => {
+        console.log(res.data);
+        setSequenceId(res.data.id);
+        getStepsSeq(res.data.id);
+      })
+      .catch((err) => console.log(err));
+  };
+  const deleteRow = async (id) => {
+    await axios
+      .delete(`${API_SERVICE}/deletesequence/${id}`)
+      .then(() => {
+        getSeqs();
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const getStepsSeq = async (id) => {
+    if (id !== undefined)
+      await axios
+        .get(`${API_SERVICE}/gettasksequence/${id}`)
+        .then((res) => {
+          console.log(res.data);
+          setSequence(res.data);
+        })
+        .catch((err) => console.log(err));
+  };
+  const getSeqs = async () => {
+    await axios
+      .get(`${API_SERVICE}/getallsequence/`)
+      .then((res) => {
+        setAllSequence(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    getSeqs();
+  }, []);
+
+  const getAllTemplates = async () => {
+    await axios
+      .get(`${API_SERVICE}/getalltemplates/personal`)
+      .then((res) => {
+        setTemplates(res.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (addSeq === true) getStepsSeq();
+    if (addSeq === true && value === 0) getAllTemplates();
+  }, [addSeq]);
+
+  const handleChangeEditorDesc = (content, editor) => {
+    setFormData({ ...formData, templateDesc0: content });
+  };
+  console.log(sequence?.steps);
 
   return (
     <>
@@ -394,7 +429,7 @@ export default function SequencesTable() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={openTask} onClose={handleCloseAdd}>
+      <Dialog open={openTask} onClose={handleCloseAdd} maxWidth="md" fullWidth>
         <Container maxWidth="md">
           <div
             style={{
@@ -440,22 +475,6 @@ export default function SequencesTable() {
                       )}
                     />
                   </Grid>
-                  {/* <Grid item xs={12}>
-                    <TextField
-                      label="Due Date and Time"
-                      type="datetime-local"
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      value={value === 0 ? formData.date0 : formData.date1}
-                      onChange={(e) =>
-                        value === 0
-                          ? setFormData({ ...formData, date0: e.target.value })
-                          : setFormData({ ...formData, date1: e.target.value })
-                      }
-                    />
-                  </Grid> */}
                   <Grid item xs={12}>
                     <TextField
                       label="Run this step on day"
@@ -495,6 +514,56 @@ export default function SequencesTable() {
                       />
                     </Grid>
                   )}
+                  <br />
+                  TEMPLATE
+                  <Grid item xs={12}>
+                    <Autocomplete
+                      inputValue={formData.templateName0}
+                      onInputChange={(event, newValue) => {
+                        setFormData({ ...formData, templateName0: newValue });
+                      }}
+                      onChange={(event, newValue) => {
+                        setFormData({
+                          ...formData,
+                          templateDesc0: newValue.description,
+                          templateName0: newValue.name,
+                        });
+                      }}
+                      options={templates}
+                      getOptionLabel={(option) => `${option.name}`}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Template"
+                          variant="outlined"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Editor
+                      apiKey="azhogyuiz16q8om0wns0u816tu8k6517f6oqgs5mfl36hptu"
+                      plugins="wordcount"
+                      value={formData.templateDesc0}
+                      init={{
+                        height: 600,
+                        menubar: false,
+                        plugins: [
+                          "advlist autolink lists link image charmap print preview anchor",
+                          "searchreplace visualblocks code fullscreen",
+                          "insertdatetime media table paste code help wordcount",
+                        ],
+                        toolbar:
+                          "undo redo | formatselect | " +
+                          "bold italic backcolor | alignleft aligncenter " +
+                          "alignright alignjustify | bullist numlist outdent indent | " +
+                          "removeformat | help",
+                        content_style:
+                          "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                      }}
+                      onEditorChange={handleChangeEditorDesc}
+                    />
+                  </Grid>
                 </Grid>
               </DialogContent>
             </>
@@ -798,7 +867,7 @@ export default function SequencesTable() {
             Cancel
           </Button>
           <Button
-            onClick={isEdit ? editTask : saveTask}
+            onClick={addTaskSequence}
             color="primary"
             autoFocus
             variant="contained"
@@ -807,85 +876,128 @@ export default function SequencesTable() {
           </Button>
         </DialogActions>
       </Dialog>
-      <div
-        style={{
-          padding: "13px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h6">All Sequences</Typography>
-          <Button
+      <>
+        {!addSeq ? (
+          <div
+            style={{
+              padding: "13px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h6">All Sequences</Typography>
+              {/* <Button
             variant="outlined"
             onClick={handleClickOpen}
             startIcon={<FilterListIcon />}
             style={{ marginLeft: "20px" }}
           >
             Filter
-          </Button>
+          </Button> */}
 
-          <Button
-            variant="outlined"
-            onClick={() => {
-              getcomingtasks();
-              setAllfiltertags([]);
-            }}
-            style={{ marginLeft: "20px" }}
-          >
-            Refresh
-          </Button>
-        </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Button
-            variant="contained"
-            style={{ marginLeft: "20px" }}
-            onClick={handleClickAdd}
-          >
-            Add
-          </Button>
-          <Paper
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  getSeqs();
+                  setAllfiltertags([]);
+                }}
+                style={{ marginLeft: "20px" }}
+              >
+                Refresh
+              </Button>
+            </div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Button
+                variant="contained"
+                style={{ marginLeft: "20px" }}
+                onClick={() => {
+                  setAddSeq(true);
+                  newSequence();
+                }}
+              >
+                Add Sequence
+              </Button>
+              <Paper
+                style={{
+                  background: "#F4F6F8",
+                  marginLeft: "18px",
+                  paddingLeft: "5px",
+                }}
+              >
+                <InputBase
+                  placeholder="Search Sequences"
+                  style={{ width: "250px" }}
+                  value={searchField}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      search();
+                    }
+                  }}
+                  onChange={(e) => {
+                    setSearchField(e.target.value);
+                  }}
+                />
+                <IconButton sx={{ p: 1 }} onClick={search}>
+                  <SearchIcon />
+                </IconButton>
+                <IconButton
+                  sx={{ p: 1 }}
+                  onClick={() => {
+                    setSearchField("");
+                    setAllfiltertags([]);
+                  }}
+                >
+                  <RefreshIcon />
+                </IconButton>
+              </Paper>
+            </div>
+          </div>
+        ) : (
+          <div
             style={{
-              background: "#F4F6F8",
-              marginLeft: "18px",
-              paddingLeft: "5px",
+              padding: "13px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            <InputBase
-              placeholder="Search Sequences"
-              style={{ width: "250px" }}
-              value={searchField}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  search();
-                }
-              }}
-              onChange={(e) => {
-                setSearchField(e.target.value);
-              }}
-            />
-            <IconButton sx={{ p: 1 }} onClick={search}>
-              <SearchIcon />
-            </IconButton>
-            <IconButton
-              sx={{ p: 1 }}
-              onClick={() => {
-                getcomingtasks();
-                setSearchField("");
-                setAllfiltertags([]);
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
               }}
             >
-              <RefreshIcon />
-            </IconButton>
-          </Paper>
-        </div>
-      </div>
+              <Typography variant="h6">Add Steps</Typography>
+            </div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Button
+                variant="contained"
+                style={{ marginLeft: "20px" }}
+                onClick={handleClickAdd}
+              >
+                Add
+              </Button>
+              <Button
+                variant="contained"
+                style={{ marginLeft: "20px" }}
+                onClick={() => {
+                  setAddSeq(false);
+                  getSeqs();
+                }}
+              >
+                Go Back
+              </Button>
+            </div>
+          </div>
+        )}
+      </>
       <section style={{ margin: "10px" }}>
         {allfiltertags.length === 0 ? (
           <></>
@@ -905,93 +1017,139 @@ export default function SequencesTable() {
           </>
         )}
       </section>
-
-      <div style={{ marginBottom: "10px" }}>
-        <Button onClick={() => getcomingtasks()} style={{ marginLeft: "20px" }}>
-          Show Due
-        </Button>
-        <Button
-          onClick={() => getcompletedtasks()}
-          style={{ marginLeft: "20px" }}
-        >
-          Show Completed
-        </Button>
-      </div>
-      <Scrollbar>
-        <TableContainer sx={{ minWidth: 720 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {/* <TableCell /> */}
-                <TableCell>Action</TableCell>
-                <TableCell>Contact Name</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Date & Time</TableCell>
-                <TableCell align="center">Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allTasks.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell style={tableCellStyle} align="left">
-                    <IconButton onClick={() => startEdit(row)}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    {row.completed === true ? (
-                      <IconButton onClick={() => notCompleteTask(row._id)}>
-                        <ClearIcon fontSize="small" />
-                      </IconButton>
-                    ) : (
-                      <IconButton onClick={() => completeTask(row._id)}>
-                        <CheckIcon fontSize="small" />
-                      </IconButton>
-                    )}
-                    <IconButton onClick={() => deleteRow(row._id)}>
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                    {/* <IconButton>
-                      <EmailIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton>
-                      <MessageIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton>
-                      <CallIcon fontSize="small" />
-                    </IconButton> */}
-                  </TableCell>
-                  <TableCell style={tableCellStyle}>{row.contact}</TableCell>
-                  <TableCell style={tableCellStyle}>
-                    {row.description != "" && row.description}
-                    {row.notes != "" && row.notes}
-                  </TableCell>
-                  <TableCell style={tableCellStyle}>{row.type}</TableCell>
-                  <TableCell style={tableCellStyle}>{row?.date}</TableCell>
-                  <TableCell style={tableCellStyle} align="center">
-                    {row.completed === true ? (
-                      <Chip
-                        label="Completed"
-                        style={{
-                          marginLeft: "10px",
-                          background: "lightblue",
-                        }}
-                      />
-                    ) : (
-                      <Chip
-                        label="Not Completed"
-                        style={{
-                          marginLeft: "10px",
-                          background: "pink",
-                        }}
-                      />
-                    )}
-                  </TableCell>
+      {!addSeq && (
+        <Scrollbar>
+          <TableContainer sx={{ minWidth: 720 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Steps</TableCell>
+                  <TableCell>ID</TableCell>
+                  <TableCell align="center">Action</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Scrollbar>
+              </TableHead>
+              <TableBody>
+                {allSequence.map((row) => (
+                  <TableRow key={row._id}>
+                    <TableCell style={tableCellStyle}>Sequence</TableCell>
+                    <TableCell style={tableCellStyle}>
+                      {row?.steps?.length}
+                    </TableCell>
+                    <TableCell style={tableCellStyle}>{row._id}</TableCell>
+                    <TableCell style={tableCellStyle} align="center">
+                      <Button
+                        onClick={() => {
+                          setSequenceId(row._id);
+                          setAddSeq(true);
+                          getStepsSeq(row._id);
+                        }}
+                        variant="outlined"
+                      >
+                        View
+                      </Button>
+                      <IconButton onClick={() => deleteRow(row._id)}>
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Scrollbar>
+      )}
+      {addSeq && (
+        <Paper sx={{ p: 5 }}>
+          <Typography variant="h5" sx={{ mb: 3 }}>
+            Number Of Steps : {sequence?.steps?.length}
+          </Typography>
+          {/*  */}
+          {/* <Stepper activeStep={0} alternativeLabel orientation="vertical">
+            {sequence?.steps?.map((seq) => (
+              <Step key={seq?.stepNo}>
+                <StepLabel>{seq?.option}</StepLabel>
+              </Step>
+            ))}
+          </Stepper> */}
+          {sequence?.steps?.map((seq) => (
+            <Card
+              elevation={2}
+              style={{
+                margin: "10px",
+                padding: "10px",
+                borderRadius: "10px !important",
+              }}
+            >
+              <Typography variant="body1">
+                STEP #{seq?.stepNo} : {seq?.option} on day {seq?.run}
+              </Typography>
+              <br />
+              <div
+                style={{
+                  paddingLeft: "70px",
+                  marginLeft: "10px",
+                  // borderLeft:
+                  //   seq?.stepNo === sequence.steps.length
+                  //     ? "none"
+                  //     : "1px solid black",
+                }}
+              >
+                {seq?.value === 0 && (
+                  <div style={{ display: "flex" }}>
+                    <div>
+                      <Switch defaultChecked />
+                    </div>
+                    <div style={{ marginLeft: "10px" }}>
+                      <Typography variant="body2">
+                        {seq?.templateName}
+                      </Typography>
+                      <Typography variant="body2">
+                        {renderHTML(seq?.templateDesc)}
+                      </Typography>
+                    </div>
+                  </div>
+                )}
+                {seq?.value === 1 && (
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <div>
+                      <Typography variant="body2">
+                        Instuction: {seq?.instruction}
+                      </Typography>
+                    </div>
+                    <div style={{ marginLeft: "30px" }}>
+                      <Typography variant="body2">
+                        Priority: {seq?.priority}
+                      </Typography>
+                    </div>
+                  </div>
+                )}
+                {seq?.value > 1 && seq?.value < 4 && (
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <div>
+                      <Typography variant="body2">
+                        Notes: {seq?.notes}
+                      </Typography>
+                    </div>
+                    <div style={{ marginLeft: "30px" }}>
+                      <Typography variant="body2">
+                        Priority: {seq?.priority}
+                      </Typography>
+                    </div>
+                  </div>
+                )}
+                {seq?.value === 4 && (
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <Typography variant="body2">
+                      Message: {seq?.message}
+                    </Typography>
+                  </div>
+                )}
+              </div>
+            </Card>
+          ))}
+        </Paper>
+      )}
     </>
   );
 }
