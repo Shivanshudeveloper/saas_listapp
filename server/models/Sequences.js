@@ -5,6 +5,10 @@ const sequencechema = new mongoose.Schema({
     type: Array,
     required: false,
   },
+  prospects: {
+    type: Array,
+    required: false,
+  },
 });
 const sequence = mongoose.model("sequence", sequencechema);
 module.exports = sequence;

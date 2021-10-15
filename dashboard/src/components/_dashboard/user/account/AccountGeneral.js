@@ -1,4 +1,6 @@
 import * as Yup from "yup";
+import React, { useState, useEffect } from "react";
+
 import { useSnackbar } from "notistack";
 import { useCallback } from "react";
 import { Form, FormikProvider, useFormik } from "formik";
@@ -13,6 +15,9 @@ import {
   FormControlLabel,
   Typography,
   FormHelperText,
+  Radio,
+  RadioGroup,
+  Button,
 } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
 // hooks
@@ -23,6 +28,8 @@ import { UploadAvatar } from "../../../upload";
 import { fData } from "../../../../utils/formatNumber";
 //
 import countries from "../countries";
+import { API_SERVICE } from "../../../../config";
+import axios from "axios";
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +37,7 @@ export default function AccountGeneral() {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar } = useSnackbar();
   const { user, updateProfile } = useAuth();
+  const userId = "123456";
 
   const UpdateUserSchema = Yup.object().shape({
     displayName: Yup.string().required("Name is required"),
@@ -90,6 +98,45 @@ export default function AccountGeneral() {
     },
     [setFieldValue]
   );
+
+  const initialState = {
+    host: "",
+    port: "",
+    tls: "false",
+    username: "",
+    password: "",
+    userId: userId,
+    emails: [],
+  };
+  const [formData, setFormData] = useState(initialState);
+
+  const updateDetails = async () => {
+    await axios
+      .post(`${API_SERVICE}/updatedetails`, formData)
+      .then((res) => getDetails())
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    getDetails();
+  }, []);
+  const getDetails = async () => {
+    await axios
+      .get(`${API_SERVICE}/getdetails/${userId}`)
+      .then((res) => setFormData(res.data[0]))
+      .catch((err) => console.log(err));
+  };
+
+  const [email, setEmail] = useState("");
+
+  const addEmail = async () => {
+    await axios
+      .post(`${API_SERVICE}/adddetails/${userId}`, { email })
+      .then((res) => {
+        setEmail("");
+        getDetails();
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <FormikProvider value={formik}>
@@ -186,6 +233,92 @@ export default function AccountGeneral() {
                   Save Changes
                 </LoadingButton>
               </Box>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h6">Email Settings</Typography>
+              <Typography sx={{ mt: 2, mb: 2 }}>
+                Update your email provider settings
+              </Typography>
+              <TextField
+                label="Host"
+                fullWidth
+                value={formData.host}
+                onChange={(e) =>
+                  setFormData({ ...formData, host: e.target.value })
+                }
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Port"
+                fullWidth
+                value={formData.port}
+                onChange={(e) =>
+                  setFormData({ ...formData, port: e.target.value })
+                }
+                sx={{ mb: 2 }}
+              />
+              <Typography sx={{ mb: 2 }}>
+                Do you want to secure using TLS
+              </Typography>
+              <RadioGroup
+                row
+                sx={{ mb: 2 }}
+                value={formData.tls}
+                onChange={(e) =>
+                  setFormData({ ...formData, tls: e.target.value })
+                }
+              >
+                <FormControlLabel
+                  value="true"
+                  control={<Radio />}
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value="false"
+                  control={<Radio />}
+                  label="No"
+                />
+              </RadioGroup>
+              <TextField
+                label="Username"
+                fullWidth
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Password"
+                fullWidth
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                sx={{ mb: 2 }}
+              />
+              <Button variant="contained" onClick={updateDetails}>
+                Update
+              </Button>
+              {formData?._id?.length > 0 && (
+                <>
+                  <Typography sx={{ mb: 2, mt: 2 }}>
+                    Emails: {formData?.emails?.map((e) => `${e?.email}, `)}
+                  </Typography>
+                  <TextField
+                    label="Add Emails"
+                    fullWidth
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    sx={{ mb: 2 }}
+                  />
+                  <Button variant="contained" onClick={addEmail}>
+                    Add
+                  </Button>
+                </>
+              )}
             </Card>
           </Grid>
         </Grid>

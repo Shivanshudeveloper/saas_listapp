@@ -54,6 +54,11 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
 import renderHTML from "react-render-html";
+import PropTypes from "prop-types";
+
+import SequencesProspects from "./SequencesProspects";
+import SequencesEmail from "./SequencesEmail";
+import SequencesCall from "./SequencesCall";
 
 export default function SequencesTable() {
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
@@ -366,6 +371,47 @@ export default function SequencesTable() {
     setFormData({ ...formData, templateDesc0: content });
   };
   console.log(sequence?.steps);
+
+  //
+  //
+  //
+  //
+  //
+  function TabPanelNew(props) {
+    const { children, valueTab, index, ...other } = props;
+    return (
+      <div
+        role="tabpanel"
+        hidden={valueTab !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {valueTab === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+  TabPanelNew.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    valueTab: PropTypes.number.isRequired,
+  };
+
+  function a11yPropsTab(index) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  }
+
+  const [valueTab, setValueTab] = React.useState(0);
+  const handleChangeTab = (event, newValue) => {
+    setValueTab(newValue);
+  };
 
   return (
     <>
@@ -974,16 +1020,9 @@ export default function SequencesTable() {
                 alignItems: "center",
               }}
             >
-              <Typography variant="h6">Add Steps</Typography>
+              <Typography variant="h6">Sequences</Typography>
             </div>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <Button
-                variant="contained"
-                style={{ marginLeft: "20px" }}
-                onClick={handleClickAdd}
-              >
-                Add
-              </Button>
               <Button
                 variant="contained"
                 style={{ marginLeft: "20px" }}
@@ -1060,95 +1099,121 @@ export default function SequencesTable() {
         </Scrollbar>
       )}
       {addSeq && (
-        <Paper sx={{ p: 5 }}>
-          <Typography variant="h5" sx={{ mb: 3 }}>
-            Number Of Steps : {sequence?.steps?.length}
-          </Typography>
-          {/*  */}
-          {/* <Stepper activeStep={0} alternativeLabel orientation="vertical">
-            {sequence?.steps?.map((seq) => (
-              <Step key={seq?.stepNo}>
-                <StepLabel>{seq?.option}</StepLabel>
-              </Step>
-            ))}
-          </Stepper> */}
-          {sequence?.steps?.map((seq) => (
-            <Card
-              elevation={2}
-              style={{
-                margin: "10px",
-                padding: "10px",
-                borderRadius: "10px !important",
-              }}
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={valueTab}
+              onChange={handleChangeTab}
+              aria-label="basic tabs example"
             >
-              <Typography variant="body1">
-                STEP #{seq?.stepNo} : {seq?.option} on day {seq?.run}
-              </Typography>
-              <br />
-              <div
-                style={{
-                  paddingLeft: "70px",
-                  marginLeft: "10px",
-                  // borderLeft:
-                  //   seq?.stepNo === sequence.steps.length
-                  //     ? "none"
-                  //     : "1px solid black",
-                }}
+              <Tab label="Steps" {...a11yPropsTab(0)} />
+              <Tab label="Prospects" {...a11yPropsTab(1)} />
+              <Tab label="Emails" {...a11yPropsTab(2)} />
+              <Tab label="Calls" {...a11yPropsTab(3)} />
+            </Tabs>
+          </Box>
+          <TabPanelNew valueTab={valueTab} index={0}>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                variant="contained"
+                style={{ marginLeft: "20px" }}
+                onClick={handleClickAdd}
               >
-                {seq?.value === 0 && (
-                  <div style={{ display: "flex" }}>
-                    <div>
-                      <Switch defaultChecked />
-                    </div>
-                    <div style={{ marginLeft: "10px" }}>
-                      <Typography variant="body2">
-                        {seq?.templateName}
-                      </Typography>
-                      <Typography variant="body2">
-                        {renderHTML(seq?.templateDesc)}
-                      </Typography>
-                    </div>
+                Add
+              </Button>
+            </div>
+            <Paper sx={{ p: 5 }}>
+              <Typography variant="h5" sx={{ mb: 3 }}>
+                Number Of Steps : {sequence?.steps?.length}
+              </Typography>
+
+              {sequence?.steps?.map((seq) => (
+                <Card
+                  elevation={2}
+                  style={{
+                    margin: "10px",
+                    padding: "10px",
+                    borderRadius: "10px !important",
+                  }}
+                >
+                  <Typography variant="body1">
+                    STEP #{seq?.stepNo} : {seq?.option} on day {seq?.run}
+                  </Typography>
+                  <br />
+                  <div
+                    style={{
+                      paddingLeft: "70px",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    {seq?.value === 0 && (
+                      <div style={{ display: "flex" }}>
+                        <div>
+                          <Switch defaultChecked />
+                        </div>
+                        <div style={{ marginLeft: "10px" }}>
+                          <Typography variant="body2">
+                            {seq?.templateName}
+                          </Typography>
+                          <Typography variant="body2">
+                            {renderHTML(seq?.templateDesc)}
+                          </Typography>
+                        </div>
+                      </div>
+                    )}
+                    {seq?.value === 1 && (
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <div>
+                          <Typography variant="body2">
+                            Instuction: {seq?.instruction}
+                          </Typography>
+                        </div>
+                        <div style={{ marginLeft: "30px" }}>
+                          <Typography variant="body2">
+                            Priority: {seq?.priority}
+                          </Typography>
+                        </div>
+                      </div>
+                    )}
+                    {seq?.value > 1 && seq?.value < 4 && (
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <div>
+                          <Typography variant="body2">
+                            Notes: {seq?.notes}
+                          </Typography>
+                        </div>
+                        <div style={{ marginLeft: "30px" }}>
+                          <Typography variant="body2">
+                            Priority: {seq?.priority}
+                          </Typography>
+                        </div>
+                      </div>
+                    )}
+                    {seq?.value === 4 && (
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <Typography variant="body2">
+                          Message: {seq?.message}
+                        </Typography>
+                      </div>
+                    )}
                   </div>
-                )}
-                {seq?.value === 1 && (
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div>
-                      <Typography variant="body2">
-                        Instuction: {seq?.instruction}
-                      </Typography>
-                    </div>
-                    <div style={{ marginLeft: "30px" }}>
-                      <Typography variant="body2">
-                        Priority: {seq?.priority}
-                      </Typography>
-                    </div>
-                  </div>
-                )}
-                {seq?.value > 1 && seq?.value < 4 && (
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div>
-                      <Typography variant="body2">
-                        Notes: {seq?.notes}
-                      </Typography>
-                    </div>
-                    <div style={{ marginLeft: "30px" }}>
-                      <Typography variant="body2">
-                        Priority: {seq?.priority}
-                      </Typography>
-                    </div>
-                  </div>
-                )}
-                {seq?.value === 4 && (
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography variant="body2">
-                      Message: {seq?.message}
-                    </Typography>
-                  </div>
-                )}
-              </div>
-            </Card>
-          ))}
-        </Paper>
+                </Card>
+              ))}
+            </Paper>
+          </TabPanelNew>
+          <TabPanelNew valueTab={valueTab} index={1}>
+            <SequencesProspects
+              sequence={sequence?.steps}
+              sequenceId={sequenceId}
+            />
+          </TabPanelNew>
+          <TabPanelNew valueTab={valueTab} index={2}>
+            <SequencesEmail />
+          </TabPanelNew>
+          <TabPanelNew valueTab={valueTab} index={3}>
+            <SequencesCall />
+          </TabPanelNew>
+        </Box>
       )}
     </>
   );

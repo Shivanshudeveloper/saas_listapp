@@ -15,6 +15,7 @@ const Template_Model = require("../models/Templates");
 const Snippet_Model = require("../models/Snippet");
 const Task_Model = require("../models/Task");
 const Sequence_Model = require("../models/Sequences");
+const User_Model = require("../models/Users");
 
 function isNumeric(str) {
   if (typeof str != "string") return false; // we only process strings!
@@ -980,6 +981,35 @@ router.post("/archivetemplates", async (req, res) => {
 
 //SEQUENCES
 
+router.get("/getprospect/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const sequence = await Sequence_Model.findById(id);
+    res.status(201).json(sequence);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+router.post("/addprospect/:id", async (req, res) => {
+  const { id } = req.params;
+  const formData = req.body;
+  try {
+    const sequence = await Sequence_Model.findById(id);
+    sequence.prospects.push(formData);
+    const updatedSequence = await Sequence_Model.findByIdAndUpdate(
+      id,
+      sequence,
+      {
+        new: true,
+        useFindAndModify: false,
+      }
+    );
+    res.status(201).json({ message: "Updated" });
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
 router.post("/newsequence", async (req, res) => {
   const newSequence = new Sequence_Model();
   try {
@@ -1123,6 +1153,67 @@ router.delete("/deletesequence/:id", async (req, res) => {
 router.get("/getallsequence", async (req, res) => {
   const sequence = await Sequence_Model.find();
   res.status(201).json(sequence);
+});
+
+// //////////////
+// USER DETAILS
+// ///////////////
+
+router.get("/getdetails/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const userDetails = await User_Model.find({ userId: id });
+    res.status(201).json(userDetails);
+  } catch (error) {
+    console.log(error);
+    res.status(409).json({ message: error.message });
+  }
+});
+router.post("/adddetails/:id", async (req, res) => {
+  const { email } = req.body;
+  const { id } = req.params;
+  console.log(email);
+  try {
+    const userDetails = await User_Model.find({ userId: id });
+    userDetails[0].emails.push({ email: email });
+    const newUser = await User_Model.findByIdAndUpdate(
+      userDetails[0]._id,
+      userDetails[0],
+      {
+        new: true,
+        useFindAndModify: false,
+      }
+    );
+    console.log(newUser);
+    res.status(201).json(newUser);
+  } catch (error) {
+    console.log(error);
+    res.status(409).json({ message: error.message });
+  }
+});
+router.post("/updatedetails", async (req, res) => {
+  const formData = req.body;
+  try {
+    const userDetails = await User_Model.find({ userId: formData.userId });
+    if (userDetails.length === 0) {
+      const newUser = new User_Model(formData);
+      await newUser.save();
+      res.status(201).json({ message: newUser });
+    } else {
+      const newUser1 = await User_Model.findByIdAndUpdate(
+        userDetails[0]._id,
+        formData,
+        {
+          new: true,
+          useFindAndModify: false,
+        }
+      );
+      res.status(201).json({ message: newUser1 });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(409).json({ message: error.message });
+  }
 });
 
 module.exports = router;
