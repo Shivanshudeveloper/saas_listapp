@@ -127,12 +127,14 @@ export default function AccountGeneral() {
   };
 
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const addEmail = async () => {
     await axios
-      .post(`${API_SERVICE}/adddetails/${userId}`, { email })
+      .post(`${API_SERVICE}/adddetails/${userId}`, { email, password })
       .then((res) => {
         setEmail("");
+        setPassword("");
         getDetails();
       })
       .catch((err) => console.log(err));
@@ -312,6 +314,13 @@ export default function AccountGeneral() {
                     fullWidth
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    label="Password"
+                    fullWidth
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     sx={{ mb: 2 }}
                   />
                   <Button variant="contained" onClick={addEmail}>

@@ -1178,12 +1178,12 @@ router.get("/getdetails/:id", async (req, res) => {
   }
 });
 router.post("/adddetails/:id", async (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
   const { id } = req.params;
   console.log(email);
   try {
     const userDetails = await User_Model.find({ userId: id });
-    userDetails[0].emails.push({ email: email });
+    userDetails[0].emails.push({ email: email, password: password });
     const newUser = await User_Model.findByIdAndUpdate(
       userDetails[0]._id,
       userDetails[0],
@@ -1283,11 +1283,19 @@ async function getDet1() {
   const currentDay = new Date().getDay();
   const currentTime = new Date().getHours();
 
+  const userDetails = await User_Model.find();
+
   cron.schedule("* * * * *", function () {
     console.log("--------");
     sequence[2].prospects.map(async (seq) => {
       if (String(currentDay) === String(seq?.type?.run - 1)) {
-        console.log(seq?.type?.time.split(":")[0], currentTime);
+        // console.log(userDetails[0].emails);
+        let password = "";
+        userDetails.map((user) => {
+          user.emails.map((email) => {
+            if (email.email === seq?.email) password = email.password;
+          });
+        });
 
         if (seq?.type?.time.split(":")[0] === String(currentTime)) {
           if (seq?.type?.option === "Email") {
@@ -1295,15 +1303,15 @@ async function getDet1() {
               (transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
-                  user: "evencloudupload@gmail.com",
-                  pass: "Evencloud@1234",
+                  user: seq?.email,
+                  pass: password,
                 },
               })),
                 (mailOption = {
                   from: seq?.email,
                   to: seq?.contact?.email,
-                  subject: seq?.templateName,
-                  html: seq?.templateDesc,
+                  subject: seq?.type?.templateName,
+                  html: seq?.type?.templateDesc,
                 }),
                 transporter.sendMail(mailOption, (err, data) => {
                   console.log("Email Sent!");
