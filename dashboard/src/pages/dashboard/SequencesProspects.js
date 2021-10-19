@@ -79,6 +79,7 @@ const SequencesProspects = ({ sequence, sequenceId }) => {
       .then((res) => {
         getProspect();
         handleClose();
+        setFormData(initialState);
       })
       .catch((err) => console.log(err));
   };
@@ -95,8 +96,6 @@ const SequencesProspects = ({ sequence, sequenceId }) => {
       .then((res) => setUser(res.data[0]))
       .catch((err) => console.log(err));
   };
-
-  console.log(prospects);
 
   return (
     <div>
@@ -167,9 +166,10 @@ const SequencesProspects = ({ sequence, sequenceId }) => {
               sx={{ mb: 3 }}
             />
             <Autocomplete
-              inputValue={formData?.email?.email}
+              inputValue={formData?.email}
               onChange={(event, newValue) => {
-                setFormData({ ...formData, email: newValue.email });
+                console.log(newValue?.email);
+                setFormData({ ...formData, email: newValue?.email });
               }}
               getOptionLabel={(option) => option.email}
               id="controllable-states-demo"
@@ -192,10 +192,10 @@ const SequencesProspects = ({ sequence, sequenceId }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Contact Name</TableCell>
+              <TableCell>Receiver Contact Name</TableCell>
               <TableCell>Step Name</TableCell>
               <TableCell>Step Day</TableCell>
-              <TableCell>Email</TableCell>
+              <TableCell>From</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -206,7 +206,7 @@ const SequencesProspects = ({ sequence, sequenceId }) => {
                 </TableCell>
                 <TableCell>{row?.type?.option}</TableCell>
                 <TableCell>{row?.type?.run}</TableCell>
-                <TableCell>{row?.email?.email}</TableCell>
+                <TableCell>{row?.email}</TableCell>
               </TableRow>
             ))}
           </TableBody>

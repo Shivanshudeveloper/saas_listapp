@@ -104,6 +104,12 @@ export default function SequencesTable() {
     run0: "",
     checked0: false,
     time0: "",
+    checked1: false,
+    time1: "",
+    checked2: false,
+    time2: "",
+    checked3: false,
+    time3: "",
     templateName0: "",
     templateDesc0: "",
     instruction1: "",
@@ -551,7 +557,7 @@ export default function SequencesTable() {
                           shrink: true,
                         }}
                         inputProps={{
-                          step: 6000, // 5 min
+                          step: 60000, // 5 min
                         }}
                         value={formData.time0}
                         onChange={(e) =>
@@ -646,6 +652,36 @@ export default function SequencesTable() {
                     />
                   </Grid>
                   <Grid item xs={12}>
+                    <Checkbox
+                      checked={formData.checked1}
+                      onChange={(e) =>
+                        setFormData({ ...formData, checked1: e.target.checked })
+                      }
+                    />
+                    Send at a specific time
+                  </Grid>
+                  {formData?.checked1 === true && (
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Time"
+                        type="time"
+                        defaultValue="07:30"
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          step: 60000, // 5 min
+                        }}
+                        value={formData.time1}
+                        onChange={(e) =>
+                          setFormData({ ...formData, time1: e.target.value })
+                        }
+                      />
+                    </Grid>
+                  )}
+                  <br />
+                  <Grid item xs={12}>
                     <Autocomplete
                       inputValue={formData.priority1}
                       onInputChange={(event, newValue) => {
@@ -725,6 +761,37 @@ export default function SequencesTable() {
                     />
                   </Grid>
                   <Grid item xs={12}>
+                    <Checkbox
+                      checked={formData.checked2}
+                      onChange={(e) =>
+                        setFormData({ ...formData, checked2: e.target.checked })
+                      }
+                    />
+                    Send at a specific time
+                  </Grid>
+                  {formData?.checked2 === true && (
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Time"
+                        type="time"
+                        defaultValue="07:30"
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          step: 60000, // 5 min
+                        }}
+                        value={formData.time2}
+                        onChange={(e) =>
+                          setFormData({ ...formData, time2: e.target.value })
+                        }
+                      />
+                    </Grid>
+                  )}
+                  <br />
+
+                  <Grid item xs={12}>
                     <Autocomplete
                       inputValue={formData.priority2}
                       onInputChange={(event, newValue) => {
@@ -802,6 +869,36 @@ export default function SequencesTable() {
                       }
                     />
                   </Grid>
+                  <Grid item xs={12}>
+                    <Checkbox
+                      checked={formData.checked3}
+                      onChange={(e) =>
+                        setFormData({ ...formData, checked3: e.target.checked })
+                      }
+                    />
+                    Send at a specific time
+                  </Grid>
+                  {formData?.checked3 === true && (
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Time"
+                        type="time"
+                        defaultValue="07:30"
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          step: 60000, // 5 min
+                        }}
+                        value={formData.time3}
+                        onChange={(e) =>
+                          setFormData({ ...formData, time3: e.target.value })
+                        }
+                      />
+                    </Grid>
+                  )}
+                  <br />
                   <Grid item xs={12}>
                     <Autocomplete
                       inputValue={formData.priority3}
