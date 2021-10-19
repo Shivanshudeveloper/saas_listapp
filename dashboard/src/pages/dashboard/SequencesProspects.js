@@ -42,6 +42,7 @@ const SequencesProspects = ({ sequence, sequenceId }) => {
 
   const handleClose = () => {
     setOpen(false);
+    setFormData(initialState);
   };
 
   useEffect(() => {
@@ -93,9 +94,10 @@ const SequencesProspects = ({ sequence, sequenceId }) => {
   const getDetails = async () => {
     await axios
       .get(`${API_SERVICE}/getdetails/${userId}`)
-      .then((res) => setUser(res.data[0]))
+      .then((res) => setUser(res.data))
       .catch((err) => console.log(err));
   };
+  console.log(user);
 
   return (
     <div>
@@ -168,12 +170,11 @@ const SequencesProspects = ({ sequence, sequenceId }) => {
             <Autocomplete
               inputValue={formData?.email}
               onChange={(event, newValue) => {
-                console.log(newValue?.email);
                 setFormData({ ...formData, email: newValue?.email });
               }}
               getOptionLabel={(option) => option.email}
               id="controllable-states-demo"
-              options={user?.emails}
+              options={user}
               fullWidth
               renderInput={(params) => <TextField {...params} label="Email" />}
               sx={{ mb: 3 }}

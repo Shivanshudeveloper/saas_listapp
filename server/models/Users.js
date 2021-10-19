@@ -11,7 +11,7 @@ const usersDataSchema = new mongoose.Schema({
   tls: { type: String, required: false },
   username: { type: String, required: false },
   password: { type: String, required: false },
-  emails: { type: Array, required: false },
+  email: { type: String, required: false },
 });
-const users = mongoose.model("users", usersDataSchema);
+const users = mongoose.model("usersEmails", usersDataSchema);
 module.exports = users;

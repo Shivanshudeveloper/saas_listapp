@@ -18,6 +18,18 @@ import {
   Radio,
   RadioGroup,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  TableContainer,
+  Paper,
+  Table,
+  TableCell,
+  TableRow,
+  TableHead,
+  TableBody,
 } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
 // hooks
@@ -103,42 +115,59 @@ export default function AccountGeneral() {
     host: "",
     port: "",
     tls: "false",
-    username: "",
+    email: "",
     password: "",
     userId: userId,
-    emails: [],
   };
   const [formData, setFormData] = useState(initialState);
+  const [emails, setEmails] = useState([]);
 
-  const updateDetails = async () => {
-    await axios
-      .post(`${API_SERVICE}/updatedetails`, formData)
-      .then((res) => getDetails())
-      .catch((err) => console.log(err));
-  };
-  useEffect(() => {
-    getDetails();
-  }, []);
   const getDetails = async () => {
     await axios
       .get(`${API_SERVICE}/getdetails/${userId}`)
-      .then((res) => setFormData(res.data[0]))
+      .then((res) => setEmails(res.data))
       .catch((err) => console.log(err));
   };
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  useEffect(() => {
+    getDetails();
+  }, []);
 
   const addEmail = async () => {
+    console.log(formData);
     await axios
-      .post(`${API_SERVICE}/adddetails/${userId}`, { email, password })
+      .post(`${API_SERVICE}/adddetails`, formData)
       .then((res) => {
-        setEmail("");
-        setPassword("");
+        handleClose();
         getDetails();
       })
       .catch((err) => console.log(err));
   };
+  const editEmail = async () => {
+    console.log(formData);
+    await axios
+      .post(`${API_SERVICE}/editdetails`, formData)
+      .then((res) => {
+        handleClose();
+        getDetails();
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const [open, setOpen] = React.useState(false);
+  const [edit, setEdit] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setEdit(false);
+    setFormData(initialState);
+  };
+
+  console.log(emails);
 
   return (
     <FormikProvider value={formik}>
@@ -238,97 +267,147 @@ export default function AccountGeneral() {
             </Card>
           </Grid>
           <Grid item xs={12} md={12}>
-            <Card sx={{ p: 3 }}>
-              <Typography variant="h6">Email Settings</Typography>
-              <Typography sx={{ mt: 2, mb: 2 }}>
-                Update your email provider settings
-              </Typography>
-              <TextField
-                label="Host"
-                fullWidth
-                value={formData.host}
-                onChange={(e) =>
-                  setFormData({ ...formData, host: e.target.value })
-                }
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                label="Port"
-                fullWidth
-                value={formData.port}
-                onChange={(e) =>
-                  setFormData({ ...formData, port: e.target.value })
-                }
-                sx={{ mb: 2 }}
-              />
-              <Typography sx={{ mb: 2 }}>
-                Do you want to secure using TLS
-              </Typography>
-              <RadioGroup
-                row
-                sx={{ mb: 2 }}
-                value={formData.tls}
-                onChange={(e) =>
-                  setFormData({ ...formData, tls: e.target.value })
-                }
-              >
-                <FormControlLabel
-                  value="true"
-                  control={<Radio />}
-                  label="Yes"
-                />
-                <FormControlLabel
-                  value="false"
-                  control={<Radio />}
-                  label="No"
-                />
-              </RadioGroup>
-              <TextField
-                label="Username"
-                fullWidth
-                value={formData.username}
-                onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
-                }
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                label="Password"
-                fullWidth
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-                sx={{ mb: 2 }}
-              />
-              <Button variant="contained" onClick={updateDetails}>
-                Update
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button variant="outlined" onClick={handleClickOpen}>
+                Add Email
               </Button>
-              {formData?._id?.length > 0 && (
-                <>
-                  <Typography sx={{ mb: 2, mt: 2 }}>
-                    Emails: {formData?.emails?.map((e) => `${e?.email}, `)}
-                  </Typography>
-                  <TextField
-                    label="Add Emails"
-                    fullWidth
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    sx={{ mb: 2 }}
+            </div>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {edit ? "Edit" : "Add"} User Details
+              </DialogTitle>
+              <DialogContent>
+                <TextField
+                  label="Host"
+                  fullWidth
+                  value={formData.host}
+                  onChange={(e) =>
+                    setFormData({ ...formData, host: e.target.value })
+                  }
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  label="Port"
+                  fullWidth
+                  value={formData.port}
+                  onChange={(e) =>
+                    setFormData({ ...formData, port: e.target.value })
+                  }
+                  sx={{ mb: 2 }}
+                />
+                <Typography sx={{ mb: 2 }}>
+                  Do you want to secure using TLS
+                </Typography>
+                <RadioGroup
+                  row
+                  sx={{ mb: 2 }}
+                  value={formData.tls}
+                  onChange={(e) =>
+                    setFormData({ ...formData, tls: e.target.value })
+                  }
+                >
+                  <FormControlLabel
+                    value="true"
+                    control={<Radio />}
+                    label="Yes"
                   />
-                  <TextField
-                    label="Password"
-                    fullWidth
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    sx={{ mb: 2 }}
+                  <FormControlLabel
+                    value="false"
+                    control={<Radio />}
+                    label="No"
                   />
-                  <Button variant="contained" onClick={addEmail}>
-                    Add
-                  </Button>
-                </>
-              )}
-            </Card>
+                </RadioGroup>
+                {/* <TextField
+                  label="Username"
+                  fullWidth
+                  value={formData.username}
+                  onChange={(e) =>
+                    setFormData({ ...formData, username: e.target.value })
+                  }
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  label="Password"
+                  fullWidth
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  sx={{ mb: 2 }}
+                /> */}
+
+                <TextField
+                  label="Email"
+                  fullWidth
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  label="Password"
+                  fullWidth
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  sx={{ mb: 2 }}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Close</Button>
+                <Button
+                  onClick={() => {
+                    edit ? editEmail() : addEmail();
+                  }}
+                  autoFocus
+                >
+                  {edit ? "Save" : "Add"}
+                </Button>
+              </DialogActions>
+            </Dialog>
+            <TableContainer component={Paper} sx={{ mt: 4 }}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Email</TableCell>
+                    <TableCell align="right">TLS</TableCell>
+                    <TableCell align="right"></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {emails.map((row) => (
+                    <TableRow
+                      key={row._id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.email}
+                      </TableCell>
+                      <TableCell align="right">{row.tls}</TableCell>
+                      <TableCell align="right">
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            setFormData(row);
+                            handleClickOpen();
+                            setEdit(true);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Grid>
         </Grid>
       </Form>

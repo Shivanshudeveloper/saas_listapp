@@ -1134,7 +1134,6 @@ router.post("/addtasksequence", async (req, res) => {
 });
 router.get("/gettasksequence/:id", async (req, res) => {
   const { id } = req.params;
-  console.log("id", id);
   if (id !== undefined)
     try {
       const sequence = await Sequence_Model.findById(id);
@@ -1177,48 +1176,27 @@ router.get("/getdetails/:id", async (req, res) => {
     res.status(409).json({ message: error.message });
   }
 });
-router.post("/adddetails/:id", async (req, res) => {
-  const { email, password } = req.body;
-  const { id } = req.params;
-  console.log(email);
+
+router.post("/adddetails", async (req, res) => {
+  const formData = req.body;
   try {
-    const userDetails = await User_Model.find({ userId: id });
-    userDetails[0].emails.push({ email: email, password: password });
-    const newUser = await User_Model.findByIdAndUpdate(
-      userDetails[0]._id,
-      userDetails[0],
-      {
-        new: true,
-        useFindAndModify: false,
-      }
-    );
-    console.log(newUser);
-    res.status(201).json(newUser);
+    const newUser = new User_Model(formData);
+    await newUser.save();
+    res.status(201).json({ message: newUser });
   } catch (error) {
     console.log(error);
     res.status(409).json({ message: error.message });
   }
 });
-
-router.post("/updatedetails", async (req, res) => {
+router.post("/editdetails", async (req, res) => {
   const formData = req.body;
   try {
-    const userDetails = await User_Model.find({ userId: formData.userId });
-    if (userDetails.length === 0) {
-      const newUser = new User_Model(formData);
-      await newUser.save();
-      res.status(201).json({ message: newUser });
-    } else {
-      const newUser1 = await User_Model.findByIdAndUpdate(
-        userDetails[0]._id,
-        formData,
-        {
-          new: true,
-          useFindAndModify: false,
-        }
-      );
-      res.status(201).json({ message: newUser1 });
-    }
+    const newUser = await User_Model.findByIdAndUpdate(
+      { _id: formData._id },
+      formData,
+      { useFindAndModify: false }
+    );
+    res.status(201).json({ message: newUser });
   } catch (error) {
     console.log(error);
     res.status(409).json({ message: error.message });
@@ -1283,22 +1261,18 @@ async function getDet1() {
   const currentDay = new Date().getDay();
   const currentTime = new Date().getHours();
 
-  const userDetails = await User_Model.find();
-
-  cron.schedule("* * * * *", function () {
-    console.log("--------");
+  cron.schedule("0 * * * *", function () {
     sequence[2].prospects.map(async (seq) => {
       if (String(currentDay) === String(seq?.type?.run - 1)) {
         // console.log(userDetails[0].emails);
-        let password = "";
-        userDetails.map((user) => {
-          user.emails.map((email) => {
-            if (email.email === seq?.email) password = email.password;
-          });
-        });
 
         if (seq?.type?.time.split(":")[0] === String(currentTime)) {
           if (seq?.type?.option === "Email") {
+            const userDetails = await User_Model.find();
+            let password = "";
+            userDetails.map((user) => {
+              if (user.email === seq?.email) password = user.password;
+            });
             try {
               (transporter = nodemailer.createTransport({
                 service: "gmail",
@@ -1324,7 +1298,6 @@ async function getDet1() {
       }
     });
     console.log("********");
-    console.log("");
   });
 }
 
