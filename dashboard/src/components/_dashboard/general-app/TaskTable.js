@@ -50,6 +50,7 @@ import axios from "axios";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
+import TaskType from "./TaskType";
 
 export default function TaskTable() {
   const filters = ["today", "upcoming", "due", "completed"];
@@ -884,12 +885,7 @@ export default function TaskTable() {
           marginBottom: "10px",
         }}
       >
-        <div
-          className="tabs"
-          style={{
-            marginBottom: "1rem",
-          }}
-        >
+        <div className="tabs">
           <Tabs
             indicatorColor="secondary"
             textColor="secondary"
@@ -907,29 +903,16 @@ export default function TaskTable() {
           </Tabs>
         </div>
 
-        <div
-          className="options"
-          style={{
-            marginBottom: "2rem",
-            width: "50%",
-          }}
-        >
-          <ToggleButtonGroup
-            color="secondary"
-            value={btnValue}
-            exclusive
-            fullWidth
-            onChange={handleBtnValue}
-          >
-            {taskTypes.map((t) => (
-              <ToggleButton disabled={t === btnValue} key={t} value={t}>
-                <div>
-                  <span>{typeStats[t]}</span>
-                  <div>{t}</div>
-                </div>
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
+        <div className="types w-full flex items-center bg-white border-t border-b mb-6 text-gray-600">
+          {taskTypes.map((t) => (
+            <TaskType
+              currentLabel={btnValue}
+              handleBtnValue={handleBtnValue}
+              count={typeStats[t]}
+              label={t}
+              key={t}
+            />
+          ))}
         </div>
       </div>
 
