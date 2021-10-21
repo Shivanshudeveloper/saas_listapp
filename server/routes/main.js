@@ -5,6 +5,7 @@ const router = express.Router();
 const stripe = require("stripe")(
   "sk_test_51IdwfeH8KzFo5uc9YHKzp2HOPkZJvH0ij0qhWeg0wQ17G73o5fVJYjMkWOfAmWUgjVZe0DesJvrQKbmAPSacXsVP00qMXnEqFr"
 );
+const { endOfDay, startOfDay } = require("date-fns");
 const { v4: uuidv4 } = require("uuid");
 // Getting Module
 
@@ -391,6 +392,138 @@ router.get("/getalltasks", async (req, res) => {
     res.status(409).json({ message: error.message });
   }
 });
+
+// GET /gettasks?filterBy="today"&type="all"
+router.get("/gettasks", async (req, res) => {
+  try {
+    let { filterBy, type } = req.query;
+    
+    // constants
+    let today = new Date();
+    const filters = ["today", "upcoming", "due", "completed"];
+    const types = ["All", "Note", "Call", "Email", "LinkedIn"];
+
+    // return values
+    let tasks = [];
+    let typeStats = {};
+    let globalStats = {};
+
+    // query
+    let query = {};
+
+    if (!filterBy || !filters.includes(filterBy.toLowerCase())) {
+      filterBy = filters[0];
+    }
+
+    if (!type || !types.includes(type)) {
+      type = types[0];
+    }
+
+    if (filterBy === filters[1]) {
+      // upcoming
+      query = {
+        date: {
+          $gt: endOfDay(today),
+        },
+      };
+    } else if (filterBy === filters[2]) {
+      // due
+      query = {
+        date: {
+          $lt: startOfDay(today),
+        },
+        completed: false,
+      };
+    } else if (filterBy === filters[3]) {
+      // completed
+      query = {
+        completed: true,
+      };
+    } else {
+      // today
+      query = {
+        date: {
+          $gte: startOfDay(today),
+          $lte: endOfDay(today),
+        },
+      };
+    }
+
+    // extract only the needed tasks with type
+    if (type === types[1]) {
+      // Note
+      type = types[1];
+    } else if (type === types[2]) {
+      // Call
+      type = types[2];
+    } else if (type === types[3]) {
+      // Email
+      type = types[3];
+    } else if (type === types[4]) {
+      // LinkedIn
+      type = types[4];
+    } else {
+      type = types[0];
+    }
+
+    // get all tasks under the filterBy
+    const allTasks = await Task_Model.find(query).sort({ date: -1 });
+
+    // const todayTasks = await Task_Model.find({
+    //   date: {
+    //     $gte: startOfDay(today),
+    //     $lte: endOfDay(today),
+    //   },
+    // });
+    // const upcomingTasks = await Task_Model.find({
+    //   date: {
+    //     $gt: endOfDay(today),
+    //   },
+    // });
+    // const dueTasks = await Task_Model.find({
+    //   date: {
+    //     $lt: startOfDay(today),
+    //   },
+    //   completed: false,
+    // });
+    // const completedTasks = await Task_Model.find({
+    //   completed: true,
+    // });
+
+    // typeStats: { "All": 0, "Note": 0 }
+    types.forEach((type) => {
+      if (type === types[0]) {
+        typeStats[type] = allTasks.length;
+      } else {
+        typeStats[type] = allTasks.filter((task) => {
+          return task.type === type;
+        }).length;
+      }
+    });
+    // globalStats: { "today": 0, "upcoming": 0 }
+    // globalStats = {
+    //   "today": todayTasks.length,
+    //   "upcoming": upcomingTasks.length,
+    //   "due": dueTasks.length,
+    //   "completed": completedTasks.length,
+    // };
+
+    if (type === types[0]) {
+      tasks = allTasks;
+    } else {
+      tasks = allTasks.filter((t) => t.type === type);
+    }
+
+    res.send({
+      globalStats,
+      tasks,
+      typeStats,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.get("/getcomingtasks", async (req, res) => {
   newDate = new Date();
   try {

@@ -20,6 +20,8 @@ import {
   Chip,
   Paper,
   InputBase,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -50,10 +52,39 @@ import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
 
 export default function TaskTable() {
+  const filters = ["today", "upcoming", "due", "completed"];
+  const taskTypes = ["All", "Note", "Call", "Email", "LinkedIn"];
+
+  const [typeStats, setTypeStats] = useState({
+    All: 0,
+    Note: 0,
+    Call: 0,
+    Email: 0,
+    LinkedIn: 0,
+  });
+  // const [globalStats, setGlobalStats] = useState({
+  //   today: 0,
+  //   upcoming: 0,
+  //   due: 0,
+  //   completed: 0,
+  // });
+
   const tableCellStyle = { paddingTop: "5px", paddingBottom: "5px" };
   const [openTask, setOpenTask] = useState(false);
   const [openCall, setOpenCall] = useState(false);
   const userName = localStorage.getItem("userName");
+
+  // section tabs
+  const [tabValue, setTabValue] = useState(filters[0]);
+  const handleTabChange = (e, newValue) => {
+    setTabValue(newValue);
+  };
+
+  // inner toggle btns -> All, Note, Call etc
+  const [btnValue, setBtnValue] = useState(taskTypes[0]);
+  const handleBtnValue = (e, newValue) => {
+    setBtnValue(newValue);
+  };
 
   const handleClickAdd = () => {
     setValue(0);
@@ -136,9 +167,13 @@ export default function TaskTable() {
   };
   const [allTasks, setAllTasks] = useState([]);
 
+  // useEffect(() => {
+  //   getcomingtasks();
+  // }, []);
+
   useEffect(() => {
-    getcomingtasks();
-  }, []);
+    getTasks();
+  }, [tabValue, btnValue]);
 
   const getcompletedtasks = async () => {
     await axios
@@ -158,13 +193,48 @@ export default function TaskTable() {
       .catch((err) => console.log(err));
   };
 
+  // const getTasks = async () => {
+  //   await axios
+  //     .get(`${API_SERVICE}/getalltasks`)
+  //     .then((res) => {
+  //       setAllTasks(res.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  // /gettasks?filterBy="today"&type="all"
   const getTasks = async () => {
     await axios
-      .get(`${API_SERVICE}/getalltasks`)
+      .get(`${API_SERVICE}/gettasks?filterBy=${tabValue}&type=${btnValue}`)
       .then((res) => {
-        setAllTasks(res.data);
+        const tasks = res.data.tasks;
+        const typeStats = res.data.typeStats;
+        // const globalStats = res.data.globalStats;
+
+        setAllTasks(tasks);
+        setTypeStats((prevValue) => {
+          return {
+            ...prevValue,
+            ...typeStats,
+          };
+        });
+        // setGlobalStats((prevValue) => {
+        //   return {
+        //     ...prevValue,
+        //     ...globalStats,
+        //   };
+        // });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setTypeStats({
+          All: 0,
+          Note: 0,
+          Call: 0,
+          Email: 0,
+          LinkedIn: 0,
+        });
+      });
   };
 
   const deleteRow = async (id) => {
@@ -304,7 +374,6 @@ export default function TaskTable() {
     let index = allfiltertags.indexOf(tag);
     allfiltertags.splice(index, 1);
   };
-  console.log(allfiltertags);
 
   const completedTypes = [{ name: "Completed" }, { name: "Not Completed" }];
 
@@ -808,7 +877,63 @@ export default function TaskTable() {
         )}
       </section>
 
-      <div style={{ marginBottom: "10px" }}>
+      {/* new fields */}
+      <div
+        className="sections"
+        style={{
+          marginBottom: "10px",
+        }}
+      >
+        <div
+          className="tabs"
+          style={{
+            marginBottom: "1rem",
+          }}
+        >
+          <Tabs
+            indicatorColor="secondary"
+            textColor="secondary"
+            sx={{
+              borderTopLeftRadius: "0px",
+              borderTopRightRadius: "0px",
+            }}
+            value={tabValue}
+            onChange={handleTabChange}
+            aria-label="icon label tabs sections"
+          >
+            {filters.map((f) => (
+              <Tab key={f} label={`${f}`} value={f} />
+            ))}
+          </Tabs>
+        </div>
+
+        <div
+          className="options"
+          style={{
+            marginBottom: "2rem",
+            width: "50%",
+          }}
+        >
+          <ToggleButtonGroup
+            color="secondary"
+            value={btnValue}
+            exclusive
+            fullWidth
+            onChange={handleBtnValue}
+          >
+            {taskTypes.map((t) => (
+              <ToggleButton disabled={t === btnValue} key={t} value={t}>
+                <div>
+                  <span>{typeStats[t]}</span>
+                  <div>{t}</div>
+                </div>
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </div>
+      </div>
+
+      {/* <div style={{ marginBottom: "10px" }}>
         <Button onClick={() => getcomingtasks()} style={{ marginLeft: "20px" }}>
           Show Due
         </Button>
@@ -818,7 +943,7 @@ export default function TaskTable() {
         >
           Show Completed
         </Button>
-      </div>
+      </div> */}
       <Scrollbar>
         <TableContainer sx={{ minWidth: 720 }}>
           <Table>
