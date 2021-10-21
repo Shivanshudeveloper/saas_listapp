@@ -391,6 +391,23 @@ router.get("/getalltasks", async (req, res) => {
     res.status(409).json({ message: error.message });
   }
 });
+
+router.get("/getspecifictasks/:type/:status", async (req, res) => {
+  const { type, status } = req.params;
+  let flag;
+  if (status === "completed") flag = true;
+  else flag = false;
+  try {
+    const allTasks = await Task_Model.find({
+      type: type,
+      completed: flag,
+    }).sort({ date: -1 });
+    res.status(201).json(allTasks);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+});
+
 router.get("/getcomingtasks", async (req, res) => {
   newDate = new Date();
   try {

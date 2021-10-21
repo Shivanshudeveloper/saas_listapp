@@ -114,6 +114,15 @@ const ContactSection = () => {
     setOpen(false);
   };
 
+  const [open2, setOpen2] = useState(false);
+
+  const handleClickOpen2 = () => {
+    setOpen2(true);
+  };
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
+
   const [openDialog, setOpenDialog] = useState(false);
   const handleClickOpenDialog = () => {
     setOpenDialog(true);
@@ -256,43 +265,6 @@ const ContactSection = () => {
       .catch((err) => console.log(err));
   };
 
-  function tabManagement(tabs, action) {
-    switch (action.type) {
-      case ACTIONS.NEW_TAB:
-        const addNote = {
-          id: tabs.length + 1,
-          valueTab: valueTab + 1,
-          details: {
-            title: action.payload.name,
-            content: action.payload.id,
-          },
-        };
-        return [...tabs, addNote];
-      case ACTIONS.CLOSE_TAB:
-        return tabs.filter((tab) => tab.id != action.payload.id);
-      case ACTIONS.SET_ACTIVE_TAB:
-        return setValueTab(action.payload.newValue);
-      default:
-        return tabs;
-    }
-  }
-
-  const ACTIONS = {
-    NEW_TAB: "newTab",
-    CLOSE_TAB: "closeTab",
-    SET_ACTIVE_TAB: "setActiveTab",
-  };
-
-  const [valueTab, setValueTab] = useState(1);
-  let initialTabs = [];
-  const [tabs, dispatch] = useReducer(tabManagement, initialTabs);
-  useEffect(() => {
-    tabs.length > 0 ? setValueTab(tabs[tabs.length - 1].id) : setValueTab(0);
-  }, [tabs]);
-  const handleChangeTab = (event, newValue) => {
-    setValueTab(newValue);
-  };
-
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -304,6 +276,8 @@ const ContactSection = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const [userRow, setUserRow] = useState([]);
 
   return (
     <>
@@ -703,15 +677,10 @@ const ContactSection = () => {
                           >
                             <Button
                               variant="contained"
-                              onClick={() =>
-                                dispatch({
-                                  type: ACTIONS.NEW_TAB,
-                                  payload: {
-                                    id: row._id,
-                                    name: `${row.fName} ${row.lName}`,
-                                  },
-                                })
-                              }
+                              onClick={() => {
+                                handleClickOpen2();
+                                setUserRow(row);
+                              }}
                             >
                               View
                             </Button>
@@ -723,6 +692,24 @@ const ContactSection = () => {
               </Table>
             </TableContainer>
           </Scrollbar>
+          <Dialog
+            open={open2}
+            onClose={handleClose2}
+            aria-labelledby="form-dialog-title"
+            // maxWidth="sm"
+            // fullWidth
+            fullScreen
+          >
+            <DialogTitle id="form-dialog-title">User</DialogTitle>
+            <DialogContent>
+              <ViewContact id={userRow._id} />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose2} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
           <TablePagination
             style={{ boxShadow: "none" }}
             rowsPerPageOptions={[5, 10, 25]}
@@ -797,52 +784,6 @@ const ContactSection = () => {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
-      <div style={{ marginTop: "20px" }} name="test1" className="element">
-        <TabContext value={valueTab}>
-          <div style={{ boxShadow: "none" }}>
-            <TabList
-              onChange={handleChangeTab}
-              variant="scrollable"
-              scrollButtons="auto"
-              aria-label="scrollable auto tabs example"
-            >
-              {tabs.map((tab) => (
-                <Tab
-                  component="div"
-                  key={tab.id}
-                  label={
-                    <span>
-                      {tab.details.title}
-                      <IconButton
-                        onClick={() =>
-                          dispatch({
-                            type: ACTIONS.CLOSE_TAB,
-                            payload: { id: tab.id },
-                          })
-                        }
-                      >
-                        <Cancel />
-                      </IconButton>
-                    </span>
-                  }
-                  value={tab.id}
-                />
-              ))}
-            </TabList>
-          </div>
-          ​
-          {tabs.length > 0 && (
-            <TabPanel value={valueTab}>
-              <ViewContact
-                id={
-                  tabs.filter((t) => t.valueTab === valueTab)[0]?.details
-                    ?.content
-                }
-              />
-            </TabPanel>
-          )}
-        </TabContext>
       </div>
     </>
   );
