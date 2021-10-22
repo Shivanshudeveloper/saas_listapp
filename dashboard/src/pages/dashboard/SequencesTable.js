@@ -419,6 +419,16 @@ export default function SequencesTable() {
     setValueTab(newValue);
   };
 
+  const [testData, setTestData] = useState("");
+
+  const testEvent = async () => {
+    await axios.post(`${API_SERVICE}/testsequence`, { testData });
+    handleCloseAdd();
+    // .then((res) => {
+    // })
+    // .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Dialog
@@ -510,6 +520,27 @@ export default function SequencesTable() {
               <DialogTitle>Add Email Step</DialogTitle>
               <DialogContent style={{ minWidth: "500px" }}>
                 <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Test On A Interval"
+                      fullWidth
+                      value={testData}
+                      onChange={(e) => setTestData(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <Button variant="contained" onClick={testEvent}>
+                      Test
+                    </Button>
+                  </Grid>
                   <Grid item xs={12}>
                     <Autocomplete
                       inputValue={formData.type0}
