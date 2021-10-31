@@ -56,16 +56,17 @@ export default function AccountPopover() {
   };
 
   const handleLogout = async () => {
-    try {
-      await logout();
-      navigate("/");
-      if (isMountedRef.current) {
-        handleClose();
-      }
-    } catch (error) {
-      console.error(error);
-      enqueueSnackbar("Unable to logout", { variant: "error" });
-    }
+    // try {
+    //   await logout();
+    //   if (isMountedRef.current) {
+    //     handleClose();
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    //   enqueueSnackbar("Unable to logout", { variant: "error" });
+    // }
+    sessionStorage.clear();
+    navigate("/");
   };
 
   return (
@@ -101,10 +102,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {user.displayName}
+            {user?.displayName}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            {user.email}
+            {user?.email}
           </Typography>
         </Box>
 

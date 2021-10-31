@@ -20,7 +20,8 @@ import useAuth from "../../../hooks/useAuth";
 import useIsMountedRef from "../../../hooks/useIsMountedRef";
 //
 import { MIconButton } from "../../@material-extend";
-
+import { auth, storage, firestore } from "../../../Firebase/index";
+import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 // ----------------------------------------------------------------------
@@ -31,131 +32,101 @@ export default function RegisterForm() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
 
-  const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string()
-      .min(2, "Too Short!")
-      .max(50, "Too Long!")
-      .required("First name required"),
-    lastName: Yup.string()
-      .min(2, "Too Short!")
-      .max(50, "Too Long!")
-      .required("Last name required"),
-    email: Yup.string()
-      .email("Email must be a valid email address")
-      .required("Email is required"),
-    password: Yup.string().required("Password is required"),
-  });
+  const navigate = useNavigate();
+  const initialState = { fName: "", lName: "", email: "", password: "" };
+  const [formData, setFormData] = useState(initialState);
 
-  const formik = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-    },
-    validationSchema: RegisterSchema,
-    onSubmit: async (values, { setErrors, setSubmitting }) => {
-      try {
-        await register(
-          values.email,
-          values.password,
-          values.firstName,
-          values.lastName
-        );
-        enqueueSnackbar("Register success", {
-          variant: "success",
-          action: (key) => (
-            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-              <Icon icon={closeFill} />
-            </MIconButton>
-          ),
-        });
-        if (isMountedRef.current) {
-          setSubmitting(false);
-        }
-      } catch (error) {
-        console.error(error);
-        if (isMountedRef.current) {
-          setErrors({ afterSubmit: error.message });
-          setSubmitting(false);
-        }
-      }
-    },
-  });
-
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  const handleRegister = (e) => {
+    e.preventDefault();
+    auth
+      .createUserWithEmailAndPassword(formData.email, formData.password)
+      .then((result) => {
+        var user = result.user;
+        user
+          .updateProfile({
+            displayName: `${formData.fName} ${formData.lName}`,
+          })
+          .then(async () => {
+            sessionStorage.setItem("userId", user.uid);
+            sessionStorage.setItem("userEmail", user.email);
+            sessionStorage.setItem("userName", user.displayName);
+            setFormData(initialState);
+            navigate("/dashboard", { replace: true });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch(function (error) {
+        console.log(error.message);
+      });
+  };
 
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <Stack spacing={3}>
-          {errors.afterSubmit && (
-            <Alert severity="error">{errors.afterSubmit}</Alert>
-          )}
-
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-            <TextField
-              fullWidth
-              label="First name"
-              {...getFieldProps("firstName")}
-              error={Boolean(touched.firstName && errors.firstName)}
-              helperText={touched.firstName && errors.firstName}
-            />
-
-            <TextField
-              fullWidth
-              label="Last name"
-              {...getFieldProps("lastName")}
-              error={Boolean(touched.lastName && errors.lastName)}
-              helperText={touched.lastName && errors.lastName}
-            />
-          </Stack>
-
+    <>
+      <Stack spacing={3}>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
           <TextField
             fullWidth
-            autoComplete="username"
-            type="email"
-            label="Email address"
-            {...getFieldProps("email")}
-            error={Boolean(touched.email && errors.email)}
-            helperText={touched.email && errors.email}
+            label="First name"
+            value={formData.fName}
+            onChange={(e) =>
+              setFormData({ ...formData, fName: e.target.value })
+            }
           />
 
           <TextField
             fullWidth
-            autoComplete="current-password"
-            type={showPassword ? "text" : "password"}
-            label="Password"
-            {...getFieldProps("password")}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    edge="end"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                  >
-                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            error={Boolean(touched.password && errors.password)}
-            helperText={touched.password && errors.password}
+            label="Last name"
+            value={formData.lName}
+            onChange={(e) =>
+              setFormData({ ...formData, lName: e.target.value })
+            }
           />
-
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-            component={Link}
-            to="/pricing"
-          >
-            Register
-          </LoadingButton>
         </Stack>
-      </Form>
-    </FormikProvider>
+
+        <TextField
+          fullWidth
+          autoComplete="username"
+          type="email"
+          label="Email address"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+        />
+
+        <TextField
+          fullWidth
+          autoComplete="current-password"
+          type={showPassword ? "text" : "password"}
+          label="Password"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  edge="end"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          value={formData.password}
+          onChange={(e) =>
+            setFormData({ ...formData, password: e.target.value })
+          }
+        />
+
+        <LoadingButton
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          // component={Link}
+          // to="/pricing"
+          onClick={handleRegister}
+        >
+          Register
+        </LoadingButton>
+      </Stack>
+    </>
   );
 }

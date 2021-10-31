@@ -13,7 +13,7 @@ var firebaseConfig = {
   storageBucket: "blubrd-921db.appspot.com",
   messagingSenderId: "978397190493",
   appId: "1:978397190493:web:fb72babb72b088eed070b4",
-  measurementId: "G-XPR1HKWQ1W"
+  measurementId: "G-XPR1HKWQ1W",
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
