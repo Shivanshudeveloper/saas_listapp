@@ -6,14 +6,15 @@ import "firebase/messaging";
 import "firebase/analytics";
 import "firebase/firestore";
 
-var firebaseConfig = {
-  apiKey: "AIzaSyBEa2TEzzfKQ-bjl98S_LZcgNTCKZk1ehA",
-  authDomain: "blubrd-921db.firebaseapp.com",
-  projectId: "blubrd-921db",
-  storageBucket: "blubrd-921db.appspot.com",
-  messagingSenderId: "978397190493",
-  appId: "1:978397190493:web:fb72babb72b088eed070b4",
-  measurementId: "G-XPR1HKWQ1W",
+const firebaseConfig = {
+  apiKey: "AIzaSyBSEx2-ykPTb70keLZh3LAuDtQT2VyCsco",
+  authDomain: "evencloud-26d32.firebaseapp.com",
+  databaseURL: "https://evencloud-26d32.firebaseio.com",
+  projectId: "evencloud-26d32",
+  storageBucket: "evencloud-26d32.appspot.com",
+  messagingSenderId: "599725599274",
+  appId: "1:599725599274:web:8f9a716ca577fc72a1f153",
+  measurementId: "G-VSJNQ5LYK5",
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
